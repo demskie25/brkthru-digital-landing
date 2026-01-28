@@ -1,4 +1,4 @@
-import fileinput
+import re
 import sys
 import os
 
@@ -7,46 +7,56 @@ def surgery(filename):
         sys.__stderr__.write(f"File {filename} not found.\n")
         return
 
+    temp_filename = filename + ".tmp"
     in_nav = False
     in_footer = False
     
+    # Regex patterns
+    nav_start = re.compile(r'<nav', re.IGNORECASE)
+    nav_end = re.compile(r'</nav>', re.IGNORECASE)
+    footer_start = re.compile(r'<footer>', re.IGNORECASE)
+    footer_end = re.compile(r'</footer>', re.IGNORECASE)
+
     try:
-        # Use a temporary file to write the results
-        temp_filename = filename + ".tmp"
         with open(filename, 'r', encoding='utf-8', errors='ignore') as fin, \
              open(temp_filename, 'w', encoding='utf-8') as fout:
             
             for line in fin:
-                # Handle <nav>...</nav>
-                if '<nav' in line and not in_nav:
-                    in_nav = True
-                    # Replace with image IMMEDIATELY when entering a nav block
-                    fout.write('<img src="images/brkthru-logo.png" alt="BRKTHRU" class="univ-logo-img">\n')
-                    continue
+                # This is a bit tricky for one-liners, but let's assume the user's files 
+                # have them on separate lines as seen in view_file.
                 
-                if '</nav>' in line and in_nav:
-                    in_nav = False
-                    continue
-                
-                # Handle <footer>...</footer>
-                if '<footer>' in line and not in_footer:
-                    in_footer = True
-                    fout.write('<!-- Footer Cleaned -->\n')
-                    continue
-                
-                if '</footer>' in line and in_footer:
-                    in_footer = False
+                # Check for footer first (to avoid matching something inside nav if possible)
+                if not in_footer:
+                    if footer_start.search(line):
+                        in_footer = True
+                        fout.write('<!-- Footer Cleaned -->\n')
+                        if footer_end.search(line):
+                            in_footer = False
+                        continue
+                else:
+                    if footer_end.search(line):
+                        in_footer = False
                     continue
 
-                # Output the line if we're not inside a section being replaced
+                if not in_nav:
+                    if nav_start.search(line):
+                        in_nav = True
+                        fout.write('<img src="images/brkthru-logo.png" alt="BRKTHRU" class="univ-logo-img">\n')
+                        if nav_end.search(line):
+                            in_nav = False
+                        continue
+                else:
+                    if nav_end.search(line):
+                        in_nav = False
+                    continue
+
                 if not in_nav and not in_footer:
                     fout.write(line)
         
-        # Replace the original file with the temp file
         os.replace(temp_filename, filename)
         sys.__stderr__.write(f"Successfully processed {filename}\n")
     except Exception as e:
-        sys.__stderr__.write(f"Error processing {filename}: {str(e)}\n")
+        sys.__stderr__.write(f"Error processing {filename}: {str(e)}\n" )
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
