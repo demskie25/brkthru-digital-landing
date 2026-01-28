@@ -198,8 +198,155 @@
   width: 100%;
 }
 
+/* MOBILE HAMBURGER BUTTON */
+.univ-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 10001;
+}
+
+.univ-hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: #ffffff;
+  margin: 3px 0;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.univ-hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.univ-hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.univ-hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* MOBILE STYLES */
 @media (max-width: 1024px) {
+  .univ-hamburger {
+    display: flex;
+  }
+
   .univ-nav {
+    position: fixed;
+    top: 100px;
+    left: 0;
+    right: 0;
+    background-color: var(--univ-navy);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 9998;
+  }
+
+  .univ-nav.mobile-open {
+    max-height: calc(100vh - 100px);
+    padding: 16px 0;
+    overflow-y: auto;
+  }
+
+  .univ-nav-item {
+    height: auto;
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    justify-content: flex-start;
+  }
+
+  .univ-nav-item:last-child {
+    border-bottom: none;
+  }
+
+  .univ-dropdown-container {
+    flex-direction: column;
+    height: auto;
+    align-items: stretch;
+  }
+
+  .univ-dropdown-menu {
+    position: static;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 100%;
+  }
+
+  .univ-dropdown-link {
+    padding: 14px 24px 14px 40px;
+    font-size: 11px;
+  }
+
+  .univ-utility {
     display: none;
+  }
+
+  .univ-container {
+    padding: 0 16px;
+  }
+
+  .univ-logo-accent {
+    font-size: 18px;
+    letter-spacing: 0.2em !important;
+  }
+
+  .univ-logo-img {
+    height: 45px;
+    min-width: 45px;
+  }
+}
+
+@media (max-width: 480px) {
+  .univ-header {
+    height: 80px;
+  }
+  
+  .univ-spacer {
+    height: 80px;
+  }
+
+  .univ-nav {
+    top: 80px;
+  }
+
+  .univ-nav.mobile-open {
+    max-height: calc(100vh - 80px);
+  }
+
+  .univ-logo-accent {
+    font-size: 14px;
+    letter-spacing: 0.15em !important;
+  }
+
+  .univ-logo-img {
+    height: 38px;
+    min-width: 38px;
+  }
+
+  .univ-logo {
+    gap: 10px;
   }
 }
