@@ -1,0 +1,29 @@
+{
+    "hosting": {
+        "public": "dist",
+        "cleanUrls": true,
+        "rewrites": [
+            {
+                "source": "/about",
+                "destination": "/about.html"
+            },
+            {
+                "source": "/corporate",
+                "destination": "/corporate.html"
+            },
+            {
+                "source": "/shop",
+                "destination": "/shop.html"
+            },
+            {
+                "source": "/resources",
+                "destination": "/resources.html"
+            },
+            {
+                "source": "**",
+                "destination": "/index.html"
+            }
+        ],
+        "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    }
+}

@@ -1,0 +1,205 @@
+/* UNIVERSAL HEADER STYLES - BRKTHRU DIGITAL */
+:root {
+  --univ-navy: #171717; /* Rich Deep Charcoal as requested */
+  --univ-blue: #3b82f6;
+  --univ-white: #ffffff;
+  --univ-gold: #d4af37;
+  --univ-height: 100px;
+}
+
+/* RESET/BASE for Header Context */
+.univ-header * {
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+/* HEADER CONTAINER */
+.univ-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100px; /* Strict 100px fixed height */
+  background-color: var(--univ-navy); /* Solid background for visibility on all pages */
+  z-index: 9999;
+  box-shadow: none;
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.univ-container {
+  width: 100%;
+  max-width: 1400px;
+  padding: 0 2rem;
+  height: 100%;
+  display: flex;
+  align-items: center; /* Vertically centered */
+  justify-content: space-between;
+}
+
+/* LOGO */
+.univ-logo {
+  display: flex;
+  align-items: center; /* Vertically centered */
+  text-decoration: none;
+  gap: 15px; /* Spacing between logo and DIGITAL */
+}
+
+.univ-logo-img {
+  height: 55px; /* Adjust as needed */
+  min-width: 55px; /* Ensure space is reserved */
+  width: auto;
+  filter: brightness(1.1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+  display: block; /* Avoid inline spacing issues */
+}
+
+.univ-logo-accent {
+  font-size: 24px;
+  font-weight: 300;
+  color: #ffffff !important;
+  letter-spacing: 0.3em !important;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1;
+}
+
+/* NAVIGATION */
+.univ-nav {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 32px;
+}
+
+.univ-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  text-decoration: none;
+  color: #e5e5e5; /* Using a very light gray/white for base nav */
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.univ-nav-item:hover,
+.univ-nav-item.active {
+  color: var(--univ-gold) !important;
+}
+
+
+/* DROPDOWNS */
+.univ-dropdown-container {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* The Menu */
+.univ-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%; /* Center relative to parent */
+  transform: translateX(-50%) translateY(10px);
+  background-color: var(--univ-navy);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 12px 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease-in-out;
+  z-index: 10000;
+  white-space: nowrap; /* Prevent wrapping */
+  min-width: 220px;
+}
+
+/* Pointer logic to keep menu open */
+.univ-dropdown-container:hover .univ-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.univ-dropdown-link {
+  display: block;
+  padding: 12px 24px;
+  /* Request: White text for dropdowns */
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: background 0.2s;
+  text-align: left;
+}
+
+.univ-dropdown-link:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: var(--univ-blue);
+}
+
+/* UTILITY (Tour Button) */
+.univ-utility {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.univ-currency {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 900;
+  color: #64748b;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px 12px;
+  border-radius: 99px;
+  gap: 8px;
+}
+.univ-currency span.active {
+  color: white;
+}
+.univ-currency span:hover {
+  color: white;
+  cursor: pointer;
+}
+
+.univ-btn-tour {
+  background-color: var(--univ-blue);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  text-decoration: none;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  transition: all 0.3s ease;
+}
+
+.univ-btn-tour:hover {
+  background-color: white;
+  color: var(--univ-navy);
+}
+
+/* Spacer for fixed header */
+.univ-spacer {
+  height: var(--univ-height);
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .univ-nav {
+    display: none;
+  }
+}

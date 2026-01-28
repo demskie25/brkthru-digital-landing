@@ -1,0 +1,8 @@
+﻿Synced index.html
+Synced odyssey.html
+Synced corporate.html
+Synced coaching.html
+Synced resources.html
+Synced shop.html
+Synced reservations.html
+Skipping events.html (not found)

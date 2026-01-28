@@ -1,0 +1,8 @@
+{
+  "name": "brkthru-digital-landing",
+  "version": "1.0.0",
+  "description": "Brkthru Digital Landing Page",
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}

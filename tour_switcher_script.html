@@ -1,0 +1,59 @@
+﻿<script>
+  // --- TOUR TRACK SWITCHER ---
+  function switchTourTrack(trackId) {
+    // 1. Update Tabs
+    document.querySelectorAll(".tour-tab").forEach((tab) => {
+      tab.classList.remove("active");
+    });
+    // Derive active tab ID (e.g. track1 -> tab1)
+    const tabId = "tab" + trackId.replace("track", "");
+    const activeTab = document.getElementById(tabId);
+    if (activeTab) activeTab.classList.add("active");
+
+    // 2. Update Content
+    document.querySelectorAll(".tour-track").forEach((track) => {
+      track.classList.remove("active");
+    });
+    const activeTrack = document.getElementById(trackId);
+    if (activeTrack) {
+      activeTrack.classList.add("active");
+      // Optional: Fade animation wrapper if needed
+    }
+  }
+
+  // --- HASH NAVIGATION HANDLER ---
+  function handleHash() {
+    const hash = window.location.hash;
+    if (!hash) return;
+
+    const map = {
+      "#masterclass": "track1",
+      "#5mm": "track2",
+      "#parenting": "track3",
+    };
+
+    if (map[hash]) {
+      // 1. Switch Track
+      switchTourTrack(map[hash]);
+      // 2. Scroll to Tour Section
+      const tourSection = document.getElementById("tour");
+      if (tourSection) {
+        setTimeout(() => {
+          tourSection.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    } else if (hash.includes("track")) {
+      // Fallback for direct track IDs
+      switchTourTrack(hash.replace("#", ""));
+      const tourSection = document.getElementById("tour");
+      if (tourSection) {
+        tourSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }
+
+  // Initialize
+  window.addEventListener("load", handleHash);
+  window.addEventListener("hashchange", handleHash);
+</script>
+

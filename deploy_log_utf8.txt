@@ -1,0 +1,9 @@
+﻿python : Python was not found; run without arguments to install from the Microsoft Store, or 
+disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+At line:1 char:1
++ python final_deploy.py > deploy_log.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Python was not ...cution aliases.:String) [], R 
+   emoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

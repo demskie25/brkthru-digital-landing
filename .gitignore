@@ -1,0 +1,30 @@
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+status.txt
+status_ascii.txt
+remote.txt
+log_check.txt
+log_check_2.txt
+commit_check.txt
+push_check.txt
+latest_commit.txt
+status_retry.txt
+porcelain.txt
+status_raw.txt
+status_v2.txt
+check_commits.txt
+push_res.txt
+origin_check.txt
+verification.txt
+.netlify/
+dist/
+build/
+.env
+
+# Troubleshooting Isolation
+# event-app/
+# netlify/
+_event_app_disabled/
+_netlify_disabled/

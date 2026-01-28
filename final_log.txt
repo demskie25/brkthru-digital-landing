@@ -1,0 +1,13 @@
+Running: git init
+Running: git checkout -b master
+Running: git remote add origin https://github.com/demskie25/brkthru-digital-landing.git
+Running: git add index.html
+Running: git add odyssey.html
+Running: git add corporate.html
+Running: git add coaching.html
+Running: git add resources.html
+Running: git add shop.html
+Running: git add images/brkthru-logo.png
+Running: git commit -m Production Build: Clean Slate
+Running: git push -f origin master
+DEPLOYMENT SUCCESSFUL

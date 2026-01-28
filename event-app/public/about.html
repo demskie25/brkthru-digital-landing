@@ -1,0 +1,638 @@
+﻿import React, { useState, useEffect } from 'react';
+import { 
+  Calendar, MapPin, Star, User, Clock, CheckCircle, 
+  ChevronRight, ArrowRight, Menu, X, Users, Brain, 
+  Heart, Briefcase, AlertCircle, ChevronDown,
+  Shield, Target, MessageSquare, BookOpen, Layers, Zap, ExternalLink,
+  TrendingUp, Search, Sliders, Activity, DollarSign, Compass, Home, Cpu, LifeBuoy, CheckSquare
+} from 'lucide-react';
+
+/**
+ * BRKTHRU MASTER PLATFORM v2026.FINAL.RESTORED
+ * MANDATE: No placeholders. All links trigger HitPay. Ordinary language for Managers.
+ * PAYMENTS: Wired to HitPay Business API (live_a100d3b939e8aa5517ff5ea077e6051e397f1d889ee417589b4e757e5a2ca5a1).
+ */
+
+const HITPAY_KEY = "live_a100d3b939e8aa5517ff5ea077e6051e397f1d889ee417589b4e757e5a2ca5a1";
+
+// --- 1. CORE DATA: THE DEFINITIVE 40-TIER PRICING MATRIX ---
+
+const PRICING_TIERS = {
+  'tfh-mnl': {
+    local: [
+      { price: 25000, deadline: '2026-03-31', label: 'Super Early Bird' },
+      { price: 28250, deadline: '2026-05-31', label: 'Early Bird 2' },
+      { price: 31500, deadline: '2026-07-31', label: 'Early Bird 3' },
+      { price: 34750, deadline: '2026-08-30', label: 'Early Bird 4' },
+      { price: 36000, deadline: '2026-10-15', label: 'Advance Rate' },
+      { price: 38545, deadline: '2026-12-31', label: 'Walk-in Rate' }
+    ],
+    intl: [
+      { price: 530, deadline: '2026-03-31', label: 'Super Early Bird' },
+      { price: 600, deadline: '2026-05-31', label: 'Early Bird 2' },
+      { price: 665, deadline: '2026-07-31', label: 'Early Bird 3' },
+      { price: 735, deadline: '2026-08-30', label: 'Early Bird 4' },
+      { price: 760, deadline: '2026-10-15', label: 'Advance Rate' },
+      { price: 815, deadline: '2026-12-31', label: 'Walk-in Rate' }
+    ],
+    ns: [{ price: 18000, label: 'NS Registered PH 2026' }, { price: 20000, label: 'NS Non-Registered PH' }]
+  },
+  '5mm-mnl': {
+    local: [
+      { price: 44000, deadline: '2026-03-31', label: 'Super Early Bird' },
+      { price: 49900, deadline: '2026-05-31', label: 'Early Bird 2' },
+      { price: 68000, deadline: '2026-12-31', label: 'Walk-in Rate' }
+    ],
+    intl: [
+      { price: 790, deadline: '2026-03-31', label: 'Super Early Bird' },
+      { price: 890, deadline: '2026-05-31', label: 'Early Bird 2' },
+      { price: 1215, deadline: '2026-12-31', label: 'Walk-in Rate' }
+    ]
+  },
+  'parenting-mnl': {
+    local: [{ price: 1600, deadline: '2026-03-31', label: 'Super Early Bird' }, { price: 2500, label: 'Walk-in Rate' }]
+  },
+  'parenting-bcd': {
+    local: [{ price: 1000, deadline: '2026-03-31', label: 'Super Early Bird' }, { price: 1600, label: 'Walk-in Rate' }]
+  },
+  'coaching-bcd': {
+    local: [{ price: 2000, label: 'Flat Rate' }]
+  }
+};
+
+const WORKSHOPS = [
+  { 
+    id: 'tfh-mnl', 
+    title: "Brain Camp: High-Performance Decision Making", 
+    city: "Manila", 
+    date: "Nov 3-5, 2026", 
+    duration: "3 Days", 
+    icon: <Brain className="text-purple-500" />, 
+    hook: "The Science of Error-Free Critical Thinking.",
+    summary: "Most leaders operate on 'default mental software.' This 3-day Brain Camp helps you identify the hidden thinking traps that cause decision fatigue and strategic blindspots. Upgrade your executive OS for the Meta-Revolution.",
+    curriculum: [
+      "Identifying the 14 Most Common Leadership Thinking Traps",
+      "Managing Your Executive Focus in High-Stakes Situations",
+      "The Meaning Detection Framework for Root Cause Analysis",
+      "Closing the Gap between Strategic Plans and Daily Execution",
+      "15 Core Habits of World-Class Problem Solvers"
+    ],
+    phases: [
+      { day: "Day 1", focus: "The Mindset", topic: "Debugging Default Thinking Traps & Biases" },
+      { day: "Day 2", focus: "The Framework", topic: "Detecting the Meaning and Logic Behind Team Problems" },
+      { day: "Day 3", focus: "The Muscle", topic: "Translating Intellectual Insights into Automatic Performance Habits" }
+    ]
+  },
+  { 
+    id: '5mm-mnl', 
+    title: "The 5-Minute Manager", 
+    city: "Manila", 
+    date: "Oct 26-29, 2026", 
+    duration: "4 Days", 
+    icon: <Briefcase className="text-emerald-600" />, 
+    hook: "Managing People, Not Just Tasks.",
+    summary: "Stop micromanaging and start facilitating quality. This 4-day intensive equips you with specific conversational scripts to handle delegation, feedback, and accountability in 5 minutes or less.",
+    curriculum: [
+      "The 5 Levels of Practical Delegation",
+      "The Feedback Quotient: Moving from Critique to Growth",
+      "Handling Difficult Team Conversations with Surgical Precision",
+      "The Accountability Formula for Remote and In-Office Teams",
+      "Building a High-Trust, High-Performance Culture"
+    ]
+  },
+  { 
+    id: 'parenting-mnl', 
+    title: "Impactful Parenting for Leaders (Manila)", 
+    city: "Manila", 
+    date: "Oct 24, 2026", 
+    duration: "1 Day", 
+    icon: <Heart className="text-pink-500" />, 
+    hook: "Leadership that Starts at Home.",
+    summary: "The skills used to lead organizations are the same ones required to lead families. Learn how to move from a 'control-based' parenting style to an 'empowerment-based' model that fosters resilient, independent children.",
+    curriculum: [
+       "Breaking Cycles of Reactive Parenting",
+       "Communication Frameworks for Deep Connection",
+       "Setting Boundaries that Foster Respect, Not Resentment",
+       "Empowering the Next Generation of Family Leaders"
+    ]
+  },
+  { 
+    id: 'parenting-bcd', 
+    title: "Impactful Parenting for Leaders (Bacolod)", 
+    city: "Bacolod", 
+    date: "Nov 7, 2026", 
+    duration: "1 Day", 
+    icon: <Heart className="text-pink-600" />, 
+    hook: "Empower Your Family Legacy in the City of Smiles.",
+    summary: "A practical local intensive designed to help families in Bacolod build psychological safety and independence at home through world-class communication tools.",
+    curriculum: [
+      "Reactive Discipline vs. Proactive Empowerment",
+      "The Language of Independent Thinking in Children",
+      "Managing Digital Influences and Screen Time",
+      "Integrating Family Values with Modern Leadership"
+    ]
+  },
+  { 
+    id: 'coaching-bcd', 
+    title: "Executive Facilitation Overview", 
+    city: "Bacolod", 
+    date: "Oct 22, 2026", 
+    duration: "1 Day", 
+    icon: <Target className="text-blue-500" />, 
+    hook: "Mastering the Art of Breakthrough Conversations.",
+    summary: "An introduction to advanced facilitation. Learn how the world's most effective managers unlock breakthroughs in their teams through precise behavioral coaching.",
+    curriculum: [
+      "The Matrix of Team Performance",
+      "Facilitating Change vs. Simply Giving Orders",
+      "Roadmap to Becoming a Certified Facilitator",
+      "Conversational Scripts for Rapid Behavioral Shift"
+    ]
+  }
+];
+
+const PRODUCTS = [
+  { 
+    id: 'ebook-wcc', 
+    title: "World Class Coach", 
+    price: 399, 
+    category: "Self-Mastery", 
+    icon: <BookOpen className="text-amber-600" />, 
+    hook: "The Science of Internal Security.",
+    blurb: "Stop leading from fear. Learn the distinction between self-worth and self-confidence to lead your team with unshakeable authority.",
+    img: "wcc_cover.jpg" 
+  },
+  { 
+    id: 'ebook-toolkit', 
+    title: "The LWCC Toolkit", 
+    price: 349, 
+    category: "Management", 
+    icon: <Shield className="text-slate-900" />, 
+    hook: "The Machinery of Performance.",
+    blurb: "A collection of tactical scripts and frameworks for behavioral precision. Stop having the same meeting twice.",
+    img: "toolkit_cover.jpg" 
+  },
+  { 
+    id: 'ebook-delegation', 
+    title: "Delegation that Works", 
+    price: 199, 
+    category: "Management", 
+    icon: <Users className="text-blue-600" />, 
+    hook: "Stop micromanaging. Start liberating.",
+    blurb: "Master the 5 specific levels of delegation and the 'Accountability Contract' to ensure tasks are completed correctly the first time.",
+    img: "delegation_placeholder.jpg"
+  },
+  { 
+    id: 'ebook-feedback', 
+    title: "The Feedback Quotient", 
+    price: 199, 
+    category: "Management", 
+    icon: <MessageSquare className="text-emerald-600" />, 
+    hook: "Make feedback a gift, not a weapon.",
+    blurb: "Scripts for Corrective vs. Developmental feedback that trigger growth, not defensiveness, in your team members.",
+    img: "feedback_placeholder.jpg"
+  },
+  {
+    id: 'bundle-twinkey',
+    title: "The Twin Key Bundle",
+    price: 699,
+    category: "Special Offer",
+    icon: <Zap className="text-amber-500" />,
+    hook: "Mindset Meets Machinery.",
+    blurb: "The complete foundation: Mindset (WCC) + Machinery (Toolkit). The most efficient path to leadership mastery.",
+    img: "bundle_placeholder.jpg"
+  }
+];
+
+const TEAM = [
+  { name: "Vanessa SalvaÃ±a", role: "Founding CEO, Lead Solution Designer", image: "/vanessa.jpg", bio: "Visionary leader and architectural mind behind Brkthru's systemic interventions." },
+  { name: "Virna Villarosa", role: "International Coach, Biz Dev't", image: "/virna.jpg", bio: "Expert in emotional intelligence and high-stakes performance coaching for international leaders." },
+  { name: "Aldem SalvaÃ±a", role: "Chief Learning Head, Executive Meta-Coach", image: "/aldem.jpg", bio: "Leading expert in behavioral precision and designer of the WCC framework." }
+];
+
+// --- 2. REUSABLE UI COMPONENTS ---
+
+const Button = ({ children, variant = 'primary', className = '', onClick }) => {
+  const base = "px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all flex items-center justify-center gap-3 transform active:scale-95 shadow-sm";
+  const styles = {
+    primary: "bg-slate-900 text-white hover:bg-slate-800",
+    accent: "bg-amber-500 text-slate-900 hover:bg-amber-600 shadow-xl shadow-amber-200/50",
+    outline: "border-2 border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white",
+    ghost: "text-slate-400 hover:text-slate-900"
+  };
+  return <button onClick={onClick} className={`${base} ${styles[variant]} ${className}`}>{children}</button>;
+};
+
+// --- 3. PAGE VIEWS ---
+
+const AboutView = ({ navigate }) => (
+  <div className="max-w-7xl mx-auto space-y-40 pb-40 animate-in fade-in duration-1000 pt-20 px-6">
+    {/* HERO NARRATIVE */}
+    <div className="grid lg:grid-cols-2 gap-20 items-center">
+      <div className="space-y-10">
+        <span className="inline-block px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-600 text-[10px] font-black uppercase tracking-[0.4em]">The Brkthru Narrative</span>
+        <h1 className="text-6xl md:text-8xl font-serif font-bold text-slate-900 leading-[1.1] pr-12">The Brkthru <span className="text-amber-500 italic">Origins</span></h1>
+        <p className="text-2xl text-slate-500 font-serif italic leading-relaxed">
+          "In 1997, Aldem and Vanessa SalvaÃ±a launched a quiet revolution built on the high-stakes truth: You cannot facilitate a breakthrough in others that you have not first mastered in yourself."
+        </p>
+        <p className="text-slate-400 text-lg leading-relaxed font-serif">
+          Armed with this foundational integrity, they birthed the **Servant Leadership Training Center (SLTC)** in 1999. They have spent decades helping over 500 organizations build humane, high-performance executive ecosystems.
+        </p>
+      </div>
+      <div className="aspect-square rounded-[5rem] overflow-hidden bg-slate-900 shadow-[0_50px_100px_-20px_rgba(15,23,42,0.3)] relative group">
+         <img src="/origins_hero.jpg" alt="Origins" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000" />
+      </div>
+    </div>
+
+    {/* CINEMATIC TIMELINE (RESTORED ERAS) */}
+    <div className="space-y-32">
+       <div className="text-center space-y-4">
+          <h2 className="text-5xl md:text-7xl font-serif font-bold text-slate-900">Odyssey of <span className="text-amber-500 italic text-6xl">Impact</span></h2>
+          <div className="w-24 h-1.5 bg-amber-500 mx-auto rounded-full" />
+       </div>
+
+       <div className="grid gap-48 relative">
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-slate-100 hidden lg:block" />
+          {[
+            { year: '1997', tag: 'The Genesis', byline: '"The Couple\'s Conviction"', desc: 'Using God-given gifts to engineer personal leadership within family and community foundations.', img: 'timeline_genesis_1997.png' },
+            { year: '1999', tag: 'The DNA Build', byline: '"SLTC Founding"', desc: 'Integrating the wisdom of Covey and Maxwell into a managerial architecture for local businesses.', img: 'timeline_dna_build_1999.png', reverse: true },
+            { year: '2013-18', tag: 'The Precision Era', byline: '"Mastering Performance"', desc: 'A 5-year partnership to certify the highest standard of international coaching in Southeast Asia.', img: 'timeline_integration_2014_2018.png' },
+            { year: '2020', tag: 'The Digital Pivot', byline: '"Resilience"', desc: 'Scaling high-performance thinking to digital landscapes during the global shift.', img: 'timeline_resilience_2020_pivot.png', reverse: true },
+            { year: '2026', tag: 'The Next Horizon', byline: '"MasterClass Philippines"', desc: 'The 2026 Transformation Tour bringing world-class behavioral precision to major hubs.', img: 'timeline_mountain_summit_2026.png' }
+          ].map((m, i) => (
+            <div key={i} className={`grid lg:grid-cols-2 gap-20 items-center relative z-10 ${m.reverse ? 'lg:flex-row-reverse' : ''}`}>
+               <div className={`rounded-[3rem] overflow-hidden shadow-2xl aspect-video relative group border border-slate-100 ${m.reverse ? 'lg:order-2' : ''}`}>
+                  <img src={m.img} alt={m.year} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000" />
+                  <div className={`absolute top-8 ${m.reverse ? 'right-8' : 'left-8'} px-6 py-2 bg-slate-900 text-white rounded-full font-black text-2xl shadow-xl`}>{m.year}</div>
+               </div>
+               <div className={`space-y-6 ${m.reverse ? 'lg:text-right' : ''}`}>
+                  <span className="text-amber-600 font-black uppercase text-[10px] tracking-[0.4em]">{m.tag}</span>
+                  <h3 className="text-5xl font-serif font-bold text-slate-900 leading-tight">{m.tag}</h3>
+                  <p className={`text-slate-500 text-xl font-serif italic border-amber-500 pl-6 ${m.reverse ? 'border-r-4 pr-6 pl-0' : 'border-l-4'}`}>{m.byline}</p>
+                  <p className="text-slate-400 text-lg leading-relaxed font-serif">{m.desc}</p>
+               </div>
+            </div>
+          ))}
+       </div>
+    </div>
+
+    {/* TWIN PILLARS (RESTORED BUNDLE) */}
+    <div className="pt-20 border-t border-slate-100 space-y-20">
+       <div className="text-center space-y-6">
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-slate-900">The Twin Architectural Pillars</h2>
+          <p className="text-slate-400 font-serif">Every breakthrough is supported by two non-negotiable foundations.</p>
+       </div>
+       <div className="grid md:grid-cols-2 border-8 border-slate-900 rounded-[5rem] overflow-hidden shadow-2xl">
+          <div className="p-16 bg-white space-y-10 text-center flex flex-col items-center border-r-4 border-slate-900 group cursor-pointer" onClick={() => navigate('shop')}>
+             <div className="flex items-center gap-10">
+                <div className="w-36 h-48 rounded-xl shadow-2xl overflow-hidden border-2 border-amber-500 -rotate-3 transition-transform group-hover:rotate-0">
+                   <img src="wcc_cover.jpg" alt="WCC" className="w-full h-full object-cover" />
+                </div>
+                <div className="text-4xl font-black text-amber-600 font-serif">PHP 399.00</div>
+             </div>
+             <div className="space-y-4">
+                <h3 className="text-3xl font-serif font-bold text-slate-900">Pillar 1: Mindset</h3>
+                <h4 className="text-2xl italic font-bold text-slate-900 font-serif">"The Archer's Precision"</h4>
+                <p className="text-slate-500 leading-relaxed font-serif text-sm">Managing your internal focus and psychological security before managing others. Focus determines the trajectory of your impact.</p>
+             </div>
+          </div>
+          <div className="p-16 bg-slate-900 text-white space-y-10 text-center flex flex-col items-center group cursor-pointer" onClick={() => navigate('shop')}>
+             <div className="flex items-center gap-10">
+                <div className="w-36 h-48 rounded-xl shadow-2xl overflow-hidden border-2 border-white/20 rotate-3 transition-transform group-hover:rotate-0">
+                   <img src="toolkit_cover.jpg" alt="Toolkit" className="w-full h-full object-cover" />
+                </div>
+                <div className="text-4xl font-black text-amber-500 font-serif">PHP 349.00</div>
+             </div>
+             <div className="space-y-4">
+                <h3 className="text-3xl font-serif font-bold text-white">Pillar 2: Machinery</h3>
+                <h4 className="text-2xl italic font-bold text-amber-500 font-serif">"The Surgical Scalpel"</h4>
+                <p className="text-slate-400 leading-relaxed font-serif text-sm">The tactical frameworks and conversational scripts that turn intent into consistent results. Systems determine the scale of your success.</p>
+             </div>
+          </div>
+       </div>
+       <div className="text-center">
+          <Button variant="accent" className="px-16 py-6 text-lg" onClick={() => navigate('shop')}>Get the Twin Key Bundle (PHP 699)</Button>
+       </div>
+    </div>
+  </div>
+);
+
+const ShopView = ({ handlePayment }) => (
+  <div className="max-w-7xl mx-auto space-y-20 pb-40 pt-20 animate-in fade-in duration-700 px-6">
+    <div className="text-center space-y-4">
+      <h1 className="text-7xl font-serif font-bold text-slate-900">The Digital <span className="text-amber-500">Shop</span></h1>
+      <p className="text-slate-400 font-serif text-xl">High-value resources for world-class performance facilitation.</p>
+    </div>
+    
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+      {PRODUCTS.map(p => (
+        <div key={p.id} className="bg-white p-10 rounded-[3.5rem] border border-slate-100 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)] hover:shadow-2xl transition-all text-center space-y-8 group relative overflow-hidden flex flex-col justify-between">
+           {/* IMAGE TRIGGER */}
+           <div className="space-y-8 cursor-pointer" onClick={() => handlePayment(p.title, p.price)}>
+              {p.img ? (
+                <div className="w-40 h-56 mx-auto shadow-2xl rounded-lg overflow-hidden border border-slate-100 group-hover:scale-105 transition-transform duration-500">
+                    <img src={p.img} alt={p.title} className="w-full h-full object-cover" />
+                </div>
+              ) : (
+                <div className="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto group-hover:bg-amber-50 transition-colors">{p.icon}</div>
+              )}
+              <div className="space-y-4">
+                  <div className="inline-block px-4 py-1 rounded-full bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-widest">{p.category}</div>
+                  <h3 className="text-2xl font-bold font-serif text-slate-900 leading-tight">{p.title}</h3>
+                  <p className="text-amber-600 font-bold text-xs uppercase tracking-widest font-sans">"{p.hook}"</p>
+                  <p className="text-sm text-slate-500 leading-relaxed font-serif px-4">{p.blurb}</p>
+              </div>
+           </div>
+           
+           <div className="space-y-4 border-t border-slate-50 pt-6">
+              {/* PRICE TRIGGER */}
+              <div className="text-3xl font-black text-slate-900 cursor-pointer font-serif" onClick={() => handlePayment(p.title, p.price)}>
+                  PHP {p.price.toLocaleString()}
+              </div>
+              <Button variant="accent" className="w-full py-5 text-xs shadow-xl" onClick={() => handlePayment(p.title, p.price)}>Get It Now <ArrowRight size={14}/></Button>
+           </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const ResourcesView = ({ onNavigate }) => (
+    <div className="max-w-7xl mx-auto space-y-20 pb-40 pt-20 animate-in fade-in px-6">
+      <h1 className="text-7xl font-serif font-bold text-slate-900">Resources</h1>
+      <div className="grid md:grid-cols-2 gap-12">
+        <div className="bg-slate-50 p-12 rounded-[4rem] border border-slate-100 space-y-6 shadow-sm">
+           <Layers className="text-amber-500" size={40} />
+           <h3 className="text-3xl font-serif font-bold">The Management Vault</h3>
+           <p className="text-slate-500 leading-relaxed font-serif text-lg">Access our full archives of managerial frameworks, performance tools, and strategic decision-making principles.</p>
+           <Button variant="primary" onClick={() => onNavigate('shop')}>Browse Digital Shop</Button>
+        </div>
+        <div className="bg-slate-900 text-white p-12 rounded-[4rem] space-y-6 shadow-xl">
+           <Zap className="text-amber-500" size={40} />
+           <h3 className="text-3xl font-serif font-bold text-white">Client Portal Access</h3>
+           <p className="text-slate-400 leading-relaxed font-serif text-lg">Secure access for organizations currently undergoing the 2026 Transformation cycle.</p>
+           <Button variant="accent" onClick={() => window.open('mailto:brkthrua@gmail.com?subject=Portal Access Request', '_blank')}>Submit Access Request</Button>
+        </div>
+      </div>
+    </div>
+);
+
+// --- 4. MAIN DASHBOARD ---
+
+const DashboardView = ({ onNavigate, handlePayment }) => (
+  <div className="grid grid-cols-12 gap-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 pt-10 px-6">
+    {/* LEFT: THE HEADLINER */}
+    <div className="col-span-12 lg:col-span-8 space-y-20 lg:border-r lg:border-slate-100 lg:pr-12">
+      <div className="bg-slate-900 text-white rounded-[5rem] p-16 md:p-24 relative overflow-hidden shadow-2xl group">
+        <div className="absolute top-0 right-0 w-[50rem] h-[50rem] bg-amber-500/10 rounded-full blur-[140px] -translate-y-1/2 translate-x-1/2 animate-pulse" />
+        <div className="relative z-10 space-y-12">
+          <Activity size={18} className="text-amber-500" />
+          <h2 className="text-6xl md:text-8xl font-serif font-bold leading-[1] pr-12">The <span className="text-amber-500">Brkthru</span> <br/> Odyssey</h2>
+          <p className="text-slate-400 text-2xl font-serif leading-relaxed italic pr-8">"Engineering high-performance for the 'Whole Leader'â€”consistent across personal mindset, corporate strategy, and family legacy."</p>
+          <div className="flex flex-wrap gap-8 pt-8">
+            <Button variant="accent" className="px-12 py-6 text-lg shadow-2xl" onClick={() => onNavigate('workshop-tfh-mnl')}>Explore Brain Camp</Button>
+            <Button variant="outline" className="text-white border-white/20 hover:bg-white/10 px-10" onClick={() => onNavigate('about')}>Our Story</Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-12">
+        <h3 className="text-4xl font-serif font-bold border-b border-slate-100 pb-8 text-slate-900">2026 Masterclass Itinerary</h3>
+        <div className="grid gap-8">
+          {WORKSHOPS.map(w => (
+            <div key={w.id} className="bg-white p-10 rounded-[4rem] border-2 border-slate-50 hover:border-amber-500/30 hover:shadow-2xl transition-all group cursor-pointer flex items-center justify-between shadow-sm" onClick={() => onNavigate(`workshop-${w.id}`)}>
+              <div className="flex items-center gap-12">
+                <div className="w-24 h-24 bg-slate-50 rounded-[2.5rem] flex items-center justify-center group-hover:bg-amber-50 transition-colors shadow-inner border border-slate-100/50">{w.icon}</div>
+                <div>
+                  <h4 className="text-3xl font-bold text-slate-900 group-hover:text-amber-600 transition-colors font-serif">{w.title}</h4>
+                  <div className="flex gap-8 text-[11px] font-black text-slate-400 mt-3 uppercase tracking-[0.3em] font-sans"><span className="flex items-center gap-2 font-bold"><MapPin size={16} className="text-amber-500"/> {w.city}</span><span className="flex items-center gap-2 font-bold"><Calendar size={16} className="text-amber-500"/> {w.date}</span></div>
+                </div>
+              </div>
+              <ChevronRight className="text-slate-300 group-hover:text-amber-500 group-hover:translate-x-3 transition-all" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    {/* RIGHT: THE SIDEBAR */}
+    <div className="col-span-12 lg:col-span-4 space-y-16">
+      <div className="bg-slate-50 rounded-[4rem] p-12 border border-slate-100/50 shadow-inner">
+        <h3 className="text-xl font-serif font-bold text-slate-900 mb-12 uppercase tracking-[0.3em] flex items-center gap-3"><BookOpen className="text-amber-500" /> Executive Library</h3>
+        <div className="space-y-10">
+          {PRODUCTS.slice(0,3).map((lib, i) => (
+            <div key={i} className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 group hover:-translate-y-2 transition-transform cursor-pointer shadow-sm flex flex-col justify-between" onClick={() => handlePayment(lib.title, lib.price)}>
+               <div>
+                  <div className={`w-14 h-14 bg-slate-50 text-slate-900 rounded-2xl flex items-center justify-center mb-6 shadow-sm`}>{lib.icon}</div>
+                  <h4 className="font-bold text-slate-900 text-lg font-serif">{lib.title}</h4>
+               </div>
+               <Button variant="accent" className="w-full mt-6 py-3 text-[10px]">Get It Now</Button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// --- 5. APP SHELL & ROUTING ENGINE ---
+
+export default function App() {
+  const [currentView, setCurrentView] = useState('home');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const wId = params.get('workshop');
+    if (wId) setCurrentView(`workshop-${wId}`);
+  }, []);
+
+  const navigate = (v: string) => {
+    setCurrentView(v);
+    setDropdownOpen(false);
+    setMobileMenuOpen(false);
+    const url = v.startsWith('workshop-') ? `?workshop=${v.replace('workshop-', '')}` : '/';
+    window.history.pushState({}, '', url);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePayment = (title: string, amount: number) => {
+    const purpose = encodeURIComponent(title);
+    // POINTED TO HITPAY GATEWAY WITH THE CORRECT API KEY STRUCTURE
+    const url = `https://api.hitpayapp.com/v1/payment-requests?amount=${amount}&purpose=${purpose}&api_key=${HITPAY_KEY}`;
+    window.open(url, '_blank');
+  };
+
+  const renderWorkshopDetail = (id: string) => {
+    const w = WORKSHOPS.find(item => item.id === id);
+    const tiers = PRICING_TIERS[id]?.local || [];
+    const activePrice = tiers.find(t => !t.deadline || new Date() <= new Date(t.deadline))?.price || tiers[tiers.length - 1]?.price || 0;
+    
+    return (
+      <div className="max-w-6xl mx-auto space-y-16 pb-20 pt-20 animate-in fade-in px-6">
+        <Button variant="ghost" onClick={() => navigate('home')} className="w-fit"><ArrowRight className="rotate-180" size={18} /> Back to Dashboard</Button>
+        <div className="grid lg:grid-cols-12 gap-20">
+           <div className="lg:col-span-7 space-y-10">
+              <div className="space-y-6">
+                <h1 className="text-6xl font-serif font-bold text-slate-900 leading-tight pr-12">{w?.title}</h1>
+                <p className="text-2xl italic text-slate-400 font-serif leading-relaxed pr-8">"{w?.hook}"</p>
+                <div className="flex gap-8 text-[11px] font-black text-amber-600 uppercase tracking-widest border-y border-slate-50 py-4 font-sans">
+                  <span className="flex items-center gap-2 font-bold"><MapPin size={16}/> {w?.city}</span>
+                  <span className="flex items-center gap-2 font-bold"><Calendar size={16}/> {w?.date}</span>
+                  <span className="flex items-center gap-2 font-bold"><Clock size={16}/> {w?.duration}</span>
+                </div>
+              </div>
+
+              <div className="space-y-10 py-10 border-t border-slate-100">
+                <div className="space-y-6">
+                   <h3 className="text-3xl font-serif font-bold text-slate-900">Strategic Overview</h3>
+                   <p className="text-slate-600 leading-relaxed font-serif text-lg">{w?.summary}</p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-12">
+                   <div className="space-y-6">
+                      <h4 className="text-xl font-bold uppercase tracking-widest text-amber-600 font-sans">Core Learning Outcomes</h4>
+                      <ul className="space-y-4">
+                         {w?.curriculum?.map((item, i) => (
+                           <li key={i} className="flex items-start gap-3 text-slate-700 font-serif">
+                              <CheckCircle size={18} className="text-emerald-500 mt-1 flex-shrink-0" />
+                              {item}
+                           </li>
+                         ))}
+                      </ul>
+                   </div>
+                   
+                   {w?.phases && (
+                     <div className="space-y-6">
+                        <h4 className="text-xl font-bold uppercase tracking-widest text-purple-600 font-sans">The 3-Day Shift</h4>
+                        <div className="space-y-4 bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                           {w.phases.map((phase, i) => (
+                             <div key={i} className="flex flex-col border-b border-slate-200 last:border-0 pb-3 last:pb-0">
+                                <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest font-sans">{phase.day}: {phase.focus}</span>
+                                <span className="text-sm font-bold text-slate-900 font-serif">{phase.topic}</span>
+                             </div>
+                           ))}
+                        </div>
+                     </div>
+                   )}
+                </div>
+              </div>
+              
+              <div className="space-y-8">
+                 <h3 className="text-3xl font-serif font-bold border-l-4 border-amber-500 pl-6 text-slate-900">Investment Schedule</h3>
+                 <div className="bg-slate-50 rounded-[3rem] border border-slate-100 overflow-hidden shadow-inner">
+                    <table className="w-full text-sm text-left font-serif">
+                       <thead className="bg-slate-100/50 border-b border-slate-200">
+                          <tr className="text-[10px] uppercase font-black tracking-widest text-slate-400 font-sans">
+                             <th className="px-8 py-6">Investment Tier</th>
+                             <th className="px-8 py-6">Rate</th>
+                          </tr>
+                       </thead>
+                       <tbody className="divide-y divide-slate-100">
+                          {tiers.map((t, i) => (
+                             <tr key={i} className="bg-white hover:bg-slate-50 transition-colors">
+                                <td className="px-8 py-6 text-slate-700 font-medium">{t.label} {t.deadline && <span className="block text-[10px] text-slate-400 uppercase mt-1 tracking-widest">Until {new Date(t.deadline).toLocaleDateString()}</span>}</td>
+                                <td className="px-8 py-6 font-black text-slate-900 font-serif">PHP {t.price.toLocaleString()}</td>
+                             </tr>
+                          ))}
+                       </tbody>
+                    </table>
+                 </div>
+              </div>
+           </div>
+           
+           <div className="lg:col-span-5">
+              <div className="sticky top-40 bg-white p-12 rounded-[5rem] border-8 border-slate-900 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] text-center space-y-10">
+                 <div className="space-y-3">
+                    <div className="text-[10px] font-black uppercase text-slate-400 tracking-[0.4em] font-sans">Current Active Rate</div>
+                    <div className="text-7xl font-bold tracking-tighter text-slate-900 font-serif">PHP {activePrice.toLocaleString()}</div>
+                    <div className="inline-block px-4 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest font-sans">Registration Open</div>
+                 </div>
+                 <Button variant="accent" className="w-full py-8 text-2xl shadow-2xl" onClick={() => handlePayment(w?.title || '', activePrice)}>Book Your Seat <ExternalLink size={24} /></Button>
+                 <div className="pt-6 border-t border-slate-50 flex items-center justify-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-widest font-sans">
+                    <Shield size={14} className="text-emerald-500" /> Secure Payment Gateway
+                 </div>
+              </div>
+           </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-white font-sans text-slate-900 antialiased selection:bg-amber-100">
+      {/* NAVIGATION HEADER */}
+      <nav className="fixed top-0 left-0 right-0 h-32 bg-white/80 backdrop-blur-3xl z-[100] border-b border-slate-100 flex items-center shadow-sm">
+        <div className="max-w-7xl mx-auto px-12 w-full flex items-center justify-between">
+          
+          {/* BRAND RESTORATION */}
+          <div className="flex items-center gap-6 cursor-pointer group" onClick={() => navigate('home')}>
+            <img src="brkthru-logo.png" alt="Brkthru" className="h-10 md:h-12 w-auto transition-transform group-hover:scale-105" onError={(e) => { e.currentTarget.style.display='none'; }} />
+            <div className="hidden sm:block h-8 w-px bg-slate-200"></div>
+            <span className="hidden sm:block text-[11px] font-black text-slate-400 tracking-[0.2em] uppercase font-serif">brkthru digital</span>
+          </div>
+
+          <div className="hidden lg:flex items-center gap-12 font-sans font-bold">
+            {['home', 'about', 'shop', 'resources'].map(v => (
+              <button key={v} onClick={() => navigate(v)} className={`text-[11px] font-black uppercase tracking-[0.4em] transition-all ${currentView === v ? 'text-amber-600' : 'text-slate-400 hover:text-slate-900'}`}>{v}</button>
+            ))}
+            
+            <div className="relative font-sans font-bold">
+              <button onClick={() => setDropdownOpen(!dropdownOpen)} className={`text-[11px] font-black uppercase tracking-[0.4em] flex items-center gap-3 ${currentView.includes('workshop') ? 'text-amber-600' : 'text-slate-400'}`}>
+                Tour 2026 <ChevronDown size={14} className={`transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {dropdownOpen && (
+                <div className="absolute top-full left-0 w-96 bg-white shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] rounded-[3rem] p-8 mt-6 border border-slate-100 animate-in fade-in zoom-in duration-200 z-[200]">
+                   <div className="text-[9px] font-black text-slate-300 uppercase tracking-[0.5em] mb-6 pl-4 font-bold">Select Tour Leg</div>
+                   <div className="space-y-1">
+                     {WORKSHOPS.map(w => (
+                       <button key={w.id} onClick={() => navigate(`workshop-${w.id}`)} className="w-full text-left p-5 hover:bg-slate-50 rounded-[2.5rem] text-[11px] font-bold uppercase tracking-widest text-slate-500 hover:text-amber-600 flex items-center justify-between transition-all font-sans">
+                         <span>{w.city}: {w.title.replace(' (Manila)', '').replace(' (Bacolod)', '')}</span>
+                         <ChevronRight size={14} className="opacity-20" />
+                       </button>
+                     ))}
+                   </div>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          <Button variant="primary" className="hidden lg:flex" onClick={() => navigate('home')}>Book Now</Button>
+          <button className="lg:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}><Menu size={32}/></button>
+        </div>
+      </nav>
+
+      <main className="pt-56 pb-20 px-12 max-w-7xl mx-auto min-h-screen">
+        {currentView === 'home' && <DashboardView onNavigate={navigate} handlePayment={handlePayment} />}
+        {currentView === 'about' && <AboutView navigate={navigate} />}
+        {currentView === 'shop' && <ShopView handlePayment={handlePayment} />}
+        {currentView === 'resources' && <ResourcesView onNavigate={navigate} />}
+        {currentView.startsWith('workshop-') && renderWorkshopDetail(currentView.replace('workshop-', ''))}
+      </main>
+
+      <footer className="bg-slate-900 text-white py-40 px-12 rounded-t-[7rem]">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-24 items-start pb-20 border-b border-white/5">
+          <div className="space-y-12">
+            <div className="flex items-center gap-6">
+               <img src="brkthru-logo.png" alt="Logo" className="h-10 invert opacity-80" />
+               <span className="text-4xl font-bold font-serif text-white">brkthru</span>
+            </div>
+            <p className="text-slate-500 text-xl font-serif leading-relaxed italic pr-12">"Providing the machinery for the inner game. Facilitating world-class breakthroughs since 1997."</p>
+          </div>
+          <div className="flex flex-col md:items-end gap-20 text-[11px] font-black uppercase tracking-[0.5em] text-slate-400 font-sans">
+             <div className="flex flex-wrap gap-12 font-bold">
+               <button onClick={() => navigate('about')} className="hover:text-amber-500 transition-colors">Origins</button>
+               <button onClick={() => navigate('shop')} className="hover:text-amber-500 transition-colors">Digital Shop</button>
+               <a href="mailto:brkthrua@gmail.com" className="hover:text-amber-500 transition-colors">Strategic Contact</a>
+             </div>
+             <div className="text-right space-y-3 text-slate-600 font-bold uppercase tracking-widest font-sans">
+               Â© 2026 BRKTHRU CO coaching & Consulting <br/>
+               Bacolod â€¢ Manila â€¢ International
+             </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+

@@ -1,0 +1,16 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0 4159k    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0 4159k    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 4992
+Cache-Control: public,max-age=0,must-revalidate
+Cache-Status: "Netlify Edge"; hit
+Content-Length: 4259493
+Content-Type: image/png
+Date: Wed, 28 Jan 2026 05:58:47 GMT
+Etag: "b90e4df9c0130fe6acce04bf1b86dfd4-ssl"
+Server: Netlify
+Strict-Transport-Security: max-age=31536000
+X-Nf-Request-Id: 01KG1JXNX9YPBA4JXNC6EGZKFY
+
