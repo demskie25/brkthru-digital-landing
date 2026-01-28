@@ -76,6 +76,8 @@
         display: none !important;
       }
     </style>
+      <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   </head>
   <body x-data="{ modalOpen: false, modalTitle: 'Apply for Coaching' }">
     <!-- UNIVERSAL HEADER -->
@@ -143,7 +145,7 @@
           </div>
           <h1
             class="text-7xl md:text-9xl font-black text-white mb-10 uppercase tracking-tighter leading-none font-serif"
-          >
+           data-aos="fade-up">
             Ruthless <br /><span class="text-brand-amber">Compassion</span>
           </h1>
           <p
@@ -928,6 +930,15 @@
           window.location.reload();
         }
       }
+    </script>
+      <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 800,
+        once: true,
+        offset: 50,
+      });
     </script>
   </body>
 </html>

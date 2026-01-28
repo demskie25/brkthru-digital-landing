@@ -106,7 +106,9 @@
       }
     </style>
   <link rel="stylesheet" href="universal-header.css">
-</head>
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  </head>
   <body
     class="bg-brand-navy text-slate-300 antialiased selection:bg-brand-amber selection:text-brand-navy"
     x-data="{ homeOpen: false, aboutOpen: false }"
@@ -229,7 +231,7 @@
 
           <h1
             class="text-4xl md:text-6xl font-serif font-bold leading-tight text-white tracking-tight"
-          >
+           data-aos="fade-up">
             MasterClass Series on <br />
             <span class="italic text-brand-amber"
               >High Performance Thinking</span
@@ -1170,6 +1172,15 @@
     </script>
 
 
+      <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 800,
+        once: true,
+        offset: 50,
+      });
+    </script>
   </body>
 </html>
 

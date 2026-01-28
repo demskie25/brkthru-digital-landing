@@ -78,6 +78,8 @@
       }
     </style>
     <link rel="stylesheet" href="universal-header.css" />
+      <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   </head>
   <body
     class="bg-brand-navy font-sans antialiased text-white selection:bg-brand-amber selection:text-brand-navy"
@@ -807,6 +809,15 @@
         </div>
       </div>
     </footer>
+      <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 800,
+        once: true,
+        offset: 50,
+      });
+    </script>
   </body>
 </html>
 
