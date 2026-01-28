@@ -1,0 +1,74 @@
+2befda5 Restore complete navigation header with all menu items
+7dce902 Add complete navigation with logo and all menu items
+c658513 Fix navigation with logo on all pages
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   about.html
+	modified:   article-case-alignment.html
+	modified:   article-hallway-coach.html
+	modified:   article-imposter.html
+	modified:   article-leading-change.html
+	modified:   article-listening-beyond.html
+	modified:   article-managing-vs-coaching.html
+	modified:   article-meaning-performance.html
+	modified:   article-problem-solver.html
+	modified:   article-roi-empathy.html
+	modified:   article-smart-leaders.html
+	modified:   article-state-management.html
+	modified:   article-stop-asking-why.html
+	modified:   article-template.html
+	modified:   event-app/index.html
+	modified:   event-app/public/about.html
+	modified:   event-app/public/corporate.html
+	modified:   event-app/public/resources.html
+	modified:   event-app/public/shop.html
+	modified:   git_log.txt
+	modified:   index_legacy.html
+	modified:   index_v5_final.html
+	modified:   reservations.html
+	modified:   store.html
+	modified:   success.html
+	modified:   testimonials.html
+	modified:   tour_switcher_script.html
+	modified:   v2_index.html
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	all_matches.txt
+	check_git.py
+	check_nav.bat
+	check_status.bat
+	clean_header.html
+	context.txt
+	context2.txt
+	context3.txt
+	diff.txt
+	extract_head.py
+	fix_and_push.bat
+	fix_headers.js
+	force_push.bat
+	force_push.py
+	force_push_v2.py
+	git_log_utf8.txt
+	git_push_log.txt
+	git_status.txt
+	head100.txt
+	head_index.txt
+	head_of_index.txt
+	header_content.txt
+	hits2.txt
+	index_head.txt
+	line134.txt
+	logo_fix_log.txt
+	node_check.txt
+	push_log.txt
+	push_now.bat
+	python_output.txt
+	raw_hits.txt
+	raw_hits_2.txt
+	remove_dupe_logo.js
+	run_extract.bat
+
+no changes added to commit (use "git add" and/or "git commit -a")

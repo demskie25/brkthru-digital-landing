@@ -1,0 +1,11 @@
+﻿      >
+        <div class="absolute inset-0 z-0">
+          <img
+            src="hall_sketch.jpg"
+            alt="Silhouette of Dr. L. Michael Hall"
+            class="w-full h-full object-cover grayscale opacity-20 scale-110"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/60 to-transparent"
+          ></div>
+        </div>

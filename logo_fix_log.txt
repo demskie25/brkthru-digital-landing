@@ -1,0 +1,14 @@
+index.html: Found 2 logo images
+index.html: Removed duplicate logo
+odyssey.html: Found 2 logo images
+odyssey.html: Removed duplicate logo
+corporate.html: Found 2 logo images
+corporate.html: Removed duplicate logo
+coaching.html: Found 2 logo images
+coaching.html: Removed duplicate logo
+resources.html: Found 2 logo images
+resources.html: Removed duplicate logo
+shop.html: Found 3 logo images
+shop.html: Removed duplicate logo
+
+Done! Commit and push.

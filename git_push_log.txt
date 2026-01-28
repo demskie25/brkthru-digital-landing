@@ -1,0 +1,8 @@
+=== GIT PUSH LOG === 
+To https://github.com/demskie25/brkthru-digital-landing.git
+   7dce902..2befda5  master -> main
+Return code: 0 
+ 
+To https://github.com/demskie25/brkthru-digital-landing.git
+   7dce902..2befda5  master -> master
+Return code: 0 

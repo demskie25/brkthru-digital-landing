@@ -1,0 +1,16 @@
+﻿diff --git a/git_log.txt b/git_log.txt
+index 1eead5c..4e788fc 100644
+Binary files a/git_log.txt and b/git_log.txt differ
+diff --git a/shop.html b/shop.html
+index a16a531..773280e 100644
+--- a/shop.html
++++ b/shop.html
+@@ -1203,7 +1203,7 @@
+         <div class="grid md:grid-cols-4 gap-8 mb-12">
+           <div class="col-span-1 md:col-span-2">
+             <img
+-              src="brkthru-logo.png"
++              src="images/brkthru-logo.png"
+               alt="Brkthru"
+               class="h-10 w-auto mb-6 opacity-80"
+             />

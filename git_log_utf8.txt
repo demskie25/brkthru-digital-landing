@@ -1,0 +1,60 @@
+﻿commit 7dce902fa3e75dad2a0ba13f491da41c617aacac
+Author: Michael Hall~ <brkthru.consulting@gmail.com>
+Date:   Wed Jan 28 22:52:02 2026 +0800
+
+    Add complete navigation with logo and all menu items
+
+diff --git a/coaching.html b/coaching.html
+index 4db131b..b6c4cff 100644
+--- a/coaching.html
++++ b/coaching.html
+@@ -886,3 +886,4 @@
+ 
+ 
+ 
++
+diff --git a/corporate.html b/corporate.html
+index a9bdb97..122cc9d 100644
+--- a/corporate.html
++++ b/corporate.html
+@@ -770,3 +770,4 @@
+ 
+ 
+ 
++
+diff --git a/index.html b/index.html
+index d29bdae..270e688 100644
+--- a/index.html
++++ b/index.html
+@@ -1128,3 +1128,4 @@
+ 
+ 
+ 
++
+diff --git a/odyssey.html b/odyssey.html
+index b6ddc6e..af5c6eb 100644
+--- a/odyssey.html
++++ b/odyssey.html
+@@ -764,3 +764,4 @@
+ 
+ 
+ 
++
+diff --git a/resources.html b/resources.html
+index 0083be2..9799a24 100644
+--- a/resources.html
++++ b/resources.html
+@@ -852,3 +852,4 @@
+ 
+ 
+ 
++
+diff --git a/shop.html b/shop.html
+index 4fd430a..a16a531 100644
+--- a/shop.html
++++ b/shop.html
+@@ -1481,3 +1481,4 @@
+ 
+ 
+ 
++

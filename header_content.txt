@@ -1,0 +1,1055 @@
+1:<!doctype html>
+2:<html lang="en" class="scroll-smooth">
+3:  <head>
+4:    <meta charset="UTF-8" />
+5:    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+6:    <title>BRKTHRU | Masterclass on High Performance Thinking</title>
+7:    <!-- SEO -->
+8:    <meta
+9:      name="description"
+10:      content="Facilitating leadership conversation breakthroughs since 1997. High-performance thinking, management facilitation, and the inner machinery of leadership."
+11:    />
+12:    <!-- Tailwind CSS -->
+13:    <script src="https://cdn.tailwindcss.com"></script>
+14:    <script>
+15:      tailwind.config = {
+16:        theme: {
+17:          extend: {
+18:            colors: {
+19:              brand: {
+20:                gold: "#D4AF37",
+21:                amber: "#FFBF00",
+22:                navy: "#0F172A",
+23:                slate: "#1E293B",
+24:              },
+25:            },
+26:            fontFamily: {
+27:              sans: ["Inter", "sans-serif"],
+28:              serif: ["Playfair Display", "serif"],
+29:            },
+30:          },
+31:        },
+32:      };
+33:    </script>
+34:    <!-- Fonts -->
+35:    <link rel="preconnect" href="https://fonts.googleapis.com" />
+36:    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+37:    <link
+38:      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap?v=9.0"
+39:      rel="stylesheet"
+40:    />
+41:    <!-- Alpine.js -->
+42:    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+43:    <!-- Font Awesome -->
+44:    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+45:    <style>
+46:      .glass {
+47:        background: rgba(255, 255, 255, 0.03);
+48:        backdrop-filter: blur(10px);
+49:        border: 1px solid rgba(255, 255, 255, 0.05);
+50:      }
+51:      .text-gradient {
+52:        background: linear-gradient(to right, #ffbf00, #d4af37);
+53:        background-clip: text;
+54:        -webkit-background-clip: text;
+55:        -webkit-text-fill-color: transparent;
+56:      }
+57:      ::-webkit-scrollbar {
+58:        width: 8px;
+59:      }
+60:      ::-webkit-scrollbar-track {
+61:        background: #0f172a;
+62:      }
+63:      ::-webkit-scrollbar-thumb {
+64:        background: #d4af37;
+65:        border-radius: 10px;
+66:      }
+67:      html, body {
+68:        overflow-y: auto !important;
+69:        height: auto !important;
+70:        min-height: 100vh;
+71:      }
+72:      .crop-bottom {
+73:        -webkit-mask-image: linear-gradient(
+74:          to bottom,
+75:          black 85%,
+76:          transparent 100%
+77:        );
+78:        mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+79:      }
+80:      /* CRITICAL FIXES */
+81:      .nav-fixed {
+82:        z-index: 1000 !important;
+83:      }
+84:      .dropdown-menu {
+85:        z-index: 2000 !important;
+86:        pointer-events: auto !important;
+87:      }
+88:      .dropdown-item {
+89:        cursor: pointer !important;
+90:        pointer-events: auto !important;
+91:        display: block !important;
+92:      }
+93:      .relative-z-1 {
+94:        position: relative;
+95:        z-index: 1;
+96:      }
+97:      /* DROPDOWN FIX */
+98:      select option {
+99:        color: #0F172A !important; /* Brand Navy */
+100:        background-color: #ffffff !important;
+101:      }
+102:      select optgroup {
+103:        color: #0F172A !important;
+104:        background-color: #f1f5f9 !important; /* Slate-100 */
+105:        font-weight: 800;
+106:      }
+107:    </style>
+108:  <link rel="stylesheet" href="universal-header.css">
+109:</head>
+110:  <body
+111:    class="bg-brand-navy text-slate-300 antialiased selection:bg-brand-amber selection:text-brand-navy"
+112:    x-data="{ homeOpen: false, aboutOpen: false }"
+113:  >
+114:    <!-- NAV HUB -->
+115:    
+116:    
+117:    
+118:    
+119:    
+120:    
+121:    
+122:    
+123:    
+124:    <!-- SVG FILTER REGISTRY -->
+125:    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+126:      <defs>
+127:        <filter id="univ-remove-white" color-interpolation-filters="sRGB">
+128:          <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -1.1 -1.1 -1.1 3 0" />
+129:        </filter>
+130:      </defs>
+131:    </svg>
+133:        <!-- UNIVERSAL HEADER -->
+134:    <img src="images/brkthru-logo.png" alt="BRKTHRU" class="univ-logo-img">
+135:    <div class="univ-spacer"></div>
+136:    <!-- END UNIVERSAL HEADER -->
+138:    
+148:    
+150:    <!-- 1. HERO -->
+151:    <section class="h-auto min-h-screen w-full relative relative-z-1" id="track1">
+152:      <!-- 1. HERO SOVEREIGNTY -->
+153:      <section
+154:        id="hero"
+155:        class="relative min-h-[90vh] flex items-center justify-center p-6 border-b border-white/5 mb-24"
+156:      >
+157:        <div class="absolute inset-0 z-0">
+158:          <img
+159:            src="hall_sketch.jpg"
+160:            alt="Silhouette of Dr. L. Michael Hall"
+161:            class="w-full h-full object-cover grayscale opacity-20 scale-110"
+162:          />
+163:          <div
+164:            class="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/60 to-transparent"
+165:          ></div>
+166:        </div>
+168:        <div
+169:          class="relative z-10 max-w-6xl w-full text-center space-y-12 pt-12"
+170:        >
+171:          <div class="inline-flex items-center gap-4 text-brand-amber mb-6">
+172:            <span class="h-px w-8 bg-brand-amber"></span>
+173:            <span
+174:              class="text-xs md:text-sm font-bold uppercase tracking-[0.6em] font-sans"
+175:              >The 2026 Transformation Tour</span
+176:            >
+177:            <span class="h-px w-8 bg-brand-amber"></span>
+178:          </div>
+180:          <h1
+181:            class="text-4xl md:text-6xl font-serif font-bold leading-tight text-white tracking-tight"
+182:          >
+183:            MasterClass Series on <br />
+184:            <span class="italic text-brand-amber"
+185:              >High Performance Thinking</span
+186:            >
+187:          </h1>
+189:          <p
+190:            class="max-w-3xl mx-auto text-xl md:text-3xl text-slate-400 font-serif italic leading-relaxed"
+191:          >
+192:            "Seismic learning. Lasting results. Skip the hype."
+193:          </p>
+195:          <div class="flex flex-wrap justify-center gap-6 pt-10 font-sans">
+196:            <a
+197:              href="#courses"
+198:              class="bg-white text-brand-navy px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-brand-amber transition-all shadow-2xl"
+199:            >
+200:              EXPLORE TOUR COURSES
+201:            </a>
+202:            <a
+203:              href="#tour"
+204:              class="border border-white/20 text-white px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-white/10 transition-all backdrop-blur-lg"
+205:            >
+206:              REGISTER FOR DR. L. MICHAEL HALL 2026
+207:            </a>
+208:          </div>
+209:        </div>
+210:      </section>
+212:      <!-- 2. FEATURED VIDEO: EPISODE 3 -->
+213:      <section id="video" class="max-w-7xl mx-auto px-6 mb-40">
+214:        <div class="text-center space-y-8 mb-20">
+215:          <div
+216:            class="text-xs md:text-sm font-bold text-slate-500 uppercase tracking-[0.5em] font-sans"
+217:          >
+218:            The Masterclass Series
+219:          </div>
+220:          <h2
+221:            class="text-5xl md:text-8xl font-serif font-bold text-white leading-tight"
+222:          >
+223:            What Great Managers, <br />
+224:            Respected Leaders, and <br />
+225:            Nurturing Parents <span class="text-brand-amber italic">Do Differently</span>
+226:          </h2>
+227:          <div class="w-32 h-2.5 bg-brand-amber mx-auto rounded-full"></div>
+228:          <p
+229:            class="max-w-4xl mx-auto text-2xl text-slate-400 font-serif italic leading-relaxed pt-6"
+230:          >
+231:            "The shift from managing to facilitating is the key to leadership."
+232:          </p>
+234:          <!-- 4 KEY EVENTS LIST -->
+235:          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12 px-6 text-left">
+236:            <!-- Event 1: Parenting Manila -->
+237:            <div class="glass p-8 rounded-3xl border-brand-amber/20 hover:border-brand-amber/50 transition-all flex flex-col">
+238:              <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Oct 24, 2026 (Saturday)</h4>
+239:              <a href="#parenting" class="block text-white font-serif font-bold text-xl mb-4 hover:text-brand-amber transition-colors">Impactful Parenting & Educating Style</a>
+240:              <div class="space-y-2 text-sm text-slate-400 mb-6">
+241:                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber"></i> Manila</p>
+242:                <p><i class="fa-solid fa-clock mr-2 text-brand-amber"></i> 9 AM - 5 PM</p>
+243:                <p><i class="fa-solid fa-users mr-2 text-brand-amber"></i> For: High-achieving parents</p>
+244:              </div>
+245:              <div class="mt-auto rounded-2xl overflow-hidden aspect-[4/3] relative border border-white/10">
+246:                <img src="parent.jpg" class="absolute inset-0 w-full h-full object-cover" alt="Parenting Manila">
+247:              </div>
+248:            </div>
+250:            <!-- Event 2: 5-Minute Manager -->
+251:            <div class="glass p-8 rounded-3xl border-brand-amber/20 hover:border-brand-amber/50 transition-all flex flex-col">
+252:              <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Oct 26-29, 2026 (Mon-Thur)</h4>
+253:              <a href="#5mm" class="block text-white font-serif font-bold text-xl mb-4 hover:text-brand-amber transition-colors">The 5-Minute Manager</a>
+254:              <div class="space-y-2 text-sm text-slate-400 mb-6">
+255:                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber"></i> Manila</p>
+256:                <p><i class="fa-solid fa-clock mr-2 text-brand-amber"></i> 9 AM - 6 PM</p>
+257:                <p><i class="fa-solid fa-users mr-2 text-brand-amber"></i> For: Middle Management & Supervisors</p>
+258:              </div>
+259:              <div class="mt-auto rounded-2xl overflow-hidden aspect-[4/3] relative border border-white/10">
+260:                <img src="5mm.jpg" class="absolute inset-0 w-full h-full object-cover" alt="5-Minute Manager">
+261:              </div>
+262:            </div>
+264:            <!-- Event 3: Productive Thinking -->
+265:            <div class="glass p-8 rounded-3xl border-brand-amber/20 hover:border-brand-amber/50 transition-all flex flex-col">
+266:              <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Oct 21-23, 2026 (Wed-Fri)</h4>
+267:              <a href="#productive-thinking" class="block text-white font-serif font-bold text-xl mb-4 hover:text-brand-amber transition-colors">Productive Thinking: Leading In High-Performance</a>
+268:              <div class="space-y-2 text-sm text-slate-400 mb-6">
+269:                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber"></i> Manila</p>
+270:                <p><i class="fa-solid fa-clock mr-2 text-brand-amber"></i> 9 AM - 6 PM</p>
+271:                <p><i class="fa-solid fa-users mr-2 text-brand-amber"></i> For: Executives & Strategic Leaders</p>
+272:              </div>
+273:              <div class="mt-auto rounded-2xl overflow-hidden aspect-[4/3] relative border border-white/10">
+274:                <img src="thinking.jpg" class="absolute inset-0 w-full h-full object-cover" alt="Brain Camp">
+275:              </div>
+276:            </div>
+278:            <!-- Event 4: Parenting Bacolod -->
+279:            <div class="glass p-8 rounded-3xl border-brand-amber/20 hover:border-brand-amber/50 transition-all flex flex-col">
+280:              <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Nov 7, 2026 (Saturday)</h4>
+281:              <a href="#parenting" class="block text-white font-serif font-bold text-xl mb-4 hover:text-brand-amber transition-colors">Impactful Parenting & Educating Style</a>
+282:              <div class="space-y-2 text-sm text-slate-400 mb-6">
+283:                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber"></i> Bacolod</p>
+284:                <p><i class="fa-solid fa-clock mr-2 text-brand-amber"></i> 9 AM - 5 PM</p>
+285:                <p><i class="fa-solid fa-users mr-2 text-brand-amber"></i> For: High-achieving parents</p>
+286:              </div>
+287:              <div class="mt-auto rounded-2xl overflow-hidden aspect-[4/3] relative border border-white/10">
+288:                <img src="parent2.jpg" class="absolute inset-0 w-full h-full object-cover" alt="Parenting Bacolod">
+289:              </div>
+290:            </div>
+291:          </div>
+292:        </div>
+293:      </section>
+295:      <!-- CLIENTS AUTHORITY NETWORK -->
+296:      <section class="max-w-7xl mx-auto px-6 mb-24">
+297:        <div class="text-center mb-12">
+298:            <p class="text-slate-500 text-xs md:text-sm font-black uppercase tracking-[0.4em] mb-4">Trusted by Institutions & Leaders Worldwide</p>
+299:            <div class="w-20 h-1 bg-brand-amber mx-auto rounded-full opacity-30"></div>
+300:        </div>
+301:        
+302:        <div class="flex flex-wrap gap-3 justify-center max-w-5xl mx-auto" id="client-list-container">
+303:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Petron</span>
+304:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Toyota</span>
+305:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Pfizer</span>
+306:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Amazon Web Services</span>
+307:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Thomson Reuters</span>
+308:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Maynilad</span>
+309:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">DTI</span>
+310:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Phinma</span>
+311:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Leslies</span>
+312:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">GSIS</span>
+313:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Citibank</span>
+314:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Nestlé</span>
+315:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Shell</span>
+316:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Microsoft</span>
+317:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Ateneo de Manila</span>
+318:        </div>
+319:        
+320:        <div class="mt-8 text-center">
+321:            <button onclick="openClientModal()" class="text-xs text-brand-amber font-bold hover:underline cursor-pointer italic uppercase tracking-widest">
+322:                ...and hundreds more clients
+323:            </button>
+324:        </div>
+325:      </section>
+327:      <!-- CLIENT MODAL -->
+328:      <div id="clientModal" class="fixed inset-0 z-[3000] hidden flex items-center justify-center p-4 bg-brand-navy/60 backdrop-blur-md">
+329:          <div class="glass max-w-4xl w-full max-h-[80vh] rounded-[3rem] overflow-hidden flex flex-col border-brand-amber/20">
+330:              <div class="p-8 border-b border-white/10 flex justify-between items-center">
+331:                  <h3 class="text-2xl font-serif font-bold text-white italic">Our Authority Network</h3>
+332:                  <button onclick="closeClientModal()" class="text-slate-400 hover:text-white transition-colors">
+333:                      <i class="fa-solid fa-times text-2xl"></i>
+334:                  </button>
+335:              </div>
+336:              <div class="p-10 overflow-y-auto">
+337:                  <div class="flex flex-wrap gap-3 justify-center" id="all-clients-grid">
+338:                      <!-- To be populated by JS -->
+339:                  </div>
+340:              </div>
+341:              <div class="p-6 border-t border-white/10 text-center text-xs text-slate-500 uppercase tracking-widest font-bold">
+342:                  Listing a Selection of Institutional Partners Served
+343:              </div>
+344:          </div>
+345:      </div>
+347:      <!-- DR. HALL AUTHORITY -->
+348:      <section class="max-w-7xl mx-auto px-6 mb-40">
+349:        <div
+350:          class="glass p-12 md:p-20 rounded-[4rem] border-brand-amber/20 relative overflow-hidden"
+351:        >
+352:          <div
+353:            class="absolute top-0 right-0 w-64 h-64 bg-brand-amber/10 rounded-full blur-3xl -mr-32 -mt-32"
+354:          ></div>
+355:          <div class="relative z-10 grid lg:grid-cols-3 gap-12 items-center">
+356:            <div class="lg:col-span-1">
+357:              <img
+358:                src="dr-hall.jpg"
+359:                alt="Dr. L. Michael Hall"
+360:                class="w-full rounded-3xl shadow-2xl border-4 border-white/5 grayscale hover:grayscale-0 transition-all duration-500"
+361:              />
+362:            </div>
+363:            <div class="lg:col-span-2 space-y-8">
+364:              <h3 class="text-4xl font-serif font-bold text-white">
+365:                Meet Dr. L. Michael Hall:
+366:                <span class="text-brand-amber italic block mt-2 text-2xl"
+367:                  >The Master Developer of Personal & Systemic
+368:                  Transformation</span
+369:                >
+370:              </h3>
+371:              <p class="text-slate-400 text-lg leading-relaxed">
+372:                Recognized as a Top 5 Global Guru in NLP, Dr. L. Michael Hall has
+373:                consistently ranked among the world's Top 30 for Communication
+374:                and Coaching for several consecutive years. This isn't just
+375:                theory; it is a global standard of excellence.
+376:              </p>
+378:              <div
+379:                class="grid grid-cols-3 gap-6 pt-6 border-t border-brand-amber/10"
+380:              >
+381:                <div class="space-y-1">
+382:                  <div
+383:                    class="text-3xl md:text-4xl text-white font-serif font-bold"
+384:                  >
+385:                    #5
+386:                  </div>
+387:                  <div
+388:                    class="text-xs md:text-sm text-brand-amber font-bold uppercase tracking-widest"
+389:                  >
+390:                    Global Guru
+391:                  </div>
+392:                </div>
+393:                <div class="space-y-1">
+394:                  <div
+395:                    class="text-3xl md:text-4xl text-white font-serif font-bold"
+396:                  >
+397:                    75+
+398:                  </div>
+399:                  <div
+400:                    class="text-xs md:text-sm text-brand-amber font-bold uppercase tracking-widest"
+401:                  >
+402:                    Books Published
+403:                  </div>
+404:                </div>
+405:                <div class="space-y-1">
+406:                  <div
+407:                    class="text-3xl md:text-4xl text-white font-serif font-bold"
+408:                  >
+409:                    60+
+410:                  </div>
+411:                  <div
+412:                    class="text-xs md:text-sm text-brand-amber font-bold uppercase tracking-widest"
+413:                  >
+414:                    Countries
+415:                  </div>
+416:                  <div class="text-xs text-slate-500 italic">
+417:                    Philippines, USA, UK, Brazil, Egypt, Mauritius
+418:                  </div>
+419:                </div>
+420:              </div>
+422:              <div
+423:                class="mt-6 p-6 bg-white/5 rounded-2xl border border-white/5"
+424:              >
+425:                <p class="text-slate-500 text-sm leading-relaxed italic">
+426:                  "Dr. L. Michael Hall is the intellectual engine powering
+427:                  leadership institutes in 60+ countries including the
+428:                  Philippines, USA, UK, Brazil, Egypt, and Mauritius. Author of
+429:                  over 75 books, he provides the cognitive architecture for
+430:                  high-performance leadership."
+431:                </p>
+432:              </div>
+433:            </div>
+434:          </div>
+435:        </div>
+436:      </section>
+438:      <!-- 3. TOUR 2026: THE INVESTMENT MATRIX -->
+439:      <!-- RENAMED TO COURSES TO PRESERVE CONTENT -->
+440:      <section id="courses" class="max-w-7xl mx-auto px-6 mb-20 mt-[120px]">
+441:        <div class="text-center space-y-8 mb-20">
+442:          <div
+443:            class="text-xs md:text-sm font-bold text-slate-500 uppercase tracking-[0.5em] font-sans"
+444:          >
+445:            The 2026 Transformation Tour
+446:          </div>
+447:          <h2
+448:            class="text-4xl md:text-8xl font-serif font-bold text-white leading-tight"
+449:          >
+450:            Tour Workshops <br/>
+451:            <span class="text-brand-amber italic">for You and Your Team</span>
+452:          </h2>
+453:          <div class="w-32 h-2.5 bg-brand-amber mx-auto rounded-full"></div>
+454:        </div>
+456:        <style>
+457:            /* Ensure tracks are visible now that tabs are gone */
+458:            .tour-track { display: block !important; margin-bottom: 8rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4rem; }
+459:            .tour-track:last-child { border-bottom: none; }
+460:        </style>
+462:        <!-- TRACK 1: PARENTING -->
+463:        <!-- TRACK 1: MASTERCLASS (Was Parenting) -->
+464:        <!-- TRACK 1: Productive Thinking -->
+465:        <div id="productive-thinking" class="tour-track active" x-data="{ showPricing: false }">
+466:          <div
+467:            class="mb-16 rounded-[4rem] overflow-hidden relative aspect-[21/9] shadow-2xl border-4 border-white/5"
+468:          >
+469:            <img
+470:              src="thinking.jpg"
+471:              alt="Productive Thinking"
+472:              class="w-full h-full object-cover"
+473:            />
+474:            <div
+475:              class="absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent flex items-end p-12"
+476:            >
+477:              <div class="text-white">
+478:                <div
+479:                  class="text-brand-amber text-xs md:text-sm font-bold uppercase tracking-[0.5em] mb-2"
+480:                >
+481:                  Track 01
+482:                </div>
+483:                <h3 class="text-3xl md:text-4xl font-serif font-bold italic">
+484:                  Brain Camp: Critical Thinking for High Performance
+485:                </h3>
+486:              </div>
+487:            </div>
+488:          </div>
+489:          <div class="grid lg:grid-cols-2 gap-10">
+490:            <!-- NEW CONTENT LAYOUT -->
+491:            <div class="lg:col-span-2 grid md:grid-cols-2 gap-12 mb-16 px-6">
+492:              <!-- BLOCK 1: TARGET & PAIN -->
+493:              <div class="space-y-8">
+494:                <div>
+495:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Target Audience</h4>
+496:                    <ul class="text-slate-400 space-y-2 text-sm">
+497:                        <li class="leading-relaxed"><span class="text-white font-bold">Decision Makers:</span> CEOs, Executives, and Entrepreneurs who feel the heavy weight of every choice.</li>
+498:                        <li class="leading-relaxed"><span class="text-white font-bold">Complex-Role Professionals:</span> Engineers, Analysts, IT Leads, and Project Managers drowning in data.</li>
+499:                        <li class="leading-relaxed"><span class="text-white font-bold">The "Mental Drifters":</span> Anyone who struggles with "Analysis Paralysis" or a brain that won't shut off at night.</li>
+500:                        <li class="leading-relaxed"><span class="text-white font-bold">Problem Solvers:</span> Consultants and fixers who need a surgical edge in finding the "truth" behind the noise.</li>
+501:                    </ul>
+502:                </div>
+504:                <div>
+505:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">The Reality Check (Pain Points)</h4>
+506:                    <ul class="text-slate-400 space-y-2 text-sm italic">
+507:                        <li><span class="text-slate-300 font-bold">Mental Exhaustion:</span> Feeling like your brain is "full" and unable to take on one more problem.</li>
+508:                        <li><span class="text-slate-300 font-bold">The Fog:</span> Spending hours on a task but feeling like you're just spinning your wheels without a breakthrough.</li>
+509:                        <li><span class="text-slate-300 font-bold">Circular Arguments:</span> Re-visiting the same business or personal problem for weeks without a real resolution.</li>
+510:                        <li><span class="text-slate-300 font-bold">Thinking Traps:</span> Falling for "all-or-nothing" thinking or letting your emotions hijack your logic during a crisis.</li>
+511:                    </ul>
+512:                </div>
+513:              </div>
+515:              <!-- BLOCK 2: WHY & COVER -->
+516:              <div class="space-y-8">
+517:                <div class="bg-white/5 p-6 rounded-3xl border border-white/5">
+518:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Why it's worth it</h4>
+519:                    <p class="text-slate-300 text-sm leading-relaxed">
+520:                        This is a "clean-out" for your mental operating system. You will learn to think faster, see through vague language, and make decisions with a quiet confidence. Instead of being a victim of your thoughts, you’ll learn to direct them. It’s the difference between being overwhelmed by life and being the architect of your own solutions.
+521:                    </p>
+522:                </div>
+524:                <div>
+525:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">What we'll cover</h4>
+526:                    <ul class="text-slate-400 space-y-2 text-sm">
+527:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">The Precision Funnel:</span> How to drill down to the actual facts in any conversation.</li>
+528:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">The 10 Cognitive Distortions:</span> Identifying the "glitches" in your brain that cause mistakes.</li>
+529:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">The Calm Mind:</span> Techniques to "step back" and look at your own thinking without getting triggered.</li>
+530:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">Mental Mapping:</span> How to build plans that actually survive contact with the real world.</li>
+531:                    </ul>
+532:                </div>
+534:                <!-- IMAGE INJECTION -->
+535:                <div class="pt-4">
+536:                    <img src="thinking-thumb.jpg" alt="Thinking Workshop" class="w-48 rounded-2xl shadow-xl border border-white/10">
+537:                </div>
+538:              </div>
+539:            </div>
+541:            <!-- BUTTON INJECTION -->
+542:            <div class="lg:col-span-2 flex justify-end px-6 -mt-8 mb-8">
+543:                <a href="#tour" class="bg-black text-white font-bold uppercase rounded-xl px-8 py-3 text-xs tracking-widest hover:bg-brand-amber hover:text-black transition-all">
+544:                    RESERVE YOUR SEAT
+545:                </a>
+546:            </div>
+547:          </div>
+548:        </div>
+550:        <!-- TRACK 2: 5MM -->
+551:        <div id="5mm" class="tour-track" x-data="{ showPricing: false }">
+552:          <div
+553:            class="mb-16 rounded-[4rem] overflow-hidden relative aspect-[21/9] shadow-2xl border-4 border-white/5"
+554:          >
+555:            <img
+556:              src="5mm.jpg"
+557:              alt="The 5-Minute Manager"
+558:              class="w-full h-full object-cover"
+559:            />
+560:            <div
+561:              class="absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent flex items-end p-12"
+562:            >
+563:              <div class="text-white">
+564:                <div
+565:                  class="text-brand-amber text-xs font-bold uppercase tracking-[0.5em] mb-2"
+566:                >
+567:                  Track 02
+568:                </div>
+569:                <h3 class="text-3xl md:text-4xl font-serif font-bold italic">
+570:                  The 5-Minute Manager: The Art & Science of Facilitating Quality Performance
+571:                </h3>
+572:              </div>
+573:            </div>
+574:          </div>
+575:            <!-- NEW CONTENT LAYOUT -->
+576:            <div class="lg:col-span-2 grid md:grid-cols-2 gap-12 mb-16 px-6">
+577:              <!-- BLOCK 1: TARGET & PAIN -->
+578:              <div class="space-y-8">
+579:                <div>
+580:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Target Audience</h4>
+581:                    <ul class="text-slate-400 space-y-2 text-sm">
+582:                        <li class="leading-relaxed"><span class="text-white font-bold">The "Babysitters":</span> Managers who spend all day solving their team's problems instead of their own.</li>
+583:                        <li class="leading-relaxed"><span class="text-white font-bold">Overwhelmed Supervisors:</span> Team leads who feel like they’re doing the work of three people.</li>
+584:                        <li class="leading-relaxed"><span class="text-white font-bold">Business Owners:</span> Leaders who want to delegate but feel they can't trust the results.</li>
+585:                        <li class="leading-relaxed"><span class="text-white font-bold">HR & Leaders:</span> Those looking for a way to drive performance that is both humane and highly effective.</li>
+586:                    </ul>
+587:                </div>
+589:                <div>
+590:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">The Reality Check (Pain Points)</h4>
+591:                    <ul class="text-slate-400 space-y-2 text-sm italic">
+592:                        <li><span class="text-slate-300 font-bold">Meeting Bloat:</span> Spending hours in syncs that yield zero accountability.</li>
+593:                        <li><span class="text-slate-300 font-bold">The Helper Trap:</span> You’re so busy "helping" that you’re staying late every night to finish your actual job.</li>
+594:                        <li><span class="text-slate-300 font-bold">Broken Records:</span> Having the same conversation about the same mistake for the third time this month.</li>
+595:                        <li><span class="text-slate-300 font-bold">Compliance vs. Commitment:</span> Your team does what they’re told, but they don't own the results.</li>
+596:                    </ul>
+597:                </div>
+598:              </div>
+600:              <!-- BLOCK 2: WHY & COVER -->
+601:              <div class="space-y-8">
+602:                <div class="bg-white/5 p-6 rounded-3xl border border-white/5">
+603:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Why it's worth it</h4>
+604:                    <p class="text-slate-300 text-sm leading-relaxed">
+605:                        You will get at least 5 hours of your week back. You’ll stop "managing" people and start "facilitating" their performance. By learning to have surgical, 5-minute conversations, you force your team to think for themselves. You go from being the "solver" to being the leader who wins the minds and hearts of their people.
+606:                    </p>
+607:                </div>
+609:                <div>
+610:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">What we'll cover</h4>
+611:                    <ul class="text-slate-400 space-y-2 text-sm">
+612:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">The 5-Minute Structure:</span> The exact script for a performance breakthrough conversation.</li>
+613:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">7 Meaning Detection Questions:</span> Probing the hidden reasons why people aren't performing.</li>
+614:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">Root Cause Diagnosis:</span> Learning to stop fixing symptoms and start fixing the real issue.</li>
+615:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">The Facilitation Shift:</span> Moving from "Command & Control" to "Performance Facilitator."</li>
+616:                    </ul>
+617:                </div>
+619:                <!-- IMAGE INJECTION -->
+620:                <div class="pt-4">
+621:                    <img src="manager-thumb.jpg" alt="Manager Workshop" class="w-48 rounded-2xl shadow-xl border border-white/10">
+622:                </div>
+623:              </div>
+624:            </div>
+626:            <!-- BUTTON INJECTION -->
+627:            <div class="lg:col-span-2 flex justify-end px-6 -mt-8 mb-8">
+628:                <a href="#tour" class="bg-black text-white font-bold uppercase rounded-xl px-8 py-3 text-xs tracking-widest hover:bg-brand-amber hover:text-black transition-all">
+629:                    RESERVE YOUR SEAT
+630:                </a>
+631:            </div>
+632:        </div>
+634:        <!-- TRACK 3: PARENTING (Was TFH) -->
+635:        <!-- TRACK 3: Parenting -->
+636:        <div id="parenting" class="tour-track" x-data="{ showPricing: false }">
+637:          <div
+638:            class="mb-16 rounded-[4rem] overflow-hidden relative aspect-[21/9] shadow-2xl border-4 border-white/5"
+639:          >
+640:            <img
+641:              src="parent.jpg"
+642:              alt="Impactful Parenting and Educating Style"
+643:              class="w-full h-full object-cover"
+644:            />
+645:            <div
+646:              class="absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent flex items-end p-12"
+647:            >
+648:              <div class="text-white">
+649:                <div
+650:                  class="text-brand-amber text-xs font-bold uppercase tracking-[0.5em] mb-2"
+651:                >
+652:                  Track 03
+653:                </div>
+654:                <h3 class="text-3xl md:text-4xl font-serif font-bold italic mb-2">
+655:                  Impactful Parenting and Educating Style
+656:                </h3>
+657:                <p class="text-slate-400 text-sm font-medium tracking-wide">
+658:                  How to enhance your Capacity for this incredibly complex and demanding task!
+659:                </p>
+660:              </div>
+661:            </div>
+662:          </div>
+663:          <div class="grid lg:grid-cols-2 gap-10">
+664:            <!-- NEW CONTENT LAYOUT -->
+665:            <div class="lg:col-span-2 grid md:grid-cols-2 gap-12 mb-16 px-6">
+666:              <!-- BLOCK 1: TARGET & PAIN -->
+667:              <div class="space-y-8">
+668:                <div>
+669:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Target Audience</h4>
+670:                    <ul class="text-slate-400 space-y-2 text-sm">
+671:                        <li class="leading-relaxed"><span class="text-white font-bold">Intentional Parents:</span> Moms and dads (kids 0-18) who want to stop "winging it" and start being proactive.</li>
+672:                        <li class="leading-relaxed"><span class="text-white font-bold">The Professional Parent:</span> High-achievers who are masters at work but feel like they're failing at home.</li>
+673:                        <li class="leading-relaxed"><span class="text-white font-bold">The Cycle-Breakers:</span> Parents who don't want to repeat the shouting or distance they grew up with.</li>
+674:                        <li class="leading-relaxed"><span class="text-white font-bold">Grandparents & Guardians:</span> Anyone playing a primary role in a child's psychological future.</li>
+675:                    </ul>
+676:                </div>
+678:                <div>
+679:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">The Reality Check (Pain Points)</h4>
+680:                    <ul class="text-slate-400 space-y-2 text-sm italic">
+681:                        <li><span class="text-slate-300 font-bold">The Shouting Match:</span> Every transition—from dinner to bedtime—feels like a full-blown battle of wills.</li>
+682:                        <li><span class="text-slate-300 font-bold">The Digital Gap:</span> Feeling like you're losing your children to screens, social media, and hidden influences.</li>
+683:                        <li><span class="text-slate-300 font-bold">The Guilt Loop:</span> Losing your cool, feeling terrible afterward, then over-compensating with lax rules.</li>
+684:                        <li><span class="text-slate-300 font-bold">The Wall:</span> Talking to your child or teen and realizing they’ve totally tuned you out.</li>
+685:                    </ul>
+686:                </div>
+687:              </div>
+689:              <!-- BLOCK 2: WHY & COVER -->
+690:              <div class="space-y-8">
+691:                <div class="bg-white/5 p-6 rounded-3xl border border-white/5">
+692:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Why it's worth it</h4>
+693:                    <p class="text-slate-300 text-sm leading-relaxed">
+694:                        You’ll turn your house from a battlefield into a home. You will learn to build "psychological resilience" in your child so they can handle the world without breaking. Most importantly, you are building a relationship that will last for the next 40 years, based on respect and deep connection rather than just "getting them to obey."
+695:                    </p>
+696:                </div>
+698:                <div>
+699:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">What we'll cover</h4>
+700:                    <ul class="text-slate-400 space-y-2 text-sm">
+701:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">The Age Tracks:</span> Understanding the specific psychological needs from 0 to 18.</li>
+702:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">The Parent’s Circle of Excellence:</span> How to stay calm and resourceful when your kid is melting down.</li>
+703:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">Boundaries without Drama:</span> How to say "No" in a way that builds respect instead of resentment.</li>
+704:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">Unleashing Genius:</span> Practical ways to build your child's self-esteem and love for learning.</li>
+705:                    </ul>
+706:                </div>
+708:                <!-- IMAGE INJECTION (SIDE BY SIDE) -->
+709:                <div class="pt-4 flex gap-4">
+710:                    <img src="parenting-manila-thumb.jpg" alt="Parenting Manila" class="w-1/2 rounded-2xl shadow-xl border border-white/10">
+711:                    <img src="parenting-bacolod-thumb.jpg" alt="Parenting Bacolod" class="w-1/2 rounded-2xl shadow-xl border border-white/10">
+712:                </div>
+713:              </div>
+714:            </div>
+716:            <!-- BUTTON INJECTION -->
+717:            <div class="lg:col-span-2 flex justify-end px-6 -mt-8 mb-8">
+718:                <a href="#tour" class="bg-black text-white font-bold uppercase rounded-xl px-8 py-3 text-xs tracking-widest hover:bg-brand-amber hover:text-black transition-all">
+719:                    RESERVE YOUR SEAT
+720:                </a>
+721:            </div>
+722:          </div>
+723:        </div>
+724:      </section>
+726:<!-- 
+727:  INSTRUCTIONS: 
+728:  1. Copy the <section> below.
+729:  2. In your index.html, DELETE the entire <section id="tour">.
+730:  3. PASTE this code in its place.
+731:-->
+733:<section id="tour" class="py-32 bg-[#0F172A] text-white">
+734:    <div class="container mx-auto px-10 text-center">
+735:        <p class="text-brand-amber font-bold text-xs uppercase tracking-[0.5em] mb-4">Transformation Tour 2026</p>
+736:        <h2 class="text-3xl md:text-5xl font-sans font-bold mb-10 text-white">Early Bird Tiers Payment Schedule</h2>
+737:        
+738:        <div class="grid lg:grid-cols-3 gap-10 text-left">
+739:            <!-- 1. PRODUCTIVE THINKING (18 Tiers) -->
+740:            <div class="glass p-10 rounded-[3rem] border-white/5 flex flex-col h-full">
+741:                <h3 class="text-2xl font-serif font-bold italic mb-2">Productive Thinking: Leading In High-Performance</h3>
+742:                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-6">Oct 21-23, 2026 • 9 AM - 5 PM • Manila</p>
+743:                <select class="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white font-bold text-sm mb-6" 
+744:                        onchange="this.parentElement.querySelector('.price-display').innerText = '?' + this.options[this.selectedIndex].getAttribute('data-price')">
+745:                    <optgroup label="Manila Track" class="bg-brand-navy">
+746:                        <option value="REF-026" data-price="22,500">Super Early Bird (Feb 15)</option>
+747:                        <option value="REF-027" data-price="26,685">Early Bird 1 (Apr 15)</option>
+748:                        <option value="REF-028" data-price="29,650">Early Bird 2 (Jun 15)</option>
+749:                        <option value="REF-029" data-price="32,615">Early Bird 3 (Aug 15)</option>
+750:                        <option value="REF-030" data-price="35,580">Early Bird 4 (Sep 15)</option>
+751:                        <option value="REF-031" data-price="38,545">Regular Rate</option>
+752:                        <option value="REF-042" data-price="137,500">Corporate Group (5+1)</option>
+753:                    </optgroup>
+754:                    <optgroup label="International Track" class="bg-brand-navy">
+755:                        <option value="REF-032" data-price="30,500">Intl - SEB (Feb 15)</option>
+756:                        <option value="REF-033" data-price="33,550">Intl - EB1 (Apr 15)</option>
+757:                        <option value="REF-034" data-price="36,600">Intl - EB2 (Jun 15)</option>
+758:                        <option value="REF-035" data-price="39,650">Intl - EB3 (Aug 15)</option>
+759:                        <option value="REF-036" data-price="42,700">Intl - EB4 (Sep 15)</option>
+760:                        <option value="REF-037" data-price="45,750">Intl - Regular</option>
+761:                        <option value="REF-043" data-price="500">Intl - SEB USD Option</option>
+762:                    </optgroup>
+763:                    <optgroup label="NS Community" class="bg-brand-navy">
+764:                        <option value="REF-038" data-price="18,000">NS Registered PH</option>
+765:                        <option value="REF-039" data-price="20,000">NS Non-Registered PH</option>
+766:                        <option value="REF-040" data-price="17,788.80">Renewed Trainers</option>
+767:                        <option value="REF-041" data-price="23,718.40">Other Members</option>
+768:                    </optgroup>
+769:                </select>
+770:                <div class="mt-auto">
+771:                    <div class="text-4xl font-serif font-bold text-brand-amber mb-8 price-display">?22,500</div>
+772:                    <div class="flex gap-4">
+773:                        <div onclick="window.location.href = 'https://hitpay.shop/brkthru-ventures/product/' + this.closest('.glass').querySelector('select').value;" 
+774:                             class="cursor-pointer flex-1 bg-white text-brand-navy py-5 rounded-2xl font-black text-xs uppercase tracking-widest text-center hover:bg-brand-amber transition-all">
+775:                            Pay Now
+776:                        </div>
+777:                        <div onclick="window.location.href = 'reservations.html?course=productive-thinking'" 
+778:                             class="cursor-pointer flex-1 border border-white/20 text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest text-center hover:bg-white/10 transition-all backdrop-blur-sm">
+779:                            Reserve
+780:                        </div>
+781:                    </div>
+782:                </div>
+783:            </div>
+785:            <!-- 2. 5-MINUTE MANAGER (9 Tiers) -->
+786:            <div class="glass p-10 rounded-[3rem] border-white/5 flex flex-col h-full">
+787:                <h3 class="text-2xl font-serif font-bold italic mb-2">5 Minute Manager</h3>
+788:                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-6">Oct 26-29, 2026 • 9 AM - 5 PM • Manila</p>
+789:                <select class="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white font-bold text-sm mb-6" 
+790:                        onchange="this.parentElement.querySelector('.price-display').innerText = '?' + this.options[this.selectedIndex].getAttribute('data-price')">
+791:                    <optgroup label="Manila Track" class="bg-brand-navy">
+792:                        <option value="REF-017" data-price="39,105">Super Early Bird (Feb 15)</option>
+793:                        <option value="REF-018" data-price="45,623">Early Bird 1 (Apr 15)</option>
+794:                        <option value="REF-019" data-price="52,140">Early Bird 2 (Jun 15)</option>
+795:                        <option value="REF-020" data-price="58,657">Early Bird 3 (Aug 15)</option>
+796:                        <option value="REF-021" data-price="61,916">Early Bird 4 (Sep 15)</option>
+797:                        <option value="REF-022" data-price="65,175">Regular Rate</option>
+798:                        <option value="REF-025" data-price="228,115">Corporate Group (5+1)</option>
+799:                    </optgroup>
+800:                    <optgroup label="NS Community" class="bg-brand-navy">
+801:                        <option value="REF-023" data-price="27,000">NS Registered PH</option>
+802:                        <option value="REF-024" data-price="29,000">NS Non-Registered PH</option>
+803:                    </optgroup>
+804:                </select>
+805:                <div class="mt-auto">
+806:                    <div class="text-4xl font-serif font-bold text-brand-amber mb-8 price-display">?39,105</div>
+807:                    <div class="flex gap-4">
+808:                        <div onclick="window.location.href = 'https://hitpay.shop/brkthru-ventures/product/' + this.closest('.glass').querySelector('select').value;" 
+809:                             class="cursor-pointer flex-1 bg-white text-brand-navy py-5 rounded-2xl font-black text-xs uppercase tracking-widest text-center hover:bg-brand-amber transition-all">
+810:                            Pay Now
+811:                        </div>
+812:                        <div onclick="window.location.href = 'reservations.html?course=5-minute-manager'" 
+813:                             class="cursor-pointer flex-1 border border-white/20 text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest text-center hover:bg-white/10 transition-all backdrop-blur-sm">
+814:                            Reserve
+815:                        </div>
+816:                    </div>
+817:                </div>
+818:            </div>
+820:            <!-- 3. IMPACTFUL PARENTING (16 Tiers) -->
+821:            <div class="glass p-10 rounded-[3rem] border-white/5 flex flex-col h-full">
+822:                <h3 class="text-2xl font-serif font-bold italic mb-2">Impactful Parenting & Educating Style</h3>
+823:                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-6">Manila: Oct 24 • Bacolod: Nov 7 • 9 AM - 5 PM</p>
+824:                <select class="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white font-bold text-sm mb-6" 
+825:                        onchange="this.parentElement.querySelector('.price-display').innerText = '?' + this.options[this.selectedIndex].getAttribute('data-price')">
+826:                    <optgroup label="Manila Track" class="bg-brand-navy">
+827:                        <option value="REF-001" data-price="1,800">Manila - SEB (Feb 15)</option>
+828:                        <option value="REF-002" data-price="1,900">Manila - EB1 (Apr 15)</option>
+829:                        <option value="REF-003" data-price="2,000">Manila - EB2 (Jun 15)</option>
+830:                        <option value="REF-004" data-price="2,100">Manila - EB3 (Aug 15)</option>
+831:                        <option value="REF-005" data-price="2,200">Manila - EB4 (Sep 15)</option>
+832:                        <option value="REF-006" data-price="2,500">Manila - Regular</option>
+833:                        <option value="REF-007" data-price="1,656">Manila - PWD SEB</option>
+834:                        <option value="REF-008" data-price="2,300">Manila - PWD Regular</option>
+835:                    </optgroup>
+836:                    <optgroup label="Bacolod Track" class="bg-brand-navy">
+837:                        <option value="REF-009" data-price="1,200">Bacolod - SEB (Feb 15)</option>
+838:                        <option value="REF-010" data-price="1,300">Bacolod - EB1 (Apr 15)</option>
+839:                        <option value="REF-011" data-price="1,400">Bacolod - EB2 (Jun 15)</option>
+840:                        <option value="REF-012" data-price="1,500">Bacolod - EB3 (Aug 15)</option>
+841:                        <option value="REF-013" data-price="1,600">Bacolod - EB4 (Sep 15)</option>
+842:                        <option value="REF-014" data-price="1,800">Bacolod - Regular</option>
+843:                        <option value="REF-015" data-price="1,104">Bacolod - PWD SEB</option>
+844:                        <option value="REF-016" data-price="1,656">Bacolod - PWD Regular</option>
+845:                    </optgroup>
+846:                </select>
+847:                <div class="mt-auto">
+848:                    <div class="text-4xl font-serif font-bold text-brand-amber mb-8 price-display">?1,800</div>
+849:                    <div class="flex gap-4">
+850:                        <div onclick="window.location.href = 'https://hitpay.shop/brkthru-ventures/product/' + this.closest('.glass').querySelector('select').value;" 
+851:                             class="cursor-pointer flex-1 bg-white text-brand-navy py-5 rounded-2xl font-black text-xs uppercase tracking-widest text-center hover:bg-brand-amber transition-all">
+852:                            Pay Now
+853:                        </div>
+854:                        <div onclick="window.location.href = 'reservations.html?course=impactful-parenting'" 
+855:                             class="cursor-pointer flex-1 border border-white/20 text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest text-center hover:bg-white/10 transition-all backdrop-blur-sm">
+856:                            Reserve
+857:                        </div>
+858:                    </div>
+859:                </div>
+860:            </div>
+861:        </div>
+863:        <!-- REGISTRATION POLICY AND GUIDE -->
+864:        <div class="max-w-6xl mx-auto mt-24 mb-16 relative group">
+865:            <div class="absolute -inset-1 bg-gradient-to-r from-brand-amber/20 to-blue-600/20 rounded-[3rem] blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+866:            <div class="relative glass p-10 md:p-16 rounded-[3rem] border-white/10 shadow-2xl overflow-hidden">
+867:                <div class="absolute top-0 right-0 w-64 h-64 bg-brand-amber/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
+868:                <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+869:                    <div class="bg-brand-amber/10 w-20 h-20 rounded-3xl flex items-center justify-center flex-shrink-0 border border-brand-amber/20 shadow-inner">
+870:                        <i class="fa-solid fa-circle-info text-3xl text-brand-amber"></i>
+871:                    </div>
+872:                    <div class="text-left w-full space-y-8">
+873:                        <div>
+874:                            <h4 class="text-2xl font-serif font-bold text-white italic mb-2">Registration Policy & Guide</h4>
+875:                            <div class="w-16 h-1 bg-brand-amber rounded-full opacity-30"></div>
+876:                        </div>
+877:                        
+878:                        <div class="grid md:grid-cols-3 gap-10">
+879:                            <div class="space-y-4">
+880:                                <div class="flex items-center gap-3">
+881:                                    <span class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-xs font-black text-brand-amber">1</span>
+882:                                    <p class="font-bold text-white uppercase tracking-widest text-xs">Early Bird Advantage</p>
+883:                                </div>
+884:                                <p class="text-slate-400 text-sm leading-relaxed font-medium">Our progressive pricing tiers reward early commitment. Secure current discounts before the next deadline.</p>
+885:                            </div>
+886:                            
+887:                            <div class="space-y-4">
+888:                                <div class="flex items-center gap-3">
+889:                                    <span class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-xs font-black text-brand-amber">2</span>
+890:                                    <p class="font-bold text-white uppercase tracking-widest text-xs">NS Community Members</p>
+891:                                </div>
+892:                                <p class="text-slate-400 text-sm leading-relaxed font-medium">Select <span class="text-brand-amber">Registered NS Member</span> for full community rates, or <span class="text-brand-amber">Unregistered</span> for specific discounts.</p>
+893:                            </div>
+894:                            
+895:                            <div class="space-y-4">
+896:                                <div class="flex items-center gap-3">
+897:                                    <span class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-xs font-black text-brand-amber">3</span>
+898:                                    <p class="font-bold text-white uppercase tracking-widest text-xs">International Track</p>
+899:                                </div>
+900:                                <p class="text-slate-400 text-sm leading-relaxed font-medium">Non-Neuro Semantic international participants should use the specific <span class="text-brand-amber">International Pricing Track</span>.</p>
+901:                            </div>
+902:                        </div>
+903:                        
+904:                        <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+905:                            <p class="text-xs italic font-medium text-slate-500">
+906:                                <i class="fa-solid fa-shield-check mr-2 text-brand-amber/40"></i>
+907:                                A reservation is only confirmed once payment is successfully processed.
+908:                            </p>
+909:                        </div>
+910:                    </div>
+911:                </div>
+912:            </div>
+913:        </div>
+914:    </div>
+915:</section>
+916:    <!-- TESTIMONIALS: TRUSTED BY LEADERS -->
+917:    <section id="testimonials" class="max-w-7xl mx-auto px-6 mb-40">
+918:        <div class="text-center mb-20">
+919:            <h2 class="text-4xl md:text-7xl font-serif font-bold text-white italic">Trusted By Leaders</h2>
+920:            <div class="w-32 h-2.5 bg-brand-amber mx-auto rounded-full mt-6 opacity-30"></div>
+921:        </div>
+923:        <div class="grid md:grid-cols-2 gap-8" id="testimonials-grid">
+924:            <!-- Testimonials will be populated by JS -->
+925:        </div>
+927:        <div class="mt-16 text-center">
+928:            <button onclick="openTestimonialModal()" class="group inline-flex items-center gap-3 text-sm font-black text-slate-500 hover:text-brand-amber transition-colors uppercase tracking-[0.3em]">
+929:                Meet More Leaders
+930:                <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-2"></i>
+931:            </button>
+932:        </div>
+933:    </section>
+935:    <!-- TESTIMONIAL MODAL -->
+936:    <div id="testimonialModal" class="fixed inset-0 z-[3000] hidden flex items-center justify-center p-4 bg-brand-navy/60 backdrop-blur-md">
+937:        <div class="glass max-w-4xl w-full max-h-[85vh] rounded-[3rem] overflow-hidden flex flex-col border-brand-amber/20">
+938:            <div class="p-8 border-b border-white/10 flex justify-between items-center">
+939:                <h3 class="text-2xl font-serif font-bold text-white italic">What Leaders Are Saying</h3>
+940:                <button onclick="closeTestimonialModal()" class="text-slate-400 hover:text-white transition-colors">
+941:                    <i class="fa-solid fa-times text-2xl"></i>
+942:                </button>
+943:            </div>
+944:            <div class="p-10 overflow-y-auto space-y-8" id="all-testimonials-list">
+945:                <!-- To be populated by JS -->
+946:            </div>
+947:        </div>
+948:    </div>
+949:    </main>
+951:    <!-- SOVEREIGN FOOTER -->
+952:    <footer
+953:      class="bg-brand-navy border-t border-white/5 pt-60 pb-24 px-12 rounded-t-[10rem] relative overflow-hidden"
+954:    >
+955:      <div
+956:        class="absolute top-0 left-1/2 -translate-x-1/2 w-[80rem] h-[30rem] bg-brand-amber/5 rounded-full blur-[160px] -translate-y-1/2"
+957:      ></div>
+959:      <div class="max-w-7xl mx-auto space-y-40 relative z-10">
+960:        <div
+961:          class="grid lg:grid-cols-12 gap-24 items-start border-b border-white/5 pb-40"
+962:        >
+963:          <div class="lg:col-span-8 space-y-16">
+964:            <a href="index.html" class="univ-logo">
+965:              <img
+966:                alt="BRKTHRU"
+967:                class="univ-logo-img"
+968:              />
+969:              <span class="univ-logo-accent">DIGITAL</span>
+970:            </a>
+971:            <p
+972:              class="text-slate-500 text-4xl font-serif italic leading-relaxed pr-32"
+973:            >
+974:              "Providing the inner machinery for the executive game. Engineering
+975:              breakthroughs since 1997."
+976:            </p>
+977:          </div>
+979:          <div
+980:            class="lg:col-span-4 grid grid-cols-2 gap-12 font-sans text-sm font-bold uppercase tracking-[0.4em]"
+981:          >
+982:            <div class="space-y-8">
+983:              <div class="text-white border-b border-white/10 pb-4">Hubs</div>
+984:              <a
+985:                href="index.html"
+986:                class="block hover:text-brand-amber transition-colors"
+987:                >HOME</a
+988:              >
+989:              <a
+990:                href="odyssey.html"
+991:                class="block hover:text-brand-amber transition-colors"
+992:                >OUR ODYSSEY</a
+993:              >
+994:              <a
+995:                href="coaching.html"
+996:                class="block hover:text-brand-amber transition-colors"
+997:                >COACHING</a
+998:              >
+999:              <a
+1000:                href="store.html"
+1001:                class="block hover:text-brand-amber transition-colors"
+1002:                >SHOP</a
+1003:              >
+1004:            </div>
+1005:            <div class="space-y-8">
+1006:              <div class="text-white border-b border-white/10 pb-4">
+1007:                Contact
+1008:              </div>
+1009:              <a
+1010:                href="mailto:brkthrua@gmail.com"
+1011:                class="block hover:text-brand-amber transition-colors"
+1012:                >brkthrua@gmail.com</a
+1013:              >
+1014:              <span class="block text-slate-700">Bacolod</span>
+1015:              <span class="block text-slate-700">Manila</span>
+1016:            </div>
+1017:          </div>
+1018:        </div>
+1020:        <div
+1021:          class="flex flex-col md:flex-row justify-between items-center gap-10 text-xs font-bold uppercase tracking-[0.6em] text-slate-700 font-sans"
+1022:        >
+1023:          <div>© 2026 BRKTHRU CO coaching & Consulting</div>
+1024:          <div class="text-brand-amber/40">
+1025:            Visual Sovereignty Engine v1.0 • Static Hard-Wired
+1026:          </div>
+1027:        </div>
+1028:      </div>
+1029:    </footer>
+1033:    <!-- INJECTED TOUR LOGIC -->
+1034:    <script>
+1035:      // --- MODAL LOGIC: CLIENTS ---
+1036:      const allClients = [
+1037:          'Amazon Web Services', 'Ateneo de Manila', 'Citibank', 'DHL', 'DTI', 'Fujitsu', 'HP', 'Jollibee', "L'Oréal", 'Maersk', 'Metrobank', 'Microsoft', 'Nestlé', 'Pfizer', 'Shell', 'SM', 'Toyota', 'Unilever', 'Wyeth',
+1038:          'Coca-Cola', 'PepsiCo', 'San Miguel Corp', 'Globe Telecom', 'Smart', 'BDO', 'BPI', 'Unionbank', 'Ayala Land', 'Megaworld', 'Robinsons Land', 'Shangri-La', 'Marriott', 'Accenture', 'IBM', 'Oracle', 'SAP', 'Salesforce', 'Google Philippines', 'Meta', 'Grab', 'Lazada', 'Shopee', 'Zalora', 'AirAsia', 'Cebu Pacific', 'PAL', 'Meralco', 'Maynilad', 'Petron', 'Phinma Properties', 'Leslies', 'GSIS', 'Pfizer Philippines', 'Thomson Reuters'
+1039:      ].sort();
+1041:      function openClientModal() {
+1042:          const grid = document.getElementById('all-clients-grid');
+1043:          grid.innerHTML = allClients.map(client => `
+1044:              <span class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">${client}</span>
+1045:          `).join('');
+1046:          document.getElementById('clientModal').classList.remove('hidden');
+1047:          document.body.style.overflow = 'hidden';
+1048:      }
+1049:      function closeClientModal() {
+1050:          document.getElementById('clientModal').classList.add('hidden');
+1051:          document.body.style.overflow = 'auto';
+1052:      }
+1054:      // --- MODAL LOGIC: TESTIMONIALS ---
+1055:      const primaryTestimonials = [
+1056:          { name: 'Davis Leonardo', role: 'SVP for HR, Consistent Group', quote: 'Brkthru delivers expert-led, deeply customized leadership transformation... They are our provider of choice for building a coaching culture.', image: 'davis leonardo.jpg' },
+1057:          { name: 'Dr. Blesilda Concepcion', role: 'VP, The Medical City', quote: 'Coaching is a critical leadership competency... this book provides leaders with the requisite tools to bring their teams to the highest level.', image: 'blesilda concepcion.jpg' },
+1058:          { name: 'Louie Jomero', role: 'HR Head', quote: 'Brkthru transformed our company culture through structured, functional tools that not only scaled our productivity but deeply enriched our people.', image: 'louie jomero.jpg' },
+1059:          { name: 'Raphael Felix', role: 'President & CEO, Phinma Properties', quote: "Brkthru's coaching and trainings helped our top and middle leaders adapt to change, navigate COVID-19, and balance growth. Shifted from individual to holistic/collaborative mindset.", image: 'raphael felix.jpeg' }
+1060:      ];
+1062:      const moreTestimonials = [
+1063:          { name: 'Luzviminda Morales', role: 'HR Account Management, OD and Learning Talent Management', quote: "Aldem proposes Meta-Coaching as one of the effective and breakthrough interventions. Leaders, be ready for transformation that will benefit you and your team!", image: 'luzviminda morales.jpg' },
+1064:          { name: 'Angela Valenzuela', role: 'Talent and Acquisition Manager, Petron Corporation', quote: 'A great tool that develops bigger leaders and transforms organizations to reach their potentials. It is a pleasure partnering with you!', image: 'angela valenzuela.jpg' },
+1065:          { name: 'Marc V. Lopez', role: 'Vice President, University of Asia and the Pacific', quote: 'The world class coaching book of Aldem is so simple and practical - but powerful! We use it to coach both our elementary and high school students.', image: 'marc lopez.jpg' },
+1066:          { name: 'Marce Combe', role: 'HR Director, Manufacturing Corp', quote: 'Since we engaged Brkthru’s services we gained a business partner! ... Personally I am forever grateful I met Coach Aldem, Ms Vanessa and Ms. Virna.', image: 'marce combe.jpeg' },
+1067:          { name: 'Dan Gailo', role: 'National Sales Director, Distribution', quote: 'I would definitely highly recommend Brkthru because the discipline they adhere to is very structured and relevant.. They equip you with tools to deal with your daily real life challenges.', image: 'dan gailo.jpeg' },
+1068:          { name: 'Joy Cunita', role: "SVP, Gov't Sector", quote: 'Brkthru coaches are experts and show utmost love and passion for transforming organizations by creating breakthrough results.', image: 'joy cunita.jpeg' },
+1069:          { name: 'Jules Ganera', role: 'Client Partner', quote: "Brkthru goes out of its way to understand the org first... after hearing out the client, they align and collaborate.", image: 'jules ganera.png' },
+1070:          { name: 'Lorna Campos', role: 'Executive Director, Youth Organization', quote: 'We have seen how Meta-Coaching has helped young people reflect on their purpose and meaning... Meta-Coaching facilitates changed lives.', image: 'lorna campos.jpeg' },
+1071:          { name: 'Stephen Thomas Misa', role: 'Country Manager, Amazon Web Services Philippines', quote: 'This book is a must-read for both aspiring and seasoned leaders! Add great coaching skills in your arsenal.', image: 'stephen thomas misa.jpg' },
+1072:          { name: 'Romulo S. Romero', role: 'CEO and Principal Consultant of OTi Philippines', quote: "Aldem's platform of Meta-Coaching effectively surfaces practical steps to bring out excellence in people.", image: 'romulo romero.jpg' },
+1073:          { name: 'Ellen Soriano', role: 'Director', quote: "This book will help you bring out and enhance your coaching skills to become an exceptional leader.", image: 'ellen soriano.jpg' }
+1074:      ];
+1076:      function populateTestimonials() {
+1077:          const grid = document.getElementById('testimonials-grid');
+1078:          grid.innerHTML = primaryTestimonials.map(t => `
+1079:            <div class="glass p-10 rounded-[3rem] border-white/5 relative group hover:border-brand-amber/20 transition-all">
+1080:                <i class="fa-solid fa-quote-right absolute top-8 right-10 text-4xl text-white/5 group-hover:text-brand-amber/10 transition-colors"></i>
+1081:                <p class="text-slate-400 italic leading-relaxed mb-8 relative z-10 font-serif">"${t.quote}"</p>
+1082:                <div class="flex items-center gap-5">
+1083:                    <img src="${t.image}" alt="${t.name}" class="w-16 h-16 rounded-2xl object-cover border-2 border-white/5 grayscale group-hover:grayscale-0 transition-all">
+1084:                    <div>
+1085:                        <div class="text-white font-bold">${t.name}</div>
+1086:                        <div class="text-xs text-brand-amber font-bold uppercase tracking-widest mt-1">${t.role}</div>
+1087:                    </div>
+1088:                </div>
+1089:            </div>
+1090:          `).join('');
+1091:      }
+1093:      function openTestimonialModal() {
+1094:          const list = document.getElementById('all-testimonials-list');
+1095:          list.innerHTML = moreTestimonials.map(t => `
+1096:            <div class="bg-white/5 p-8 rounded-[2.5rem] border border-white/10 flex flex-col md:flex-row gap-8 items-center md:items-start transition-all hover:bg-white/[0.07]">
+1097:                <img src="${t.image}" alt="${t.name}" class="w-20 h-20 rounded-3xl object-cover border-2 border-white/10 grayscale-0 shadow-xl flex-shrink-0">
+1098:                <div class="space-y-4">
+1099:                    <p class="text-slate-300 italic leading-relaxed font-serif">"${t.quote}"</p>
+1100:                    <div>
+1101:                        <div class="text-white font-bold text-lg">${t.name}</div>
+1102:                        <div class="text-xs text-brand-amber font-bold uppercase tracking-[0.2em] mt-1">${t.role}</div>
+1103:                    </div>
+1104:                </div>
+1105:            </div>
+1106:          `).join('');
+1107:          document.getElementById('testimonialModal').classList.remove('hidden');
+1108:          document.body.style.overflow = 'hidden';
+1109:      }
+1110:      function closeTestimonialModal() {
+1111:          document.getElementById('testimonialModal').classList.add('hidden');
+1112:          document.body.style.overflow = 'auto';
+1113:      }
+1115:      window.addEventListener('load', () => {
+1116:          populateTestimonials();
+1117:          handleHash();
+1118:      });
+1119:      window.addEventListener("hashchange", handleHash);
+1120:    </script>
+1123:  </body>
+1124:</html>
