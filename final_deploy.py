@@ -52,9 +52,10 @@ try:
     for f in files:
         if os.path.exists(f): run(['git', 'add', f])
     
-    # 4. Final Force Push
-    run(['git', 'commit', '-m', 'Production Build: Clean Slate'])
+    # 4. Final Force Push to BOTH branches
+    run(['git', 'commit', '-m', 'Fix: Clinical Definitive Fix - Base64 Embedding and multi-branch push'])
     run(['git', 'push', '-f', 'origin', 'master'])
-    print("DEPLOYMENT SUCCESSFUL")
+    run(['git', 'push', '-f', 'origin', 'master:main']) # Force main as well
+    print("DEPLOYMENT SUCCESSFUL to both master and main")
 except Exception as e:
     print(f"CRITICAL FAILURE: {e}")
