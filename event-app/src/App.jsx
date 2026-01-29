@@ -1131,12 +1131,17 @@ export default function App() {
                             <div className="space-y-10">
                                 <h4 className="text-sm font-black uppercase tracking-[0.5em] text-white">Contact</h4>
                                 <div className="flex flex-col gap-6 text-slate-500 font-bold uppercase text-sm tracking-[0.3em] font-sans">
-                                    <a href="mailto:brkthrua@gmail.com" className="hover:text-amber-500">
-                                        brkthrua@gmail.com
+                                    <a href="mailto:brkthruworkshops@gmail.com" className="hover:text-amber-500">
+                                        brkthruworkshops@gmail.com
+                                    </a>
+                                    <a href="tel:+639158766595" className="hover:text-amber-500">
+                                        +63915 876 6595
+                                    </a>
+                                    <a href="https://facebook.com/brkthrucentre" target="_blank" className="hover:text-amber-500 flex items-center gap-2">
+                                        fb/brkthrucentre
                                     </a>
                                     <span className="text-slate-700">Bacolod Hub</span>
                                     <span className="text-slate-700">Manila Hub</span>
-                                    <span className="text-slate-700">Metaverse Hub</span>
                                 </div>
                             </div>
                         </div>
