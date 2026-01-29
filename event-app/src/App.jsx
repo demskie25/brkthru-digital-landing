@@ -998,7 +998,7 @@ export default function App() {
                 <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
                     <div className="flex items-center gap-8 cursor-pointer group" onClick={() => navigate('home')}>
                         <img
-                            src="brkthru logo.png"
+                            src="images/brkthru-logo.png"
                             alt="Logo"
                             className="h-10 md:h-14 w-auto group-hover:scale-110 transition-transform"
                         />
@@ -1085,7 +1085,7 @@ export default function App() {
                     <div className="grid lg:grid-cols-12 gap-24 items-start border-b border-white/5 pb-40">
                         <div className="lg:col-span-6 space-y-16">
                             <div className="flex flex-col items-start gap-1">
-                                <img src="brkthru logo.png" alt="Logo" className="h-14 invert opacity-90" />
+                                <img src="images/brkthru-logo.png" alt="Logo" className="h-14 invert opacity-90" />
                                 <span className="text-white text-xs md:text-xs font-black tracking-[0.8em] uppercase opacity-90 ml-1">
                                     DIGITAL
                                 </span>
