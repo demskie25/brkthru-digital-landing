@@ -68,6 +68,8 @@
         overflow-y: auto !important;
         height: auto !important;
         min-height: 100vh;
+        background-color: #0c1221;
+        color: #ffffff;
       }
       .crop-bottom {
         -webkit-mask-image: linear-gradient(
@@ -111,7 +113,7 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   </head>
   <body
-    class="bg-brand-navy text-slate-300 antialiased selection:bg-brand-amber selection:text-brand-navy"
+    class="bg-[#0c1221] text-slate-300 antialiased selection:bg-brand-amber selection:text-brand-navy"
     x-data="{ homeOpen: false, aboutOpen: false }"
   >
     <!-- UNIVERSAL HEADER -->
@@ -248,7 +250,7 @@
           </h1>
 
           <p
-            class="max-w-3xl mx-auto text-xl md:text-3xl text-slate-400 font-serif italic leading-relaxed"
+            class="max-w-3xl mx-auto text-xl md:text-3xl text-white/90 font-serif italic leading-relaxed"
           >
             "Seismic learning. Lasting results. Skip the hype."
           </p>
@@ -287,7 +289,7 @@
           </h2>
           <div class="w-32 h-2.5 bg-brand-amber mx-auto rounded-full"></div>
           <p
-            class="max-w-4xl mx-auto text-2xl text-slate-400 font-serif italic leading-relaxed pt-6"
+            class="max-w-4xl mx-auto text-2xl text-white/90 font-serif italic leading-relaxed pt-6"
           >
             "The shift from managing to facilitating is the key to leadership."
           </p>
@@ -298,8 +300,8 @@
             <div class="glass p-8 rounded-3xl border-brand-amber/20 hover:border-brand-amber/50 transition-all flex flex-col">
               <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Oct 24, 2026 (Saturday)</h4>
               <a href="#parenting" class="block text-white font-serif font-bold text-xl mb-4 hover:text-brand-amber transition-colors">Impactful Parenting & Educating Style</a>
-              <div class="space-y-2 text-sm text-slate-400 mb-6">
-                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber"></i> Manila</p>
+              <div class="space-y-2 text-sm text-slate-300 mb-6">
+                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber text-lg"></i> Manila</p>
                 <p><i class="fa-solid fa-clock mr-2 text-brand-amber"></i> 9 AM - 5 PM</p>
                 <p><i class="fa-solid fa-users mr-2 text-brand-amber"></i> For: High-achieving parents</p>
               </div>
@@ -312,8 +314,8 @@
             <div class="glass p-8 rounded-3xl border-brand-amber/20 hover:border-brand-amber/50 transition-all flex flex-col">
               <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Oct 26-29, 2026 (Mon-Thur)</h4>
               <a href="#5mm" class="block text-white font-serif font-bold text-xl mb-4 hover:text-brand-amber transition-colors">The 5-Minute Manager</a>
-              <div class="space-y-2 text-sm text-slate-400 mb-6">
-                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber"></i> Manila</p>
+              <div class="space-y-2 text-sm text-slate-300 mb-6">
+                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber text-lg"></i> Manila</p>
                 <p><i class="fa-solid fa-clock mr-2 text-brand-amber"></i> 9 AM - 6 PM</p>
                 <p><i class="fa-solid fa-users mr-2 text-brand-amber"></i> For: Middle Management & Supervisors</p>
               </div>
@@ -326,8 +328,8 @@
             <div class="glass p-8 rounded-3xl border-brand-amber/20 hover:border-brand-amber/50 transition-all flex flex-col">
               <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Oct 21-23, 2026 (Wed-Fri)</h4>
               <a href="#productive-thinking" class="block text-white font-serif font-bold text-xl mb-4 hover:text-brand-amber transition-colors">Productive Thinking: Leading In High-Performance</a>
-              <div class="space-y-2 text-sm text-slate-400 mb-6">
-                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber"></i> Manila</p>
+              <div class="space-y-2 text-sm text-slate-300 mb-6">
+                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber text-lg"></i> Manila</p>
                 <p><i class="fa-solid fa-clock mr-2 text-brand-amber"></i> 9 AM - 6 PM</p>
                 <p><i class="fa-solid fa-users mr-2 text-brand-amber"></i> For: Executives & Strategic Leaders</p>
               </div>
@@ -340,8 +342,8 @@
             <div class="glass p-8 rounded-3xl border-brand-amber/20 hover:border-brand-amber/50 transition-all flex flex-col">
               <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Nov 7, 2026 (Saturday)</h4>
               <a href="#parenting" class="block text-white font-serif font-bold text-xl mb-4 hover:text-brand-amber transition-colors">Impactful Parenting & Educating Style</a>
-              <div class="space-y-2 text-sm text-slate-400 mb-6">
-                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber"></i> Bacolod</p>
+              <div class="space-y-2 text-sm text-slate-300 mb-6">
+                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber text-lg"></i> Bacolod</p>
                 <p><i class="fa-solid fa-clock mr-2 text-brand-amber"></i> 9 AM - 5 PM</p>
                 <p><i class="fa-solid fa-users mr-2 text-brand-amber"></i> For: High-achieving parents</p>
               </div>
@@ -356,8 +358,8 @@
       <!-- CLIENTS AUTHORITY NETWORK -->
       <section class="max-w-7xl mx-auto px-6 mb-24">
         <div class="text-center mb-12">
-            <p class="text-slate-500 text-xs md:text-sm font-black uppercase tracking-[0.4em] mb-4">Trusted by Institutions & Leaders Worldwide</p>
-            <div class="w-20 h-1 bg-brand-amber mx-auto rounded-full opacity-30"></div>
+            <p class="text-slate-400 text-xs md:text-sm font-black uppercase tracking-[0.4em] mb-4">Trusted by Institutions & Leaders Worldwide</p>
+            <div class="w-20 h-1 bg-brand-amber mx-auto rounded-full opacity-50"></div>
         </div>
         
         <div class="flex flex-wrap gap-3 justify-center max-w-5xl mx-auto" id="client-list-container">
@@ -429,7 +431,7 @@
                   Transformation</span
                 >
               </h3>
-              <p class="text-slate-400 text-lg leading-relaxed">
+              <p class="text-white/80 text-lg leading-relaxed">
                 Recognized as a Top 5 Global Guru in NLP, Dr. L. Michael Hall has
                 consistently ranked among the world's Top 30 for Communication
                 and Coaching for several consecutive years. This isn't just
@@ -483,7 +485,7 @@
               <div
                 class="mt-6 p-6 bg-white/5 rounded-2xl border border-white/5"
               >
-                <p class="text-slate-500 text-sm leading-relaxed italic">
+                <p class="text-slate-300 text-sm leading-relaxed italic">
                   "Dr. L. Michael Hall is the intellectual engine powering
                   leadership institutes in 60+ countries including the
                   Philippines, USA, UK, Brazil, Egypt, and Mauritius. Author of
@@ -554,7 +556,7 @@
               <div class="space-y-8">
                 <div>
                     <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Target Audience</h4>
-                    <ul class="text-slate-400 space-y-2 text-sm">
+                    <ul class="text-slate-300 space-y-2 text-sm">
                         <li class="leading-relaxed"><span class="text-white font-bold">Decision Makers:</span> CEOs, Executives, and Entrepreneurs who feel the heavy weight of every choice.</li>
                         <li class="leading-relaxed"><span class="text-white font-bold">Complex-Role Professionals:</span> Engineers, Analysts, IT Leads, and Project Managers drowning in data.</li>
                         <li class="leading-relaxed"><span class="text-white font-bold">The "Mental Drifters":</span> Anyone who struggles with "Analysis Paralysis" or a brain that won't shut off at night.</li>
@@ -564,11 +566,11 @@
 
                 <div>
                     <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">The Reality Check (Pain Points)</h4>
-                    <ul class="text-slate-400 space-y-2 text-sm italic">
-                        <li><span class="text-slate-300 font-bold">Mental Exhaustion:</span> Feeling like your brain is "full" and unable to take on one more problem.</li>
-                        <li><span class="text-slate-300 font-bold">The Fog:</span> Spending hours on a task but feeling like you're just spinning your wheels without a breakthrough.</li>
-                        <li><span class="text-slate-300 font-bold">Circular Arguments:</span> Re-visiting the same business or personal problem for weeks without a real resolution.</li>
-                        <li><span class="text-slate-300 font-bold">Thinking Traps:</span> Falling for "all-or-nothing" thinking or letting your emotions hijack your logic during a crisis.</li>
+                    <ul class="text-slate-300 space-y-2 text-sm italic">
+                        <li><span class="text-slate-200 font-bold">Mental Exhaustion:</span> Feeling like your brain is "full" and unable to take on one more problem.</li>
+                        <li><span class="text-slate-200 font-bold">The Fog:</span> Spending hours on a task but feeling like you're just spinning your wheels without a breakthrough.</li>
+                        <li><span class="text-slate-200 font-bold">Circular Arguments:</span> Re-visiting the same business or personal problem for weeks without a real resolution.</li>
+                        <li><span class="text-slate-200 font-bold">Thinking Traps:</span> Falling for "all-or-nothing" thinking or letting your emotions hijack your logic during a crisis.</li>
                     </ul>
                 </div>
               </div>
@@ -584,7 +586,7 @@
 
                 <div>
                     <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">What we'll cover</h4>
-                    <ul class="text-slate-400 space-y-2 text-sm">
+                    <ul class="text-slate-300 space-y-2 text-sm">
                         <li class="flex gap-2"><span class="text-brand-amber">�</span> <span class="text-white font-bold">The Precision Funnel:</span> How to drill down to the actual facts in any conversation.</li>
                         <li class="flex gap-2"><span class="text-brand-amber">�</span> <span class="text-white font-bold">The 10 Cognitive Distortions:</span> Identifying the "glitches" in your brain that cause mistakes.</li>
                         <li class="flex gap-2"><span class="text-brand-amber">�</span> <span class="text-white font-bold">The Calm Mind:</span> Techniques to "step back" and look at your own thinking without getting triggered.</li>
@@ -639,9 +641,9 @@
               <div class="space-y-8">
                 <div>
                     <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Target Audience</h4>
-                    <ul class="text-slate-400 space-y-2 text-sm">
+                    <ul class="text-slate-300 space-y-2 text-sm">
                         <li class="leading-relaxed"><span class="text-white font-bold">The "Babysitters":</span> Managers who spend all day solving their team's problems instead of their own.</li>
-                        <li class="leading-relaxed"><span class="text-white font-bold">Overwhelmed Supervisors:</span> Team leads who feel like they�re doing the work of three people.</li>
+                        <li class="leading-relaxed"><span class="text-white font-bold">Overwhelmed Supervisors:</span> Team leads who feel like they're doing the work of three people.</li>
                         <li class="leading-relaxed"><span class="text-white font-bold">Business Owners:</span> Leaders who want to delegate but feel they can't trust the results.</li>
                         <li class="leading-relaxed"><span class="text-white font-bold">HR & Leaders:</span> Those looking for a way to drive performance that is both humane and highly effective.</li>
                     </ul>
@@ -715,7 +717,7 @@
                 <h3 class="text-3xl md:text-4xl font-serif font-bold italic mb-2">
                   Impactful Parenting and Educating Style
                 </h3>
-                <p class="text-slate-400 text-sm font-medium tracking-wide">
+                <p class="text-slate-300 text-sm font-medium tracking-wide">
                   How to enhance your Capacity for this incredibly complex and demanding task!
                 </p>
               </div>
@@ -728,7 +730,7 @@
               <div class="space-y-8">
                 <div>
                     <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Target Audience</h4>
-                    <ul class="text-slate-400 space-y-2 text-sm">
+                    <ul class="text-slate-300 space-y-2 text-sm">
                         <li class="leading-relaxed"><span class="text-white font-bold">Intentional Parents:</span> Moms and dads (kids 0-18) who want to stop "winging it" and start being proactive.</li>
                         <li class="leading-relaxed"><span class="text-white font-bold">The Professional Parent:</span> High-achievers who are masters at work but feel like they're failing at home.</li>
                         <li class="leading-relaxed"><span class="text-white font-bold">The Cycle-Breakers:</span> Parents who don't want to repeat the shouting or distance they grew up with.</li>

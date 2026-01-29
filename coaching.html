@@ -23,6 +23,8 @@
                 amber: "#FFBF00",
                 navy: "#0F172A",
                 slate: "#1E293B",
+                charcoal: "#0a192f",
+                blue: "#3b82f6",
               },
             },
             fontFamily: {
@@ -46,7 +48,8 @@
 
       body {
         font-family: "Inter", sans-serif;
-        background-color: #ffffff;
+        background-color: #0c1221;
+        color: #ffffff;
       }
       h1,
       h2,
@@ -80,7 +83,10 @@
       <!-- AOS Animation CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   </head>
-  <body x-data="{ modalOpen: false, modalTitle: 'Apply for Coaching' }">
+  <body
+    class="bg-slate-950 text-white selection:bg-brand-amber selection:text-brand-navy"
+    x-data="{ modalOpen: false, modalTitle: 'Apply for Coaching' }"
+  >
     <!-- UNIVERSAL HEADER -->
     <nav class="univ-header">
         <div class="univ-container">
@@ -145,7 +151,7 @@
     <!-- END UNIVERSAL HEADER -->
     <main>
       <!-- HERO -->
-      <section class="bg-brand-navy py-32 overflow-hidden relative">
+      <section class="bg-slate-950 py-32 overflow-hidden relative">
         <!-- Background Image -->
         <div class="absolute inset-0 z-0">
           <img src="hero_coaching.png" alt="" class="w-full h-full object-cover opacity-80" />
@@ -165,7 +171,7 @@
             Ruthless <br /><span class="text-brand-amber">Compassion</span>
           </h1>
           <p
-            class="text-xl text-white/90 max-w-4xl mx-auto mb-16 leading-relaxed font-light"
+            class="text-xl text-slate-200 max-w-4xl mx-auto mb-16 leading-relaxed font-light"
           >
             Engineering internal breakthroughs for high-stakes leadership. We
             provide the surgical cognitive precision required to move from
@@ -189,7 +195,7 @@
       </section>
 
       <!-- TRUSTED PERFORMANCE (TRACK RECORD) -->
-      <section class="py-24 bg-brand-navy border-y border-white/5">
+      <section class="py-24 bg-slate-900 border-y border-white/5">
         <div class="container mx-auto px-6">
           <p
             class="text-center text-slate-400 text-xs md:text-sm font-black uppercase tracking-ultra mb-16"
@@ -274,7 +280,7 @@
       </section>
 
       <!-- COACHING TRACKS -->
-      <section id="tracks" class="py-32 bg-brand-navy">
+      <section id="tracks" class="py-32 bg-slate-900">
         <div class="container mx-auto px-6">
           <div class="grid md:grid-cols-3 gap-12">
             <!-- Track 1 -->
@@ -282,12 +288,12 @@
               class="p-12 rounded-[3rem] bg-slate-50 border border-slate-100 hover:shadow-2xl transition-all"
             >
               <h3
-                class="text-2xl font-black text-brand-charcoal mb-6 uppercase tracking-tight leading-tight"
+                class="text-2xl font-black text-slate-950 mb-6 uppercase tracking-tight leading-tight"
               >
                 Management Team Coaching
               </h3>
               <p
-                class="text-slate-600 leading-relaxed font-medium text-base mb-10"
+                class="text-slate-700 leading-relaxed font-medium text-base mb-10"
               >
                 Facilitating interpersonal and systemic alignment among top
                 executives and senior managers for more productive synergy and
@@ -312,14 +318,14 @@
                 Relationships
               </h3>
               <p
-                class="text-slate-300 leading-relaxed font-medium text-base mb-10"
+                class="text-slate-200 leading-relaxed font-medium text-base mb-10"
               >
                 Systemic relationship coaching for families and teams using the
                 Meta-States model to rebuild trust and synergy.
               </p>
               <button
                 @click="modalOpen = true; modalTitle = 'Relationships Coaching Inquiry'"
-                class="text-brand-blue font-black text-xs md:text-sm uppercase tracking-ultra hover:ml-2 transition-all"
+                class="text-blue-600 font-black text-xs md:text-sm uppercase tracking-ultra hover:ml-2 transition-all"
               >
                 Select Track <i class="fa-solid fa-arrow-right ml-2"></i>
               </button>
@@ -330,12 +336,12 @@
               class="p-12 rounded-[3rem] bg-slate-50 border border-slate-100 hover:shadow-2xl transition-all"
             >
               <h3
-                class="text-2xl font-black text-brand-charcoal mb-6 uppercase tracking-tight leading-tight"
+                class="text-2xl font-black text-slate-950 mb-6 uppercase tracking-tight leading-tight"
               >
                 Career Direction & Transition
               </h3>
               <p
-                class="text-slate-600 leading-relaxed font-medium text-base mb-10"
+                class="text-slate-700 leading-relaxed font-medium text-base mb-10"
               >
                 Facilitating professional pivots from high-level corporate
                 management to purpose-driven leadership with strategic clarity
@@ -346,7 +352,7 @@
               </p>
               <button
                 @click="modalOpen = true; modalTitle = 'Career Transition Inquiry'"
-                class="text-brand-blue font-black text-xs md:text-sm uppercase tracking-ultra hover:ml-2 transition-all"
+                class="text-blue-600 font-black text-xs md:text-sm uppercase tracking-ultra hover:ml-2 transition-all"
               >
                 Select Track <i class="fa-solid fa-arrow-right ml-2"></i>
               </button>
@@ -357,12 +363,12 @@
               class="p-12 rounded-[3rem] bg-slate-50 border border-slate-100 hover:shadow-2xl transition-all"
             >
               <h3
-                class="text-2xl font-black text-brand-charcoal mb-6 uppercase tracking-tight leading-tight"
+                class="text-2xl font-black text-slate-950 mb-6 uppercase tracking-tight leading-tight"
               >
                 Executive Coaching
               </h3>
               <p
-                class="text-slate-600 leading-relaxed font-medium text-base mb-10"
+                class="text-slate-700 leading-relaxed font-medium text-base mb-10"
               >
                 High-precision cognitive coaching for leaders to master their
                 inner game. We focus on meta-strategic thinking, emotional
@@ -371,7 +377,7 @@
               </p>
               <button
                 @click="modalOpen = true; modalTitle = 'Executive Coaching Inquiry'"
-                class="text-brand-blue font-black text-xs md:text-sm uppercase tracking-ultra hover:ml-2 transition-all"
+                class="text-blue-600 font-black text-xs md:text-sm uppercase tracking-ultra hover:ml-2 transition-all"
               >
                 Select Track <i class="fa-solid fa-arrow-right ml-2"></i>
               </button>
@@ -382,12 +388,12 @@
               class="p-12 rounded-[3rem] bg-slate-50 border border-slate-100 hover:shadow-2xl transition-all"
             >
               <h3
-                class="text-2xl font-black text-brand-charcoal mb-6 uppercase tracking-tight leading-tight"
+                class="text-2xl font-black text-slate-950 mb-6 uppercase tracking-tight leading-tight"
               >
                 Sports Performance
               </h3>
               <p
-                class="text-slate-600 leading-relaxed font-medium text-base mb-10"
+                class="text-slate-700 leading-relaxed font-medium text-base mb-10"
               >
                 Mastering the mental mechanics of the 'zone.' We help elite
                 athletes identify and remove the internal interferences that
@@ -396,7 +402,7 @@
               </p>
               <button
                 @click="modalOpen = true; modalTitle = 'Sports Performance Inquiry'"
-                class="text-brand-blue font-black text-xs md:text-sm uppercase tracking-ultra hover:ml-2 transition-all"
+                class="text-blue-600 font-black text-xs md:text-sm uppercase tracking-ultra hover:ml-2 transition-all"
               >
                 Select Track <i class="fa-solid fa-arrow-right ml-2"></i>
               </button>
@@ -407,12 +413,12 @@
               class="p-12 rounded-[3rem] bg-slate-50 border border-slate-100 hover:shadow-2xl transition-all"
             >
               <h3
-                class="text-2xl font-black text-brand-charcoal mb-6 uppercase tracking-tight leading-tight"
+                class="text-2xl font-black text-slate-950 mb-6 uppercase tracking-tight leading-tight"
               >
                 ADHD & Resilience
               </h3>
               <p
-                class="text-slate-600 leading-relaxed font-medium text-base mb-10"
+                class="text-slate-700 leading-relaxed font-medium text-base mb-10"
               >
                 Transforming cognitive uniqueness into a high-performance
                 advantage. We provide tools for executive functioning and
@@ -421,7 +427,7 @@
               </p>
               <button
                 @click="modalOpen = true; modalTitle = 'ADHD & Resilience Inquiry'"
-                class="text-brand-blue font-black text-xs md:text-sm uppercase tracking-ultra hover:ml-2 transition-all"
+                class="text-blue-600 font-black text-xs md:text-sm uppercase tracking-ultra hover:ml-2 transition-all"
               >
                 Select Track <i class="fa-solid fa-arrow-right ml-2"></i>
               </button>
@@ -433,7 +439,8 @@
       <!-- COACHING CLIENT EXPERIENCES (MAGAZINE LAYOUT) -->
       <section
         id="testimonials"
-        class="py-32 bg-brand-charcoal text-white overflow-hidden font-sans"
+        class="py-32 bg-slate-950 text-white overflow-hidden font-sans"
+        style="background-color: #0c1221;"
       >
         <div class="container mx-auto px-6">
           <div class="text-center mb-24">
@@ -447,7 +454,8 @@
 
           <!-- LEAD CONTRIBUTION (BO SANCHEZ) - MAGAZINE SPLIT -->
           <div
-            class="grid lg:grid-cols-2 gap-0 rounded-[4rem] overflow-hidden bg-white/5 mb-32 shadow-2xl border border-white/5"
+            class="grid lg:grid-cols-2 gap-0 rounded-[4rem] overflow-hidden mb-32 shadow-2xl border border-white/5"
+            style="background-color: #0a192f;"
           >
             <div class="p-16 md:p-24 flex flex-col justify-center">
               <div
@@ -486,7 +494,7 @@
                 class="absolute inset-0 w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-105 hover:scale-100"
               />
               <div
-                class="absolute inset-0 bg-brand-navy/20 mix-blend-multiply"
+                class="absolute inset-0 bg-brand-navy bg-slate-950/20 mix-blend-multiply"
               ></div>
             </div>
           </div>
@@ -502,7 +510,7 @@
             <div class="grid lg:grid-cols-2 gap-12">
               <!-- Jennifer Nguyen -->
               <div
-                class="bg-brand-amber p-16 rounded-[4rem] relative overflow-hidden group shadow-2xl text-brand-navy"
+                class="bg-[#FFBF00] p-16 rounded-[4rem] relative overflow-hidden group shadow-2xl text-[#0F172A]"
               >
                 <div
                   class="absolute -top-10 -left-10 text-[15rem] font-serif text-black opacity-10 leading-none"
@@ -534,7 +542,7 @@
                 class="bg-slate-900 p-16 rounded-[4rem] border border-white/10 shadow-2xl"
               >
                 <p
-                  class="text-2xl text-white/90 leading-relaxed mb-12 italic font-light"
+                  class="text-2xl text-slate-100 leading-relaxed mb-12 italic font-light"
                 >
                   "A year-long crisis of severe depression and self-harm
                   resolved in minutes, not months. In 45 minutes, I was equipped
@@ -569,7 +577,7 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               <!-- Linda Haute -->
               <div
-                class="md:col-span-2 lg:col-span-2 bg-white text-brand-charcoal p-16 rounded-[4rem] flex flex-col justify-between shadow-2xl"
+                class="md:col-span-2 lg:col-span-2 bg-white text-slate-950 p-16 rounded-[4rem] flex flex-col justify-between shadow-2xl"
               >
                 <div>
                   <i
@@ -584,10 +592,10 @@
                   </p>
                 </div>
                 <div class="flex items-center space-x-4">
-                  <div class="w-10 h-px bg-brand-charcoal"></div>
-                  <p class="font-black text-sm uppercase tracking-ultra">
+                  <div class="w-10 h-px bg-slate-900"></div>
+                  <p class="font-black text-sm uppercase tracking-ultra text-slate-950">
                     Linda Haute
-                    <span class="text-slate-400 font-medium ml-2"
+                    <span class="text-slate-600 font-medium ml-2"
                       >— Corporate Executive</span
                     >
                   </p>
@@ -599,7 +607,7 @@
                 class="bg-brand-amber/10 border border-brand-amber/20 p-12 rounded-[3.5rem] flex flex-col justify-between"
               >
                 <p
-                  class="text-xl md:text-2xl text-brand-charcoal leading-relaxed font-bold italic mb-10"
+                  class="text-xl md:text-2xl text-slate-800 leading-relaxed font-bold italic mb-10"
                 >
                   "A single session with Coach Aldem completely turned my life
                   around... from lost and angry to being self-possessed, free,
@@ -607,7 +615,7 @@
                 </p>
                 <div>
                   <p
-                    class="font-black text-sm uppercase tracking-ultra text-white"
+                    class="font-black text-sm uppercase tracking-ultra text-slate-950"
                   >
                     VP Vi
                   </p>
@@ -678,7 +686,7 @@
       </section>
 
       <!-- FINAL CTA -->
-      <section id="apply" class="py-32 bg-brand-navy">
+      <section id="apply" class="py-32 bg-slate-900">
         <div class="container mx-auto px-6 text-center">
           <h2
             class="text-5xl md:text-7xl font-black text-white mb-10 uppercase tracking-tighter leading-none font-serif"
@@ -688,7 +696,7 @@
             >
           </h2>
           <p
-            class="text-xl text-slate-400 max-w-2xl mx-auto mb-16 leading-relaxed font-light"
+            class="text-xl text-slate-300 max-w-2xl mx-auto mb-16 leading-relaxed font-light"
           >
             Applications are reviewed for alignment and capacity. We only work
             with leaders ready for ruthless clarity.
@@ -713,7 +721,7 @@
 
     <!-- SOVEREIGN FOOTER -->
     <footer
-      class="bg-brand-navy border-t border-white/5 pt-60 pb-24 px-12 rounded-t-[10rem] relative overflow-hidden"
+      class="bg-brand-navy bg-slate-950 border-t border-white/5 pt-60 pb-24 px-12 rounded-t-[10rem] relative overflow-hidden"
     >
       <div
         class="absolute top-0 left-1/2 -translate-x-1/2 w-[80rem] h-[30rem] bg-brand-blue/5 rounded-full blur-[160px] -translate-y-1/2"
@@ -728,7 +736,7 @@
               <span class="univ-logo-accent">DIGITAL</span>
             </a>
             <p
-              class="text-slate-500 text-4xl font-serif italic leading-relaxed pr-32"
+              class="text-slate-400 text-4xl font-serif italic leading-relaxed pr-32"
             >
               "Providing the inner machinery for the executive game. Engineering
               breakthroughs since 1997."
@@ -849,7 +857,7 @@
                 type="email"
                 name="email"
                 required
-                class="w-full bg-slate-50 border-none p-6 rounded-[1.5rem] focus:ring-2 focus:ring-brand-blue font-bold text-brand-charcoal placeholder-slate-300"
+                class="w-full bg-slate-50 border-none p-6 rounded-[1.5rem] focus:ring-2 focus:ring-brand-blue font-bold text-slate-950 placeholder-slate-300"
                 placeholder="OFFICIAL@EMAIL.COM"
               />
             </div>
@@ -880,7 +888,7 @@
               >
               <select
                 name="contact_preference"
-                class="w-full bg-slate-50 border-none p-6 rounded-[1.5rem] focus:ring-2 focus:ring-brand-blue font-bold text-brand-charcoal appearance-none"
+                class="w-full bg-slate-50 border-none p-6 rounded-[1.5rem] focus:ring-2 focus:ring-brand-blue font-bold text-slate-950 appearance-none"
               >
                 <option>EMAIL INTERVENTION</option>
                 <option>WHATSAPP / TELEGRAM</option>
@@ -898,7 +906,7 @@
               name="breakthrough"
               rows="4"
               required
-              class="w-full bg-slate-50 border-none p-6 rounded-[1.5rem] focus:ring-2 focus:ring-brand-blue font-bold text-brand-charcoal placeholder-slate-300"
+              class="w-full bg-slate-50 border-none p-6 rounded-[1.5rem] focus:ring-2 focus:ring-brand-blue font-bold text-slate-950 placeholder-slate-300"
               placeholder="WHAT SURGERY IS REQUIRED?"
             ></textarea>
           </div>
