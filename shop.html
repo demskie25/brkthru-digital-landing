@@ -723,16 +723,20 @@
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
           <!-- 1. Delegation that Works -->
           <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-md transition-shadow"
+            class="bg-white rounded-xl shadow-sm border border-slate-200 group hover:shadow-md transition-shadow"
           >
             <a
               href="https://hitpay.link/y0ymoa"
               target="_blank"
-              class="block h-96 bg-white relative flex items-center justify-center p-0 transition-all hover:z-50 group"
+              x-data="{ ozX: 50, ozY: 50 }"
+              @mousemove="let r = $el.getBoundingClientRect(); ozX = (($event.clientX - r.left) / r.width) * 100; ozY = (($event.clientY - r.top) / r.height) * 100"
+              @mouseleave="ozX = 50; ozY = 50"
+              class="block h-96 bg-white relative flex items-center justify-center p-0 transition-all hover:z-50 group cursor-zoom-in"
             >
               <img
                 src="delegation cover.png"
                 class="w-full h-full object-contain shadow-2xl transition-transform duration-500 hover:scale-[2.0] relative z-10"
+                :style="{ transformOrigin: ozX + '% ' + ozY + '%' }"
                 alt="Delegation that Works"
               />
             </a>
@@ -757,10 +761,13 @@
 
           <!-- 2. The Feedback Quotient -->
           <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-md transition-shadow"
+            class="bg-white rounded-xl shadow-sm border border-slate-200 group hover:shadow-md transition-shadow"
           >
             <div
-              class="h-96 bg-slate-100 relative flex items-center justify-center p-0 group"
+              x-data="{ ozX: 50, ozY: 50 }"
+              @mousemove="let r = $el.getBoundingClientRect(); ozX = (($event.clientX - r.left) / r.width) * 100; ozY = (($event.clientY - r.top) / r.height) * 100"
+              @mouseleave="ozX = 50; ozY = 50"
+              class="h-96 bg-slate-100 relative flex items-center justify-center p-0 group hover:z-50"
             >
               <div
                 class="absolute inset-0 bg-brand-900/60 flex items-center justify-center z-20 pointer-events-none group-hover:opacity-0 transition-opacity"
@@ -773,6 +780,7 @@
               <img
                 src="toolkit_cover.jpg"
                 class="w-full h-full object-contain opacity-50 grayscale transition-all duration-500 hover:scale-[2.0] hover:opacity-100 hover:grayscale-0 relative z-10"
+                :style="{ transformOrigin: ozX + '% ' + ozY + '%' }"
                 alt="Feedback"
               />
             </div>
@@ -807,10 +815,13 @@
 
           <!-- 3. Completed Staff Work -->
           <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-md transition-shadow"
+            class="bg-white rounded-xl shadow-sm border border-slate-200 group hover:shadow-md transition-shadow"
           >
             <div
-              class="h-96 bg-slate-100 relative flex items-center justify-center p-0 group"
+              x-data="{ ozX: 50, ozY: 50 }"
+              @mousemove="let r = $el.getBoundingClientRect(); ozX = (($event.clientX - r.left) / r.width) * 100; ozY = (($event.clientY - r.top) / r.height) * 100"
+              @mouseleave="ozX = 50; ozY = 50"
+              class="h-96 bg-slate-100 relative flex items-center justify-center p-0 group hover:z-50"
             >
               <div
                 class="absolute inset-0 bg-brand-900/60 flex items-center justify-center z-20 pointer-events-none group-hover:opacity-0 transition-opacity"
@@ -823,6 +834,7 @@
               <img
                 src="toolkit_cover.jpg"
                 class="w-full h-full object-contain opacity-50 grayscale transition-all duration-500 hover:scale-[2.0] hover:opacity-100 hover:grayscale-0 relative z-10"
+                :style="{ transformOrigin: ozX + '% ' + ozY + '%' }"
                 alt="Staff Work"
               />
             </div>
@@ -857,10 +869,13 @@
 
           <!-- 4. Strategic Problem Solving -->
           <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-md transition-shadow"
+            class="bg-white rounded-xl shadow-sm border border-slate-200 group hover:shadow-md transition-shadow"
           >
             <div
-              class="h-96 bg-slate-100 relative flex items-center justify-center p-0 group"
+              x-data="{ ozX: 50, ozY: 50 }"
+              @mousemove="let r = $el.getBoundingClientRect(); ozX = (($event.clientX - r.left) / r.width) * 100; ozY = (($event.clientY - r.top) / r.height) * 100"
+              @mouseleave="ozX = 50; ozY = 50"
+              class="h-96 bg-slate-100 relative flex items-center justify-center p-0 group hover:z-50"
             >
               <div
                 class="absolute inset-0 bg-brand-900/60 flex items-center justify-center z-20 pointer-events-none group-hover:opacity-0 transition-opacity"
@@ -873,6 +888,7 @@
               <img
                 src="toolkit_cover.jpg"
                 class="w-full h-full object-contain opacity-50 grayscale transition-all duration-500 hover:scale-[2.0] hover:opacity-100 hover:grayscale-0 relative z-10"
+                :style="{ transformOrigin: ozX + '% ' + ozY + '%' }"
                 alt="Strategy"
               />
             </div>
@@ -924,12 +940,15 @@
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <!-- 1. The Executive Self-Concept -->
           <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-md transition-shadow"
+            class="bg-white rounded-xl shadow-sm border border-slate-200 group hover:shadow-md transition-shadow"
           >
             <a
               href="https://hitpay.link/mhy8sc"
               target="_blank"
-              class="block h-96 bg-white relative flex items-center justify-center p-0 group hover:z-50"
+              x-data="{ ozX: 50, ozY: 50 }"
+              @mousemove="let r = $el.getBoundingClientRect(); ozX = (($event.clientX - r.left) / r.width) * 100; ozY = (($event.clientY - r.top) / r.height) * 100"
+              @mouseleave="ozX = 50; ozY = 50"
+              class="block h-96 bg-white relative flex items-center justify-center p-0 group hover:z-50 cursor-zoom-in"
             >
               <div
                 class="absolute inset-0 bg-brand-900/60 flex items-center justify-center z-20 pointer-events-none group-hover:opacity-0 transition-opacity"
@@ -942,6 +961,7 @@
               <img
                 src="wcc_cover.jpg"
                 class="w-full h-full object-contain opacity-50 grayscale transition-all duration-500 hover:scale-[2.0] hover:opacity-100 hover:grayscale-0 relative z-10"
+                :style="{ transformOrigin: ozX + '% ' + ozY + '%' }"
                 alt="Self Concept"
               />
             </a>
@@ -975,9 +995,12 @@
 
           <!-- 2. Mind-to-Muscle -->
           <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-md transition-shadow"
+            class="bg-white rounded-xl shadow-sm border border-slate-200 group hover:shadow-md transition-shadow"
           >
             <div
+              x-data="{ ozX: 50, ozY: 50 }"
+              @mousemove="let r = $el.getBoundingClientRect(); ozX = (($event.clientX - r.left) / r.width) * 100; ozY = (($event.clientY - r.top) / r.height) * 100"
+              @mouseleave="ozX = 50; ozY = 50"
               class="h-96 bg-slate-100 relative flex items-center justify-center p-0 group hover:z-50"
             >
               <div
@@ -991,6 +1014,7 @@
               <img
                 src="wcc_cover.jpg"
                 class="w-full h-full object-contain opacity-50 grayscale transition-all duration-500 hover:scale-[2.0] hover:opacity-100 hover:grayscale-0 relative z-10"
+                :style="{ transformOrigin: ozX + '% ' + ozY + '%' }"
                 alt="Mind to Muscle"
               />
             </div>
@@ -1024,9 +1048,12 @@
 
           <!-- 3. Emotional Mastery -->
           <div
-            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-md transition-shadow"
+            class="bg-white rounded-xl shadow-sm border border-slate-200 group hover:shadow-md transition-shadow"
           >
             <div
+              x-data="{ ozX: 50, ozY: 50 }"
+              @mousemove="let r = $el.getBoundingClientRect(); ozX = (($event.clientX - r.left) / r.width) * 100; ozY = (($event.clientY - r.top) / r.height) * 100"
+              @mouseleave="ozX = 50; ozY = 50"
               class="h-96 bg-slate-100 relative flex items-center justify-center p-0 group hover:z-50"
             >
               <div
@@ -1040,6 +1067,7 @@
               <img
                 src="wcc_cover.jpg"
                 class="w-full h-full object-contain opacity-50 grayscale transition-all duration-500 hover:scale-[2.0] hover:opacity-100 hover:grayscale-0 relative z-10"
+                :style="{ transformOrigin: ozX + '% ' + ozY + '%' }"
                 alt="Emotional Mastery"
               />
             </div>
@@ -1097,6 +1125,9 @@
               Advanced
             </div>
             <div
+              x-data="{ ozX: 50, ozY: 50 }"
+              @mousemove="let r = $el.getBoundingClientRect(); ozX = (($event.clientX - r.left) / r.width) * 100; ozY = (($event.clientY - r.top) / r.height) * 100"
+              @mouseleave="ozX = 50; ozY = 50"
               class="h-96 bg-slate-100 relative flex items-center justify-center p-0 group hover:z-50"
             >
               <div
@@ -1110,6 +1141,7 @@
               <img
                 src="wcc_cover.jpg"
                 class="w-full h-full object-contain opacity-50 grayscale transition-all duration-500 hover:scale-[2.0] hover:opacity-100 hover:grayscale-0 relative z-10"
+                :style="{ transformOrigin: ozX + '% ' + ozY + '%' }"
                 alt="Neuro-Divergent"
               />
             </div>
@@ -1151,6 +1183,9 @@
               Advanced
             </div>
             <div
+              x-data="{ ozX: 50, ozY: 50 }"
+              @mousemove="let r = $el.getBoundingClientRect(); ozX = (($event.clientX - r.left) / r.width) * 100; ozY = (($event.clientY - r.top) / r.height) * 100"
+              @mouseleave="ozX = 50; ozY = 50"
               class="h-96 bg-slate-100 relative flex items-center justify-center p-0 group hover:z-50"
             >
               <div
@@ -1164,6 +1199,7 @@
               <img
                 src="toolkit_cover.jpg"
                 class="w-full h-full object-contain opacity-50 grayscale transition-all duration-500 hover:scale-[2.0] hover:opacity-100 hover:grayscale-0 relative z-10"
+                :style="{ transformOrigin: ozX + '% ' + ozY + '%' }"
                 alt="First Aid"
               />
             </div>
@@ -1205,6 +1241,9 @@
               Advanced
             </div>
             <div
+              x-data="{ ozX: 50, ozY: 50 }"
+              @mousemove="let r = $el.getBoundingClientRect(); ozX = (($event.clientX - r.left) / r.width) * 100; ozY = (($event.clientY - r.top) / r.height) * 100"
+              @mouseleave="ozX = 50; ozY = 50"
               class="h-96 bg-slate-100 relative flex items-center justify-center p-0 group hover:z-50"
             >
               <div
@@ -1218,6 +1257,7 @@
               <img
                 src="wcc_cover.jpg"
                 class="w-full h-full object-contain opacity-50 grayscale transition-all duration-500 hover:scale-[2.0] hover:opacity-100 hover:grayscale-0 relative z-10"
+                :style="{ transformOrigin: ozX + '% ' + ozY + '%' }"
                 alt="Parenting Manager"
               />
             </div>
