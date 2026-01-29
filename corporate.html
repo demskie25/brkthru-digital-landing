@@ -237,60 +237,7 @@
         </div>
       </section>
 
-      <!-- UPDATED TRUSTED BY GIANTS BAR -->
-      <section class="bg-brand-navy py-16 border-b border-white/5">
-        <div class="container mx-auto px-6">
-          <p
-            class="text-center text-slate-500 text-xs md:text-sm font-black uppercase tracking-[0.3em] mb-12"
-          >
-            Institutional Partners & Clients Served
-          </p>
-          <div
-            class="flex flex-wrap justify-center items-center gap-x-12 gap-y-10 opacity-60 grayscale hover:grayscale-0 transition-all duration-700"
-          >
-            <span
-              class="text-xl font-black text-white px-4 py-2 border border-white/10 rounded-lg hover:border-brand-amber transition-colors tracking-tighter uppercase"
-              >Petron</span
-            >
-            <span
-              class="text-xl font-black text-white tracking-tighter uppercase"
-              >Toyota</span
-            >
-            <span
-              class="text-xl font-black text-white tracking-tighter uppercase"
-              >Pfizer</span
-            >
-            <span
-              class="text-xl font-black text-white tracking-tighter uppercase"
-              >Amazon Web</span
-            >
-            <span
-              class="text-xl font-black text-white tracking-tighter uppercase"
-              >Thomson Reuters</span
-            >
-            <span
-              class="text-xl font-black text-white tracking-tighter uppercase"
-              >Maynilad</span
-            >
-            <span
-              class="text-xl font-black text-white tracking-tighter uppercase"
-              >DTI</span
-            >
-            <span
-              class="text-xl font-black text-white tracking-tighter uppercase"
-              >Phinma</span
-            >
-            <span
-              class="text-xl font-black text-white tracking-tighter uppercase"
-              >Leslies</span
-            >
-            <span
-              class="text-xl font-black text-white tracking-tighter uppercase"
-              >GSIS</span
-            >
-          </div>
-        </div>
-      </section>
+
 
       <!-- WORKSHOP TRACKS: CORE PILLARS -->
       <!-- WORKSHOP TRACKS: CORE PILLARS -->
@@ -843,6 +790,35 @@
           hamburger.classList.toggle('active');
         }
       }
+    </script>
+  
+    <!-- Active Nav Highlight Script -->
+    <script>
+      (function() {
+        var path = window.location.pathname;
+        var page = path.split('/').pop() || 'index.html';
+        var navMap = {
+          'index.html': 'nav-home',
+          '': 'nav-home',
+          'odyssey.html': 'nav-odyssey',
+          'odyssey': 'nav-odyssey',
+          'corporate.html': 'nav-corporate',
+          'corporate': 'nav-corporate',
+          'coaching.html': 'nav-coaching',
+          'coaching': 'nav-coaching',
+          'resources.html': 'nav-resources',
+          'resources': 'nav-resources',
+          'shop.html': 'nav-shop',
+          'shop': 'nav-shop'
+        };
+        var navId = navMap[page];
+        if (navId) {
+          var navItem = document.getElementById(navId);
+          if (navItem) {
+            navItem.classList.add('active');
+          }
+        }
+      })();
     </script>
   </body>
 </html>

@@ -838,6 +838,35 @@
         }
       }
     </script>
+  
+    <!-- Active Nav Highlight Script -->
+    <script>
+      (function() {
+        var path = window.location.pathname;
+        var page = path.split('/').pop() || 'index.html';
+        var navMap = {
+          'index.html': 'nav-home',
+          '': 'nav-home',
+          'odyssey.html': 'nav-odyssey',
+          'odyssey': 'nav-odyssey',
+          'corporate.html': 'nav-corporate',
+          'corporate': 'nav-corporate',
+          'coaching.html': 'nav-coaching',
+          'coaching': 'nav-coaching',
+          'resources.html': 'nav-resources',
+          'resources': 'nav-resources',
+          'shop.html': 'nav-shop',
+          'shop': 'nav-shop'
+        };
+        var navId = navMap[page];
+        if (navId) {
+          var navItem = document.getElementById(navId);
+          if (navItem) {
+            navItem.classList.add('active');
+          }
+        }
+      })();
+    </script>
   </body>
 </html>
 
