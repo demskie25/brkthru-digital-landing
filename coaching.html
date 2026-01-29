@@ -948,6 +948,18 @@
         offset: 50,
       });
     </script>
+  
+    <!-- Mobile Menu Script -->
+    <script>
+      function toggleMobileMenu() {
+        var nav = document.querySelector('.univ-nav');
+        var hamburger = document.querySelector('.univ-hamburger');
+        if (nav && hamburger) {
+          nav.classList.toggle('mobile-open');
+          hamburger.classList.toggle('active');
+        }
+      }
+    </script>
   </body>
 </html>
 
