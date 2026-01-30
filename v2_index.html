@@ -91,11 +91,12 @@
 
 
     <section id="hero" class="hero">
+      <div class="mesh-gradient"></div>
       <div class="hero-bg">
         <img src="hall_sketch.jpg" alt="Abstract Brain Performance" />
         <div class="hero-overlay"></div>
       </div>
-      <div class="container hero-content reveal">
+      <div class="container hero-content reveal-up">
         <div class="hero-badge">
           <span>The 2026 Transformation Tour</span>
         </div>
@@ -137,10 +138,11 @@
               background: var(--accent);
               margin: 2rem auto;
             "
+            class="reveal-up"
           ></div>
         </div>
 
-        <div class="pricing-tabs">
+        <div class="pricing-tabs reveal-up">
           <button class="tab-btn active" onclick="switchTrack('track1')">
             Parenting & Educating
           </button>
@@ -155,7 +157,7 @@
         <!-- TRACK 1: PARENTING -->
         <div id="track1" class="pricing-track active">
           <div
-            class="reveal"
+            class="reveal-up"
             style="
               margin-bottom: 4rem;
               border-radius: 40px;
@@ -189,7 +191,7 @@
               </h3>
             </div>
           </div>
-          <div class="pricing-grid">
+          <div class="pricing-grid reveal-stagger">
             <div class="pricing-card">
               <h3>Manila Track</h3>
               <p style="color: var(--text-muted); margin-bottom: 2rem">
@@ -414,7 +416,7 @@
         <!-- TRACK 2: 5MM -->
         <div id="track2" class="pricing-track">
           <div
-            class="reveal"
+            class="reveal-up"
             style="
               margin-bottom: 4rem;
               border-radius: 40px;
@@ -446,7 +448,7 @@
               <h3 style="font-size: 2.5rem; margin: 0">The 5-Minute Manager</h3>
             </div>
           </div>
-          <div class="pricing-grid">
+          <div class="pricing-grid reveal-stagger">
             <div class="pricing-card">
               <h3>Professional / PHP</h3>
               <p style="color: var(--text-muted); margin-bottom: 2rem">
@@ -671,7 +673,7 @@
         <!-- TRACK 3: TFH -->
         <div id="track3" class="pricing-track">
           <div
-            class="reveal"
+            class="reveal-up"
             style="
               margin-bottom: 4rem;
               border-radius: 40px;
@@ -703,7 +705,7 @@
               <h3 style="font-size: 2.5rem; margin: 0">Thinking for Humans</h3>
             </div>
           </div>
-          <div class="pricing-grid">
+          <div class="pricing-grid reveal-stagger">
             <div class="pricing-card">
               <h3>Manila Local / PHP</h3>
               <p style="color: var(--text-muted); margin-bottom: 2rem">
