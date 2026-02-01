@@ -950,9 +950,9 @@
 1007:                Contact
 1008:              </div>
 1009:              <a
-1010:                href="mailto:brkthrua@gmail.com"
+1010:                href="mailto:brkthrucares@gmail.com"
 1011:                class="block hover:text-brand-amber transition-colors"
-1012:                >brkthrua@gmail.com</a
+1012:                >brkthrucares@gmail.com</a
 1013:              >
 1014:              <span class="block text-slate-700">Bacolod</span>
 1015:              <span class="block text-slate-700">Manila</span>

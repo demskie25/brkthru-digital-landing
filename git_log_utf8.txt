@@ -1,5 +1,5 @@
-﻿commit 7dce902fa3e75dad2a0ba13f491da41c617aacac
-Author: Michael Hall~ <brkthru.consulting@gmail.com>
+commit 7dce902fa3e75dad2a0ba13f491da41c617aacac
+Author: Michael Hall~ <brkthrucares@gmail.com>
 Date:   Wed Jan 28 22:52:02 2026 +0800
 
     Add complete navigation with logo and all menu items

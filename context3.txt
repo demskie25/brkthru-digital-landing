@@ -1,4 +1,4 @@
-﻿          class="grid lg:grid-cols-12 gap-24 items-start border-b border-white/5 pb-40"
+          class="grid lg:grid-cols-12 gap-24 items-start border-b border-white/5 pb-40"
         >
           <div class="lg:col-span-8 space-y-16">
             <a href="index.html" class="univ-logo">

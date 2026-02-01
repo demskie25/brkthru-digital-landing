@@ -1131,8 +1131,8 @@ export default function App() {
                             <div className="space-y-10">
                                 <h4 className="text-sm font-black uppercase tracking-[0.5em] text-white">Contact</h4>
                                 <div className="flex flex-col gap-6 text-slate-500 font-bold uppercase text-sm tracking-[0.3em] font-sans">
-                                    <a href="mailto:brkthruworkshops@gmail.com" className="hover:text-amber-500">
-                                        brkthruworkshops@gmail.com
+                                    <a href="mailto:brkthrucares@gmail.com" className="hover:text-amber-500">
+                                        brkthrucares@gmail.com
                                     </a>
                                     <a href="tel:+639158766595" className="hover:text-amber-500">
                                         +63915 876 6595
