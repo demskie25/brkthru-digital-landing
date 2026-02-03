@@ -42,24 +42,27 @@
 /* LOGO */
 .univ-logo {
   display: flex;
-  align-items: center; /* Vertically centered */
+  flex-direction: column; /* Stacked layout */
+  align-items: center;    /* Center image and text */
+  justify-content: center;
   text-decoration: none;
-  gap: 15px; /* Spacing between logo and DIGITAL */
+  gap: 4px; /* Tight spacing between logo and DIGITAL */
+  height: 100%;
 }
 
 .univ-logo-img {
-  height: 55px; /* Adjust as needed */
-  min-width: 55px; /* Ensure space is reserved */
+  height: 45px; /* Resized to fit stacked layout */
+  min-width: unset;
   width: auto;
   filter: brightness(1.1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
-  display: block; /* Avoid inline spacing issues */
+  display: block;
 }
 
 .univ-logo-accent {
-  font-size: 24px;
-  font-weight: 300;
-  color: #ffffff !important;
-  letter-spacing: 0.3em !important;
+  font-size: 16px; /* Resized to fit */
+  font-weight: 700;
+  color: var(--univ-gold) !important; /* Gold text */
+  letter-spacing: 0.2em !important;
   text-transform: uppercase;
   margin: 0;
   line-height: 1;

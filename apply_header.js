@@ -17,7 +17,7 @@ const newHeader = `
         <div class="univ-container">
             <!-- LOGO -->
             <a href="index.html" class="univ-logo">
-                <img src="brkthru logo.png" alt="BRKTHRU" class="univ-logo-img">
+                <img src="images/brkthru-logo.png" alt="BRKTHRU" class="univ-logo-img">
                 <span class="univ-logo-accent">DIGITAL</span>
             </a>
 
