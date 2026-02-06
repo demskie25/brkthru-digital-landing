@@ -51,7 +51,7 @@ const newHeader = `
 
             <!-- UTILITY -->
             <div class="univ-utility">
-                <a href="https://youtu.be/ICr8WGQbpjc" target="_blank" class="univ-btn-video">WATCH LOVE'S VIDEO</a>
+                <a href="javascript:void(0)" onclick="window.open('https://youtu.be/ICr8WGQbpjc', '_blank')" class="univ-btn-video">WATCH LOVE'S VIDEO</a>
                 <div class="univ-currency">
                     <span class="active">USD</span> | <span>PHP</span>
                 </div>

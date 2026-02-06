@@ -114,6 +114,16 @@
       </defs>
     </svg>
 
+    
+    <!-- SVG FILTER REGISTRY -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="univ-remove-white" color-interpolation-filters="sRGB">
+          <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -1.1 -1.1 -1.1 3 0" />
+        </filter>
+      </defs>
+    </svg>
+
     <!-- UNIVERSAL HEADER -->
     <nav class="univ-header">
         <div class="univ-container">
@@ -153,7 +163,7 @@
 
             <!-- UTILITY -->
             <div class="univ-utility">
-                <a href="https://youtu.be/ICr8WGQbpjc" target="_blank" class="univ-btn-video">WATCH LOVE'S VIDEO</a>
+                <a href="javascript:void(0)" onclick="window.open('https://youtu.be/ICr8WGQbpjc', '_blank')" class="univ-btn-video">WATCH LOVE'S VIDEO</a>
                 <div class="univ-currency">
                     <span class="active">USD</span> | <span>PHP</span>
                 </div>
@@ -163,6 +173,7 @@
     </nav>
     <div class="univ-spacer"></div>
     <!-- END UNIVERSAL HEADER -->
+
 
 
 
