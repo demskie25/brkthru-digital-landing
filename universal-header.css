@@ -160,6 +160,25 @@
   gap: 20px;
 }
 
+.univ-btn-video {
+  background-color: transparent;
+  color: var(--univ-gold);
+  border: 1px solid var(--univ-gold);
+  padding: 10px 20px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.univ-btn-video:hover {
+  background-color: var(--univ-gold);
+  color: var(--univ-navy);
+}
+
 .univ-currency {
   display: flex;
   align-items: center;
