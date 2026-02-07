@@ -1,43 +1,8 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reservation Received | Brkthru Digital</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              brand: {
-                gold: "#D4AF37",
-                amber: "#FFBF00",
-                navy: "#0F172A",
-                slate: "#1E293B",
-              },
-            },
-            fontFamily: {
-              sans: ["Inter", "sans-serif"],
-              serif: ["Playfair Display", "serif"],
-            },
-          },
-        },
-      };
-    </script>
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap?v=9.0"
-      rel="stylesheet"
-    />
-  <link rel="stylesheet" href="universal-header.css">
-</head>
-  <body
-    class="bg-brand-navy text-slate-300 antialiased min-h-screen flex flex-col items-center"
-  >
+import os
+import re
+import sys
 
+HEADER_TEMPLATE = """
     <!-- SVG FILTER REGISTRY -->
     <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -97,53 +62,50 @@
     </nav>
     <div class="univ-spacer"></div>
     <!-- END UNIVERSAL HEADER -->
+"""
 
+def clean_file(file_path):
+    print(f"Processing {file_path}...")
+    try:
+        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+            content = f.read()
 
+        # Regex for universal header block
+        header_regex = re.compile(r'<!-- UNIVERSAL HEADER -->[\s\S]*?<!-- END UNIVERSAL HEADER -->', re.IGNORECASE)
+        # Regex for SVG registry block
+        svg_regex = re.compile(r'<!-- SVG FILTER REGISTRY -->\s*<svg[^>]*>[\s\S]*?</svg>', re.IGNORECASE)
 
-    <div class="max-w-xl w-full mx-auto px-6 text-center space-y-8 py-20">
-      <!-- Icon -->
-      <div
-        class="w-24 h-24 bg-brand-amber/10 rounded-full flex items-center justify-center mx-auto border border-brand-amber/20 shadow-[0_0_50px_rgba(255,191,0,0.1)]"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-12 h-12 text-brand-amber"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M5 13l4 4L19 7"
-          />
-        </svg>
-      </div>
+        # Remove all instances
+        while header_regex.search(content):
+            content = header_regex.sub('', content)
+            print(f"  Removed a header block in {file_path}")
+            
+        while svg_regex.search(content):
+            content = svg_regex.sub('', content)
+            print(f"  Removed an SVG block in {file_path}")
 
-      <!-- Text -->
-      <div class="space-y-4">
-        <h1
-          class="text-4xl md:text-5xl font-serif font-bold text-white leading-tight"
-        >
-          Reservation <span class="text-brand-amber italic">Captured.</span>
-        </h1>
-        <p class="text-lg text-slate-400 leading-relaxed">
-          GlobalGuru here. Your reservation is captured. Check your email
-          shortly for your specific HitPay link to lock in this rate.
-        </p>
-      </div>
+        # Insert one fresh copy after <body> tag
+        body_match = re.search(r'<body[^>]*>', content, re.IGNORECASE)
+        if body_match:
+            body_end = body_match.end()
+            new_content = content[:body_end] + "\n" + HEADER_TEMPLATE + "\n" + content[body_end:]
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write(new_content)
+            print(f"  Successfully updated {file_path}")
+        else:
+            print(f"  WARNING: Could not find <body> tag in {file_path}")
+    except Exception as e:
+        print(f"  ERROR processing {file_path}: {str(e)}")
 
-      <!-- Button -->
-      <div class="pt-8">
-        <a
-          href="index.html"
-          class="inline-block bg-white/5 border border-white/10 text-white px-8 py-4 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-all"
-        >
-          Return to Interior
-        </a>
-      </div>
-    </div>
-  </body>
-</html>
+files = [
+    'index.html', 'odyssey.html', 'corporate.html', 
+    'coaching.html', 'resources.html', 'shop.html'
+]
 
+for f in files:
+    if os.path.exists(f):
+        clean_file(f)
+    else:
+        print(f"File not found: {f}")
+
+sys.exit(0)

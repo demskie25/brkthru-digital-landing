@@ -23,11 +23,11 @@ const newHeader = `
 
             <!-- NAV LINKS -->
             <div class="univ-nav">
-                <a href="index.html" class="univ-nav-item">HOME</a>
-                <a href="odyssey.html" class="univ-nav-item">OUR ODYSSEY</a>
+                <a href="index.html" class="univ-nav-item" id="nav-home">HOME</a>
+                <a href="odyssey.html" class="univ-nav-item" id="nav-odyssey">OUR ODYSSEY</a>
                 
                 <div class="univ-dropdown-container">
-                    <a href="corporate.html" class="univ-nav-item">CORPORATE</a>
+                    <a href="corporate.html" class="univ-nav-item" id="nav-corporate">CORPORATE</a>
                     <div class="univ-dropdown-menu">
                         <a href="corporate.html#leadership" class="univ-dropdown-link">Leadership Edge</a>
                         <a href="corporate.html#alignment" class="univ-dropdown-link">Systemic Alignment</a>
@@ -36,7 +36,7 @@ const newHeader = `
                 </div>
 
                 <div class="univ-dropdown-container">
-                    <a href="coaching.html" class="univ-nav-item">COACHING</a>
+                    <a href="coaching.html" class="univ-nav-item" id="nav-coaching">COACHING</a>
                     <div class="univ-dropdown-menu">
                         <a href="coaching.html#executive" class="univ-dropdown-link">Executive Coaching</a>
                         <a href="coaching.html#sports" class="univ-dropdown-link">Sports Performance</a>
@@ -46,7 +46,8 @@ const newHeader = `
                     </div>
                 </div>
 
-                <a href="shop.html" class="univ-nav-item">SHOP</a>
+                <a href="resources.html" class="univ-nav-item" id="nav-resources">RESOURCES</a>
+                <a href="shop.html" class="univ-nav-item" id="nav-shop">SHOP</a>
             </div>
 
             <!-- UTILITY -->
@@ -84,9 +85,9 @@ fs.readdir(rootDir, (err, files) => {
           );
         }
 
-        // 2. Replace Header - Regex Logic
+        // 2. Replace Header - Regex Logic (Global)
         const universalHeaderRegex =
-          /<!-- UNIVERSAL HEADER -->[\s\S]*?<!-- END UNIVERSAL HEADER -->/i;
+          /<!-- UNIVERSAL HEADER -->[\s\S]*?<!-- END UNIVERSAL HEADER -->/gi;
 
         if (universalHeaderRegex.test(content)) {
           console.log(`Updating existing Universal Header in ${file}`);
