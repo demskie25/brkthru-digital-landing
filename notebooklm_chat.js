@@ -11,9 +11,9 @@ document.addEventListener('alpine:init', () => {
             { type: 'ai', text: 'Hello! I am your AI Knowledge Assistant. I am grounded in the 3 primary sources of Brkthru Digital. How can I help you lead more effectively today?' }
         ],
         sources: [
-            { id: 1, name: 'Leadership Hub', active: true, url: 'https://notebooklm.google.com/notebook/73263c60-6754-4632-9db5-d803f7787b6d' },
-            { id: 2, name: 'Twin Bundle Book', active: true, url: 'https://notebooklm.google.com/notebook/fb2c0e69-de98-45ea-81a2-39c23733bc5f' },
-            { id: 3, name: 'Coaching Toolkit', active: true, url: 'https://notebooklm.google.com/notebook/175bb5b7-dc3e-4cdc-9eca-d5783fc4469a' },
+            { id: 1, name: 'Neuro-Semantics', active: true, url: 'https://notebooklm.google.com/notebook/73263c60-6754-4632-9db5-d803f7787b6d' },
+            { id: 2, name: 'Meta-Coaching', active: true, url: 'https://notebooklm.google.com/notebook/fb2c0e69-de98-45ea-81a2-39c23733bc5f' },
+            { id: 3, name: 'Dr. Hall 2026 Courses', active: true, url: 'https://notebooklm.google.com/notebook/175bb5b7-dc3e-4cdc-9eca-d5783fc4469a' },
             { id: 4, name: 'Future Source', active: false, url: '' }
         ],
         isTyping: false,
@@ -49,22 +49,21 @@ document.addEventListener('alpine:init', () => {
         generateResponse(query) {
             this.isTyping = false;
             let response = "";
-            
             const q = query.toLowerCase();
             
-            // Basic grounded logic based on ai_system_prompt_context.txt
-            if (q.includes('bundle') || q.includes('price') || q.includes('cost')) {
-                response = "The Twin Bundle (Book + Toolkit) is our hero offer for ₱600. It includes the 10th Anniversary edition of the World Class Coach book and the actionable Coaching Toolkit. Separately, they are ₱399 each, so the bundle saves you 25%.";
-            } else if (q.includes('imposter') || q.includes('fraud')) {
-                response = "Imposter syndrome is common among high-achieving leaders. In the World Class Coach book, we explore the 'internal narrative' and how to debug the frames that make you feel like a fraud despite your results.";
-            } else if (q.includes('burnout') || q.includes('tired')) {
-                response = "Burnout often comes from carrying the team's weight. Our resources teach you how to move from being the 'Chief Problem Solver' to a coach who develops others to lead.";
-            } else if (q.includes('mcp')) {
-                response = "I am powered by the Model Context Protocol (MCP) concepts, meaning I retrieve specific insights from my 3 curated internal sources to provide you with verified leadership advice.";
-            } else if (q.includes('chapters') || q.includes('outline') || q.includes('table of contents')) {
-                response = "That's a specific request for the deep content! You can view the full table of contents and index by opening our grounded NotebookLM assistants. Click the 'Leadership Hub' or 'Twin Bundle Book' badges above to open the respective deep-dive assistant.";
+            // Intelligence grounded in the 3 specific NotebookLM areas
+            if (q.includes('neuro-semantics') || q.includes('what is ns') || q.includes('meaning')) {
+                response = "Neuro-Semantics (NS) is the study of how we translate 'meanings' into 'performance.' It goes beyond NLP by looking at the 'Meta-Frames' we hold. For a deep dive into the models, click the 'Neuro-Semantics' badge above to open Dr. Hall's grounded research assistant.";
+            } else if (q.includes('meta-coaching') || q.includes('systemic coaching') || q.includes('coach training')) {
+                response = "Meta-Coaching is our systemic framework for coaching at the highest level of human potential. It involves 7 core competencies and the 'axes of change.' You can scan the full curriculum by clicking the 'Meta-Coaching' source badge above.";
+            } else if (q.includes('2026') || q.includes('tour') || q.includes('dr. hall') || q.includes('courses')) {
+                response = "Dr. Michael Hall's 2026 Transformation Tour includes 'Brain Camp', 'The 5-Minute Manager', and 'Thinking for Humans.' These are high-performance immersions. Click the 'Dr. Hall 2026 Courses' badge for the full schedule and grounded details.";
+            } else if (q.includes('price') || q.includes('bundle') || q.includes('cost')) {
+                response = "The Twin Bundle (Book + Toolkit) is our hero offer for ₱600. It includes the 10th Anniversary edition of the World Class Coach book and the actionable Coaching Toolkit. It's the best foundation for leaders.";
+            } else if (q.includes('imposter') || q.includes('syndrome')) {
+                response = "Imposter syndrome is a classic 'Meta-Frame' issue we solve in Neuro-Semantics. It's often the result of evaluating yourself using the wrong level of meaning. Our 'Neuro-Semantics' source has specific models to debug this.";
             } else {
-                response = "That is a great question. Based on my sources, effective leadership starts with managing your own 'inner game' first. Would you like to know more about our Coaching Toolkit which has scripts for these exact situations? You can also open the full assistant for it by clicking the badge above.";
+                response = "That is a great question. Based on my sources, effective leadership starts with managing your own 'inner game' first. Would you like to know more about our Coaching Toolkit which has scripts for these exact situations? You can also open the full grounded assistants by clicking the badges above.";
             }
 
             this.messages.push({ type: 'ai', text: response });
