@@ -11,8 +11,8 @@ document.addEventListener('alpine:init', () => {
             { type: 'ai', text: 'Hello! I am your AI Knowledge Assistant. I am grounded in the 3 primary sources of Brkthru Digital. How can I help you lead more effectively today?' }
         ],
         sources: [
-            { id: 1, name: 'Neuro-Semantics', active: true, url: 'https://notebooklm.google.com/notebook/73263c60-6754-4632-9db5-d803f7787b6d' },
-            { id: 2, name: 'Meta-Coaching', active: true, url: 'https://notebooklm.google.com/notebook/fb2c0e69-de98-45ea-81a2-39c23733bc5f' },
+            { id: 1, name: 'Neuro-Semantics', active: true, url: 'https://notebooklm.google.com/notebook/fb2c0e69-de98-45ea-81a2-39c23733bc5f' },
+            { id: 2, name: 'Meta-Coaching', active: true, url: 'https://notebooklm.google.com/notebook/73263c60-6754-4632-9db5-d803f7787b6d' },
             { id: 3, name: 'Dr. Hall 2026 Courses', active: true, url: 'https://notebooklm.google.com/notebook/175bb5b7-dc3e-4cdc-9eca-d5783fc4469a' },
             { id: 4, name: 'Future Source', active: false, url: '' }
         ],
