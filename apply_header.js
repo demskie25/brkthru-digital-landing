@@ -21,6 +21,13 @@ const newHeader = `
                 <span class="univ-logo-accent">DIGITAL</span>
             </a>
 
+            <!-- MOBILE HAMBURGER -->
+            <button class="univ-hamburger" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             <!-- NAV LINKS -->
             <div class="univ-nav">
                 <a href="index.html" class="univ-nav-item" id="nav-home">HOME</a>
@@ -61,6 +68,31 @@ const newHeader = `
         </div>
     </nav>
     <div class="univ-spacer"></div>
+
+    <!-- Mobile Menu Toggle Script -->
+    <script>
+      function toggleMobileMenu() {
+        const nav = document.querySelector('.univ-nav');
+        const hamburger = document.querySelector('.univ-hamburger');
+        if (nav && hamburger) {
+          nav.classList.toggle('mobile-open');
+          hamburger.classList.toggle('active');
+        }
+      }
+      
+      // Close menu when clicking a link
+      document.addEventListener('DOMContentLoaded', function() {
+        const links = document.querySelectorAll('.univ-nav-item, .univ-dropdown-link');
+        links.forEach(link => {
+          link.addEventListener('click', () => {
+            const nav = document.querySelector('.univ-nav');
+            const hamburger = document.querySelector('.univ-hamburger');
+            if (nav) nav.classList.remove('mobile-open');
+            if (hamburger) hamburger.classList.remove('active');
+          });
+        });
+      });
+    </script>
     <!-- END UNIVERSAL HEADER -->
 `;
 

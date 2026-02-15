@@ -168,6 +168,20 @@
 }
 
 /* ============================================
+   EXTRA LARGE DESKTOP (> 1440px)
+   ============================================ */
+@media (min-width: 1440px) {
+  .max-w-7xl {
+    max-width: 1400px !important;
+  }
+  
+  .univ-container {
+    max-width: 1400px !important;
+    padding: 0 4rem !important;
+  }
+}
+
+/* ============================================
    CONSISTENCY IMPROVEMENTS (ALL SCREENS)
    ============================================ */
 

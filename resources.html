@@ -72,6 +72,16 @@
       </defs>
     </svg>
 
+    
+    <!-- SVG FILTER REGISTRY -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="univ-remove-white" color-interpolation-filters="sRGB">
+          <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -1.1 -1.1 -1.1 3 0" />
+        </filter>
+      </defs>
+    </svg>
+
     <!-- UNIVERSAL HEADER -->
     <nav class="univ-header">
         <div class="univ-container">
@@ -80,6 +90,13 @@
                 <img src="images/brkthru-logo.png" alt="BRKTHRU" class="univ-logo-img">
                 <span class="univ-logo-accent">DIGITAL</span>
             </a>
+
+            <!-- MOBILE HAMBURGER -->
+            <button class="univ-hamburger" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
 
             <!-- NAV LINKS -->
             <div class="univ-nav">
@@ -121,7 +138,33 @@
         </div>
     </nav>
     <div class="univ-spacer"></div>
+
+    <!-- Mobile Menu Toggle Script -->
+    <script>
+      function toggleMobileMenu() {
+        const nav = document.querySelector('.univ-nav');
+        const hamburger = document.querySelector('.univ-hamburger');
+        if (nav && hamburger) {
+          nav.classList.toggle('mobile-open');
+          hamburger.classList.toggle('active');
+        }
+      }
+      
+      // Close menu when clicking a link
+      document.addEventListener('DOMContentLoaded', function() {
+        const links = document.querySelectorAll('.univ-nav-item, .univ-dropdown-link');
+        links.forEach(link => {
+          link.addEventListener('click', () => {
+            const nav = document.querySelector('.univ-nav');
+            const hamburger = document.querySelector('.univ-hamburger');
+            if (nav) nav.classList.remove('mobile-open');
+            if (hamburger) hamburger.classList.remove('active');
+          });
+        });
+      });
+    </script>
     <!-- END UNIVERSAL HEADER -->
+
 
 
 
@@ -969,18 +1012,29 @@
         <div class="chat-window chat-enter" x-show="isOpen">
             <div class="chat-header">
                 <div>
-                    <h3 class="font-bold text-sm text-white">AI Coach Assistant</h3>
-                    <p class="text-[10px] text-white opacity-70">Grounded in 3 Knowledge Sources</p>
+                    <h3 class="font-bold text-sm text-white">AI Coach Assistant <span class="text-[8px] opacity-50">v2.1</span></h3>
+                    <p class="text-[10px] text-white opacity-70">Grounded in 4 Knowledge Sources</p>
                 </div>
                 <div class="flex gap-2">
                     <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
                 </div>
             </div>
 
+            <!-- Library Selector -->
+            <div class="library-select-container">
+                <label for="notebook-select" class="library-label">Select Source Library</label>
+                <select id="notebook-select" class="notebook-select" x-model="selectedNotebook">
+                    <option value="meta-coaching">meta-coaching</option>
+                    <option value="Neuro-Semantics">Neuro-Semantics</option>
+                    <option value="hall workshops 2026">hall workshops 2026</option>
+                    <option value="digital business">digital business</option>
+                </select>
+            </div>
+
             <!-- 3 Sources Selector -->
             <div class="sources-bar">
                 <template x-for="source in sources" :key="source.id">
-                    <div class="source-tag" :class="source.active ? 'active' : ''" @click="openSource(source)" :title="'Open ' + source.name + ' Assistant'">
+                    <div class="source-tag" :class="selectedNotebook === source.name ? 'active' : ''" @click.prevent="openSource(source)" :title="'Select ' + source.name">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
@@ -1007,7 +1061,7 @@
         </div>
     </div>
 
-    <script src="notebooklm_chat.js"></script>
+    <script src="notebooklm_chat.js?v=2.1"></script>
     <!-- End Chatbox -->
   </body>
 </html>
