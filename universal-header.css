@@ -242,7 +242,7 @@
   display: block;
   width: 24px;
   height: 2px;
-  background-color: #ffffff;
+  background-color: #ff0000 !important; /* RED FOR DEBUGGING */
   margin: 3px 0;
   transition: all 0.3s ease;
   border-radius: 2px;

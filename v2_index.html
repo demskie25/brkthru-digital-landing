@@ -42,6 +42,16 @@
       </defs>
     </svg>
 
+    
+    <!-- SVG FILTER REGISTRY -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="univ-remove-white" color-interpolation-filters="sRGB">
+          <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -1.1 -1.1 -1.1 3 0" />
+        </filter>
+      </defs>
+    </svg>
+
     <!-- UNIVERSAL HEADER -->
     <nav class="univ-header">
         <div class="univ-container">
@@ -124,6 +134,7 @@
       });
     </script>
     <!-- END UNIVERSAL HEADER -->
+
 
 
 
