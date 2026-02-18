@@ -35,6 +35,8 @@
                 900: "#0f172a", // slate-900
                 800: "#1e293b", // slate-800
                 50: "#f8fafc", // slate-50
+                amber: "#f59e0b",
+                navy: "#0f172a",
               },
               accent: {
                 500: "#f59e0b", // amber-500
@@ -58,7 +60,20 @@
         background-color: #f8fafc;
         color: #1e293b;
       }
+      .spline-container {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        height: 100vh;
+        pointer-events: none;
+      }
+      spline-viewer {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
     </style>
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.5/build/spline-viewer.js"></script>
   </head>
 
   <body
@@ -183,11 +198,9 @@
 
 
     <section class="bg-slate-900 pt-32 pb-16 lg:pt-40 lg:pb-24 relative overflow-hidden">
-      <!-- Background Image -->
-      <div class="absolute inset-0 z-0">
-        <img src="hero_shop.png" alt="" class="w-full h-full object-cover opacity-80" />
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-slate-900/30"></div>
-        <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, rgba(15,23,42,0.85) 0%, transparent 70%);"></div>
+      <!-- Spline 3D Hero -->
+      <div class="spline-container">
+        <spline-viewer url="https://prod.spline.design/6Wq1Q7YAnWfW6HJC/scene.splinecode"></spline-viewer>
       </div>
       <div
         class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white relative z-10"
@@ -1735,7 +1748,7 @@
                     <div class="inline-block px-2 py-0.5 bg-amber-500/20 text-amber-500 text-[10px] font-bold rounded-full uppercase mb-2 tracking-wider">Exclusive Bundle</div>
                     <h3 class="text-sm font-heading font-bold mb-1">The Twin Key Bundle</h3>
                     <p class="text-[10px] text-slate-400 mb-3 leading-tight">The 10th Anniversary Book + The Digital Toolkit. Save 30% today.</p>
-                    <a href="checkout.html?item=bundle" class="block w-full py-2 bg-amber-500 text-slate-950 rounded-lg text-[11px] font-bold uppercase tracking-wider text-center hover:bg-white transition-all shadow-lg shadow-amber-500/20">
+                    <a href="checkout.html?item=bundle" class="inline-block bg-brand-amber text-brand-navy px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-105 hover:bg-white transition-all shadow-xl">
                         Get the Bundle - ₱649
                     </a>
                 </div>
@@ -1745,6 +1758,7 @@
             <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl group-hover:bg-amber-500/20 transition-all"></div>
         </div>
     </div>
-  </body>
+      <script src="gsap_animations.js"></script>
+</body>
 </html>
 

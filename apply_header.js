@@ -113,8 +113,10 @@ fs.readdir(rootDir, (err, files) => {
         if (!content.includes("universal-header.css")) {
           content = content.replace(
             "</head>",
-            '<link rel="stylesheet" href="universal-header.css">\n</head>',
+            '<link rel="stylesheet" href="universal-header.css?v=1.1">\n</head>',
           );
+        } else {
+            content = content.replace('href="universal-header.css"', 'href="universal-header.css?v=1.1"');
         }
 
         // 2. Replace Header - Regex Logic (Global)

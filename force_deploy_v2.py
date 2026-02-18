@@ -17,7 +17,7 @@ os.chdir(r"e:\brkthru-digital-landing")
 
 print("--- STARTING DEPLOY ---")
 run_git_cmd("git add -A")
-run_git_cmd('git commit -m "FIX: Force visibility of mobile menu and optimize spacing"')
+run_git_cmd('git commit -m "FIX: Emergency fix for checkout encoding and hero 3D visibility"')
 run_git_cmd("git push origin master:main --force")
 run_git_cmd("git push origin master:master --force")
 print("--- DEPLOY FINISHED ---")
