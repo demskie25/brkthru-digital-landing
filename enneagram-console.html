@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enneagram Master Console | Brkthru Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <style>
+      [x-cloak] { display: none !important; }
+      body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #0f172a; }
+    </style>
+  </head>
+  <body 
+    x-data="{
+        isAuthorized: false,
+        checkAccess() {
+            const params = new URLSearchParams(window.location.search);
+            const isReview = params.get('review') === 'true';
+            const isCompleted = params.get('status') === 'completed';
+            const hasExistingAccess = localStorage.getItem('enneagramAccess') === 'true';
+
+            if (isReview || isCompleted || hasExistingAccess) {
+                this.isAuthorized = true;
+                localStorage.setItem('enneagramAccess', 'true');
+                
+                // Clean URL if it came from payment
+                if (isCompleted) {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            } else {
+                // Redirect unauthorized users
+                window.location.href = 'assessments.html';
+            }
+        },
+        handleReport(event) {
+            // Placeholder for capturing report data from the Netlify iframe
+            // Expected event: { type: 'assessment_complete', data: { ... } }
+            if (event.data && event.data.type === 'assessment_complete') {
+                console.log('Assessment complete, capturing data for brkthru.consulting@gmail.com');
+                // Implementation for EmailJS or mailto reporting would go here
+            }
+        }
+    }"
+    x-init="checkAccess(); window.addEventListener('message', handleReport)"
+    class="flex flex-col h-full"
+  >
+    <div x-show="!isAuthorized" class="fixed inset-0 bg-slate-900 z-[9999] flex items-center justify-center">
+        <div class="text-white text-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500 mx-auto mb-4"></div>
+            <p class="font-bold uppercase tracking-widest text-sm">Verifying Access...</p>
+        </div>
+    </div>
+
+    <!-- Console Header -->
+    <header class="h-16 bg-slate-800 border-b border-white/10 flex items-center justify-between px-6 shrink-0 relative z-10">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center">
+                <span class="text-slate-900 font-black text-xs">E</span>
+            </div>
+            <span class="text-white font-bold uppercase tracking-widest text-sm">Enneagram Master Console</span>
+        </div>
+        <div class="flex items-center gap-4">
+             <button 
+                @click="localStorage.removeItem('enneagramAccess'); window.location.href='assessments.html'"
+                class="bg-red-500/10 hover:bg-red-500/20 text-red-500 px-4 py-1.5 rounded-full text-[10px] font-bold transition-colors uppercase tracking-widest border border-red-500/20"
+            >
+                Clear Session
+            </button>
+            <a 
+                href="assessments.html"
+                class="bg-white/10 hover:bg-white/20 text-white px-4 py-1.5 rounded-full text-[10px] font-bold transition-colors uppercase tracking-widest"
+            >
+                Exit Console
+            </a>
+        </div>
+    </header>
+
+    <!-- iframe Area -->
+    <main class="flex-grow relative bg-white">
+        <iframe 
+            src="https://serene-alfajores-aea820.netlify.app/" 
+            class="absolute inset-0 w-full h-full border-0"
+            title="Enneagram Master Profile"
+        ></iframe>
+    </main>
+
+    <!-- Report Notification (Overlay when data is captured) -->
+    <div x-show="false" class="fixed bottom-8 right-8 bg-amber-500 text-slate-900 p-6 rounded-2xl shadow-2xl z-20 max-w-sm">
+        <h4 class="font-black uppercase text-xs mb-2">Report Captured</h4>
+        <p class="text-sm font-medium leading-tight">Your results have been sent to your email and our consulting team.</p>
+    </div>
+
+  </body>
+</html>
