@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assessments Library | Brkthru Digital</title>
+    <meta
+      name="description"
+      content="Comprehensive psychological and leadership assessments for high-performing teams."
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              heading: ["Poppins", "sans-serif"],
+            },
+            colors: {
+              brand: {
+                900: "#0f172a", // slate-900
+                800: "#1e293b", // slate-800
+                50: "#f8fafc", // slate-50
+              },
+              accent: {
+                500: "#f59e0b", // amber-500
+                600: "#d97706", // amber-600
+                700: "#b45309", // amber-700
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Alpine.js -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <link rel="stylesheet" href="universal-header.css" />
+    <link rel="stylesheet" href="responsive-global.css" />
+    <style>
+      body {
+        background-color: #f8fafc;
+        color: #1e293b;
+      }
+      [x-cloak] { display: none !important; }
+    </style>
+  </head>
+
+  <body
+    class="font-sans text-slate-800 bg-slate-50 antialiased"
+    x-data="{ 
+      scrolled: false, 
+      mobileMenuOpen: false,
+      enneagramUnlocked: false,
+      checkAccess() {
+          const params = new URLSearchParams(window.location.search);
+          if (params.get('status') === 'completed' || localStorage.getItem('enneagramAccess') === 'true') {
+              this.enneagramUnlocked = true;
+              localStorage.setItem('enneagramAccess', 'true');
+          }
+      }
+    }"
+    x-init="checkAccess()"
+  >
+
+    <!-- UNIVERSAL HEADER -->
+    <nav class="univ-header">
+        <div class="univ-container">
+            <!-- LOGO -->
+            <a href="index.html" class="univ-logo">
+                <img src="images/brkthru-logo.png" alt="BRKTHRU" class="univ-logo-img">
+                <span class="univ-logo-accent">DIGITAL</span>
+            </a>
+
+            <!-- MOBILE HAMBURGER -->
+            <button class="univ-hamburger" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- NAV LINKS -->
+            <div class="univ-nav">
+                <a href="index.html" class="univ-nav-item" id="nav-home">HOME</a>
+                <a href="odyssey.html" class="univ-nav-item" id="nav-odyssey">OUR ODYSSEY</a>
+                
+                <div class="univ-dropdown-container">
+                    <a href="corporate.html" class="univ-nav-item" id="nav-corporate">CORPORATE</a>
+                    <div class="univ-dropdown-menu">
+                        <a href="corporate.html#leadership" class="univ-dropdown-link">Leadership Edge</a>
+                        <a href="corporate.html#alignment" class="univ-dropdown-link">Systemic Alignment</a>
+                        <a href="corporate.html#excellence" class="univ-dropdown-link">Customer Excellence</a>
+                    </div>
+                </div>
+
+                <div class="univ-dropdown-container">
+                    <a href="coaching.html" class="univ-nav-item" id="nav-coaching">COACHING</a>
+                    <div class="univ-dropdown-menu">
+                        <a href="coaching.html#executive" class="univ-dropdown-link">Executive Coaching</a>
+                        <a href="coaching.html#sports" class="univ-dropdown-link">Sports Performance</a>
+                        <a href="coaching.html#adhd" class="univ-dropdown-link">ADHD & Resilience</a>
+                        <a href="coaching.html#relationships" class="univ-dropdown-link">Relationships</a>
+                        <a href="coaching.html#career" class="univ-dropdown-link">Career Direction & Transition</a>
+                    </div>
+                </div>
+
+                <a href="resources.html" class="univ-nav-item" id="nav-resources">RESOURCES</a>
+                <a href="shop.html" class="univ-nav-item" id="nav-shop">SHOP</a>
+            </div>
+
+            <!-- UTILITY -->
+            <div class="univ-utility">
+                <a href="javascript:void(0)" onclick="window.open('https://youtu.be/ICr8WGQbpjc', '_blank')" class="univ-btn-video">WATCH LOVE'S VIDEO</a>
+                <div class="univ-currency">
+                    <span class="active">USD</span> | <span>PHP</span>
+                </div>
+                <a href="index.html#tour" class="univ-btn-tour">TOUR 2026</a>
+            </div>
+        </div>
+    </nav>
+    <div class="univ-spacer"></div>
+
+    <!-- Mobile Menu Toggle Script -->
+    <script>
+      function toggleMobileMenu() {
+        const nav = document.querySelector('.univ-nav');
+        const hamburger = document.querySelector('.univ-hamburger');
+        if (nav && hamburger) {
+          nav.classList.toggle('mobile-open');
+          hamburger.classList.toggle('active');
+        }
+      }
+    </script>
+    <!-- END UNIVERSAL HEADER -->
+
+    <!-- HERO SECTION -->
+    <section class="bg-slate-900 pt-32 pb-16 lg:pt-40 lg:pb-24 relative overflow-hidden">
+      <div class="absolute inset-0 z-0">
+        <img src="hero_v2.png" alt="" class="w-full h-full object-cover opacity-30" />
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
+      </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white relative z-10">
+        <h1 class="text-4xl lg:text-6xl font-heading font-bold mb-6" data-aos="fade-up">
+          Assessments Library
+        </h1>
+        <p class="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="100">
+          The Data of Transformation. Professional tools for revealing the hidden architecture of the human mind.
+        </p>
+      </div>
+    </section>
+
+    <!-- ASSESSMENTS GRID -->
+    <section class="py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          
+          <!-- FEATURED: ENNEAGRAM -->
+          <div class="bg-white rounded-[3rem] p-10 shadow-2xl border border-slate-100 relative overflow-hidden group" data-aos="fade-right">
+            <div class="absolute top-0 right-0 p-8">
+                <span class="bg-accent-500 text-brand-900 text-[0.7rem] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">New Release</span>
+            </div>
+            
+            <div class="mb-8">
+                <h2 class="text-3xl font-heading font-bold text-brand-900 mb-4">Enneagram Master Profile</h2>
+                <p class="text-slate-600 leading-relaxed font-light text-lg">
+                    The ultimate psychological map. Understand the core motivation, fear, and desire that drives your leadership style. Beyond traits—into the architecture of ego.
+                </p>
+            </div>
+
+            <div class="space-y-6 mb-10">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-brand-900 font-bold">01</div>
+                    <p class="text-slate-700 font-medium">9 Primary Types & Subtypes</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-brand-900 font-bold">02</div>
+                    <p class="text-slate-700 font-medium">Stress & Growth Directions</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-brand-900 font-bold">03</div>
+                    <p class="text-slate-700 font-medium">Comprehensive Strategy Guide</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-4">
+                <a href="https://hitpay.link/mhy8sc" class="inline-flex items-center justify-center px-8 py-5 bg-brand-900 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-sm hover:bg-slate-800 transition-all shadow-xl shadow-brand-900/20 text-center">
+                    Unlock Master Profile - ₱499
+                </a>
+                <p class="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest">Secure Payment via HitPay</p>
+            </div>
+          </div>
+
+          <!-- PLACEHOLDER / UPCOMING -->
+          <div class="space-y-8">
+            <div class="bg-slate-900/5 p-8 rounded-[2rem] border border-slate-200/50" data-aos="fade-left" data-aos-delay="100">
+                <h3 class="text-xl font-heading font-bold text-brand-900 mb-2">Role Behavior Alignment (RBA)</h3>
+                <p class="text-slate-600 text-sm">Synchronizing your biological predispositions with professional expectations. Coming Soon.</p>
+            </div>
+            <div class="bg-slate-900/5 p-8 rounded-[2rem] border border-slate-200/50" data-aos="fade-left" data-aos-delay="200">
+                <h3 class="text-xl font-heading font-bold text-brand-900 mb-2">Identity-Performance Matrix</h3>
+                <p class="text-slate-600 text-sm">Measuring the gap between who you believe you are and what you produce. Coming Soon.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FULL SCREEN MODAL FOR ENNEAGRAM -->
+    <div 
+        x-show="enneagramUnlocked" 
+        x-cloak
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-[9999] bg-brand-900 flex flex-col"
+    >
+        <!-- Modal Toolbar -->
+        <div class="h-16 bg-brand-800 border-b border-white/10 flex items-center justify-between px-6 shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-accent-500 flex items-center justify-center">
+                    <span class="text-brand-900 font-black text-xs">E</span>
+                </div>
+                <span class="text-white font-bold uppercase tracking-widest text-sm">Enneagram Master Console</span>
+            </div>
+            <button 
+                @click="enneagramUnlocked = false; localStorage.removeItem('enneagramAccess'); window.location.href='assessments.html'"
+                class="bg-white/10 hover:bg-white/20 text-white px-4 py-1.5 rounded-full text-xs font-bold transition-colors uppercase tracking-widest"
+            >
+                Close Session
+            </button>
+        </div>
+
+        <!-- iframe Content -->
+        <div class="flex-grow relative bg-white">
+            <iframe 
+                src="https://serene-alfajores-aea820.netlify.app/" 
+                class="absolute inset-0 w-full h-full border-0"
+                title="Enneagram Master Profile"
+            ></iframe>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-900 text-slate-400 py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <img src="images/brkthru-logo.png" alt="Brkthru" class="h-10 mx-auto mb-8 opacity-50 grayscale" />
+        <p class="text-sm border-t border-white/5 pt-8">
+          © 2026 Brkthru Digital. Strategically Humane Leadership.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 800,
+        once: true,
+      });
+    </script>
+  </body>
+</html>
