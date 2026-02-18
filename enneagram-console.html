@@ -9,9 +9,95 @@
       defer
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
     ></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
       [x-cloak] { display: none !important; }
-      body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #0f172a; }
+      body { background: #0f172a; min-height: 100vh; font-family: 'Inter', sans-serif; }
+      
+      :root {
+          --aubergine: #4A148C;
+          --chartreuse-bright: #ADFF2F;
+          --chartreuse-muted: #9ACD32;
+          --gold-main: #FFD700;
+          --gold-light: #FFF8DC;
+          --gold-dark: #B8860B;
+          --royal-navy: #000080;
+          --text-on-dark: var(--gold-light);
+          --text-on-light: var(--royal-navy);
+          --container-bg: var(--aubergine);
+          --page-bg: #fdfbf6;
+          --section-bg: #ffffff;
+      }
+
+      .assessment-container {
+          max-width: 900px;
+          margin: 2rem auto;
+          padding: 2.5rem;
+          background-color: var(--container-bg);
+          color: var(--text-on-dark);
+          border-radius: 1.5rem;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+          border: 2px solid var(--gold-dark);
+      }
+      .btn {
+          padding: 0.75rem 1.5rem;
+          border-radius: 0.5rem;
+          font-weight: 600;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          border: 1px solid transparent;
+      }
+      .btn:disabled { background-color: #9ca3af !important; color: #e5e7eb !important; cursor: not-allowed; }
+      .btn-primary { background-color: var(--chartreuse-muted); color: var(--royal-navy); border: 1px solid var(--gold-dark); }
+      .btn-primary:hover:not(:disabled) { background-color: var(--chartreuse-bright); box-shadow: 0 0 15px var(--chartreuse-bright); }
+      .btn-secondary { background-color: var(--royal-navy); color: var(--gold-light); border: 1px solid var(--gold-main); }
+      .btn-secondary:hover:not(:disabled) { background-color: #0000CD; box-shadow: 0 0 8px var(--gold-main); }
+      
+      .input-field {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border: 1px solid var(--gold-dark);
+          border-radius: 0.5rem;
+          margin-bottom: 1rem;
+          background: rgba(255,255,255,0.05);
+          color: white;
+      }
+      .input-field:focus { border-color: var(--chartreuse-muted); outline: none; background: rgba(255,255,255,0.1); }
+      
+      .question-card, .graph-container, .results-section > div {
+          background-color: var(--section-bg);
+          color: var(--text-on-light);
+          padding: 1.5rem;
+          border-radius: 0.75rem;
+          margin-bottom: 1.5rem;
+          border: 1px solid var(--gold-dark);
+      }
+      .option-label {
+          display: block;
+          padding: 1rem;
+          border: 1px solid #e2e8f0;
+          border-radius: 0.5rem;
+          margin-bottom: 0.75rem;
+          cursor: pointer;
+          transition: all 0.2s;
+          background: #f8fafc;
+          color: #1e293b;
+      }
+      .option-label:hover { background: var(--gold-light); border-color: var(--gold-main); }
+      .option-label.selected { background: var(--chartreuse-muted); border-color: var(--gold-dark); color: var(--royal-navy); font-weight: 700; }
+      
+      .bar-chart { border-bottom: 2px solid var(--gold-dark); background: #f1f5f9; padding: 1.5rem 0.5rem; border-radius: 0.5rem; display: flex; align-items: flex-end; justify-content: space-around; height: 250px; }
+      .bar-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+      .bar { background: var(--royal-navy); width: 60%; transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+      .bar.primary-type-bar { background: var(--chartreuse-muted); }
+      .bar-score { color: var(--aubergine); font-weight: 800; position: absolute; top: -25px; font-size: 0.75rem; }
+      .bar-label { color: var(--royal-navy); font-size: 0.6rem; font-weight: 800; text-align: center; margin-top: 0.75rem; line-height: 1; }
+
+      .enneagram-outer-path { fill: none; stroke: var(--gold-dark); stroke-width: 2; }
+      .enneagram-inner-line { fill: none; stroke: var(--gold-main); opacity: 0.3; stroke-width: 1; }
+      
+      .message-box-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+      .message-box-content { background: white; padding: 2.5rem; border-radius: 1.5rem; max-width: 450px; text-align: center; border: 3px solid var(--gold-dark); }
     </style>
   </head>
   <body 
@@ -26,73 +112,382 @@
             if (isReview || isCompleted || hasExistingAccess) {
                 this.isAuthorized = true;
                 localStorage.setItem('enneagramAccess', 'true');
-                
-                // Clean URL if it came from payment
                 if (isCompleted) {
                     window.history.replaceState({}, document.title, window.location.pathname);
                 }
+                setTimeout(() => { if(window.initializeApp) window.initializeApp(); }, 150);
             } else {
-                // Redirect unauthorized users
                 window.location.href = 'assessments.html';
-            }
-        },
-        handleReport(event) {
-            // Placeholder for capturing report data from the Netlify iframe
-            // Expected event: { type: 'assessment_complete', data: { ... } }
-            if (event.data && event.data.type === 'assessment_complete') {
-                console.log('Assessment complete, capturing data for brkthru.consulting@gmail.com');
-                // Implementation for EmailJS or mailto reporting would go here
             }
         }
     }"
-    x-init="checkAccess(); window.addEventListener('message', handleReport)"
-    class="flex flex-col h-full"
+    x-init="checkAccess()"
+    class="flex flex-col min-h-screen"
   >
     <div x-show="!isAuthorized" class="fixed inset-0 bg-slate-900 z-[9999] flex items-center justify-center">
         <div class="text-white text-center">
             <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500 mx-auto mb-4"></div>
-            <p class="font-bold uppercase tracking-widest text-sm">Verifying Access...</p>
+            <p class="font-bold uppercase tracking-widest text-sm">Securing Session...</p>
         </div>
     </div>
 
-    <!-- Console Header -->
-    <header class="h-16 bg-slate-800 border-b border-white/10 flex items-center justify-between px-6 shrink-0 relative z-10">
+    <header class="h-16 bg-slate-800 border-b border-white/10 flex items-center justify-between px-6 shrink-0 sticky top-0 z-50">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center">
                 <span class="text-slate-900 font-black text-xs">E</span>
             </div>
-            <span class="text-white font-bold uppercase tracking-widest text-sm">Enneagram Master Console</span>
+            <span class="text-white font-bold uppercase tracking-widest text-sm">Master Console</span>
         </div>
         <div class="flex items-center gap-4">
-             <button 
-                @click="localStorage.removeItem('enneagramAccess'); window.location.href='assessments.html'"
-                class="bg-red-500/10 hover:bg-red-500/20 text-red-500 px-4 py-1.5 rounded-full text-[10px] font-bold transition-colors uppercase tracking-widest border border-red-500/20"
-            >
-                Clear Session
-            </button>
-            <a 
-                href="assessments.html"
-                class="bg-white/10 hover:bg-white/20 text-white px-4 py-1.5 rounded-full text-[10px] font-bold transition-colors uppercase tracking-widest"
-            >
-                Exit Console
-            </a>
+             <button @click="localStorage.removeItem('enneagramAccess'); window.location.href='assessments.html'" class="text-red-400 text-[10px] font-bold uppercase tracking-widest hover:text-red-300 transition-colors">Reset</button>
+             <a href="assessments.html" class="bg-white/10 hover:bg-white/20 text-white px-4 py-1.5 rounded-full text-[10px] font-bold transition-colors uppercase tracking-widest">Exit</a>
         </div>
     </header>
 
-    <!-- iframe Area -->
-    <main class="flex-grow relative bg-white">
-        <iframe 
-            src="https://serene-alfajores-aea820.netlify.app/" 
-            class="absolute inset-0 w-full h-full border-0"
-            title="Enneagram Master Profile"
-        ></iframe>
+    <main class="flex-grow p-4 sm:p-10">
+        <div class="assessment-container" x-show="isAuthorized" x-cloak>
+            <div id="userInfoSection">
+                <h1 class="main-title">Enneagram Assessment for Leaders</h1>
+                <p class="intro-text text-sm opacity-90 leading-relaxed mb-6">This meta-programs assessment helps managers understand the subconscious mental "filters" or "operating systems" people use to process information, make decisions, and react.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div>
+                        <label class="label-text text-[10px] uppercase tracking-widest opacity-70">Family Name *</label>
+                        <input type="text" id="familyName" class="input-field" required>
+                    </div>
+                    <div>
+                        <label class="label-text text-[10px] uppercase tracking-widest opacity-70">First Name *</label>
+                        <input type="text" id="firstName" class="input-field" required>
+                    </div>
+                    <div>
+                        <label class="label-text text-[10px] uppercase tracking-widest opacity-70">Middle Initial</label>
+                        <input type="text" id="middleInitial" class="input-field" maxlength="1">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="label-text text-[10px] uppercase tracking-widest opacity-70">Position</label>
+                        <input type="text" id="position" class="input-field">
+                    </div>
+                    <div>
+                        <label class="label-text text-[10px] uppercase tracking-widest opacity-70">Company</label>
+                        <input type="text" id="company" class="input-field">
+                    </div>
+                </div>
+                <div class="mb-8">
+                    <label class="label-text text-[10px] uppercase tracking-widest opacity-70">Email for Results *</label>
+                    <input type="email" id="email" class="input-field" required>
+                </div>
+                <div class="hidden">
+                    <input type="text" id="assessmentDate" readonly>
+                </div>
+                <button id="proceedToAssessmentButton" class="btn btn-primary w-full py-4 text-lg uppercase tracking-widest">Proceed to Assessment</button>
+                <p id="userInfoValidationMessage" class="text-red-400 text-xs mt-4 text-center hidden font-bold">Please fill in all required fields (*)</p>
+            </div>
+
+            <div id="welcomeSection" class="hidden text-center py-10">
+                <h1 class="text-4xl font-black text-amber-400 mb-6">Welcome, <span id="welcomeName"></span></h1>
+                <p class="intro-text text-lg mb-10">You are ready to begin. There are no right or wrong answers—select based on your natural architecture.</p>
+                <button id="startButton" class="btn btn-primary px-16 py-4 text-xl uppercase tracking-widest">Start Assessment</button>
+            </div>
+
+            <div id="questionnaireSection" class="hidden">
+                <div id="questionContainer" class="question-card min-h-[350px]"></div>
+                <div class="flex flex-col sm:flex-row justify-between mt-8 gap-4">
+                    <button id="prevButton" class="btn btn-secondary px-10">PREVIOUS</button>
+                    <button id="nextButton" class="btn btn-primary px-16">NEXT</button>
+                    <button id="finishButton" class="btn btn-primary hidden px-16">GET RESULTS</button> 
+                </div>
+                 <p id="validationMessage" class="text-red-500 bg-red-100 p-3 rounded-lg mt-6 text-center hidden font-bold">Please select an option before moving forward.</p>
+            </div>
+
+            <div id="resultsSection" class="hidden results-section">
+                <h2 class="text-3xl font-black text-center mb-10 text-amber-400">Master Architecture Profile</h2>
+                <div id="participantSummary"></div>
+                <div id="typeResult"></div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div id="graphContainer">
+                        <h3 class="text-center font-bold mb-6">Score Distribution</h3>
+                        <div id="barChart" class="bar-chart"></div>
+                    </div>
+                    <div id="circularDiagramWrapper">
+                        <h3 class="text-center font-bold mb-6">Structural Map</h3>
+                        <svg id="enneagramCircleSvg" viewBox="0 0 320 360" class="mx-auto w-full max-w-sm h-auto"></svg> 
+                    </div>
+                </div>
+                
+                <div id="detailedReport" class="space-y-6"></div>
+                <button id="restartButton" class="btn btn-primary w-full mt-10 py-4 uppercase tracking-ultra">New Assessment</button>
+            </div>
+        </div>
     </main>
 
-    <!-- Report Notification (Overlay when data is captured) -->
-    <div x-show="false" class="fixed bottom-8 right-8 bg-amber-500 text-slate-900 p-6 rounded-2xl shadow-2xl z-20 max-w-sm">
-        <h4 class="font-black uppercase text-xs mb-2">Report Captured</h4>
-        <p class="text-sm font-medium leading-tight">Your results have been sent to your email and our consulting team.</p>
+    <div id="messageBoxOverlay" class="hidden message-box-overlay">
+        <div class="message-box-content">
+            <p id="messageBoxText" class="text-slate-900 font-bold mb-8"></p>
+            <button id="messageBoxCloseButton" class="btn btn-primary w-full py-3">OK</button>
+        </div>
     </div>
 
+    <!-- Assessment Logic -->
+    <script>
+        const enneagramTypesData = {
+            1: { name: "The Reformer/Perfectionist", shortName: "Reformer", growthPoint: 7, stressPoint: 4, coreMotivation: "To be good, to have integrity, and to be balanced.", basicDesire: "To be good/right.", coreFear: "Of being corrupt or defective." },
+            2: { name: "The Helper/Giver", shortName: "Helper", growthPoint: 4, stressPoint: 8, coreMotivation: "To be loved, needed, and appreciated.", basicDesire: "To feel loved.", coreFear: "Of being unwanted or unloved." },
+            3: { name: "The Achiever/Performer", shortName: "Achiever", growthPoint: 6, stressPoint: 9, coreMotivation: "To be valuable, successful, and admired.", basicDesire: "To feel valuable.", coreFear: "Of being worthless." },
+            4: { name: "The Individualist/Romantic", shortName: "Individualist", growthPoint: 1, stressPoint: 2, coreMotivation: "To find themselves and their unique significance.", basicDesire: "To be themselves.", coreFear: "Of having no identity." },
+            5: { name: "The Investigator/Observer", shortName: "Investigator", growthPoint: 8, stressPoint: 7, coreMotivation: "To be capable and competent.", basicDesire: "To be knowledgeable.", coreFear: "Of being helpless." },
+            6: { name: "The Loyalist/Skeptic", shortName: "Loyalist", growthPoint: 9, stressPoint: 3, coreMotivation: "To find security and support.", basicDesire: "To have security.", coreFear: "Of being without support." },
+            7: { name: "The Enthusiast/Epicure", shortName: "Enthusiast", growthPoint: 5, stressPoint: 1, coreMotivation: "To be satisfied and content.", basicDesire: "To be happy.", coreFear: "Of being deprived." },
+            8: { name: "The Challenger/Protector", shortName: "Challenger", growthPoint: 2, stressPoint: 5, coreMotivation: "To protect themselves and be in control.", basicDesire: "To be independent.", coreFear: "Of being harmed/controlled." },
+            9: { name: "The Peacemaker/Mediator", shortName: "Peacemaker", growthPoint: 3, stressPoint: 6, coreMotivation: "To maintain inner stability and peace.", basicDesire: "To have peace of mind.", coreFear: "Of loss and separation." }
+        };
+
+        const questions = [
+            { text: "When facing a difficult task, my primary concern is often:", options: ["Ensuring it's done correctly and to the highest standard.", "How it will affect my relationships and if I can help others through it.", "Achieving the goal efficiently and being recognized for my success.", "Whether it feels meaningful and authentic to me personally."], scoring: [[1], [2], [3], [4]] },
+            { text: "I feel most anxious or unsettled when I perceive a threat of:", options: ["Being seen as flawed, wrong, or unethical.", "Being unwanted, unloved, or dispensable to others.", "Failing or being seen as incompetent or worthless.", "Lacking a unique identity or profound significance in the world."], scoring: [[1], [2], [3], [4]] },
+            { text: "My natural tendency in a group is to:", options: ["Observe and understand before actively participating, conserving my energy.", "Look for potential problems and ensure we are prepared for contingencies.", "Bring energy, enthusiasm, and explore new possibilities.", "Take charge or ensure things are moving forward decisively."], scoring: [[5], [6], [7], [8]] },
+            { text: "I am most driven by a need for:", options: ["Competence and understanding; I want to know how things work.", "Security and support; I need to feel safe and guided.", "Satisfaction and new experiences; I want to avoid pain and boredom.", "Control over my environment and to protect myself and what's mine."], scoring: [[5], [6], [7], [8]] },
+            { text: "When conflict arises, my first instinct is often to:", options: ["Try to smooth things over and maintain harmony.", "Analyze it objectively and understand all sides before acting.", "Confront it directly to resolve it and assert my position.", "Feel anxious and seek reassurance or prepare for the worst."], scoring: [[9], [5], [8], [6]] },
+            { text: "A common piece of feedback I receive is that I can be:", options: ["Too critical or demanding (of myself and others).", "Overly accommodating or focused on others' needs to my own detriment.", "Too competitive or image-conscious.", "Too moody, dramatic, or self-absorbed."], scoring: [[1], [2], [3], [4]] },
+            { text: "I tend to avoid situations or feelings that make me feel:", options: ["Overwhelmed by demands or strong emotions.", "Unsupported, uncertain, or at risk.", "Trapped, bored, or in pain (emotional or physical).", "Vulnerable or controlled by others."], scoring: [[5], [6], [7], [8]] },
+            { text: "My greatest struggle is often with:", options: ["My inner critic and the feeling that things are not good enough.", "Needing to be needed and feeling prideful about my helpfulness.", "Focusing too much on achieving/appearing successful.", "Feeling like something is missing in me compared to others (envy)."], scoring: [[1], [2], [3], [4]] },
+            { text: "I am most comfortable when:", options: ["I have my own space and time to think and recharge.", "I know what to expect and feel supported by those I trust.", "I am exploring exciting new options and possibilities.", "I am in control and feel strong and capable."], scoring: [[5], [6], [7], [8]] },
+            { text: "In relationships, I primarily seek:", options: ["Peace and stability, avoiding conflict as much as possible.", "To be a source of help and support.", "To be admired for my accomplishments.", "Deep, authentic connection."], scoring: [[9], [2], [3], [4]] },
+            { text: "Others might not realize that I often feel:", options: ["A deep sense of responsibility and a desire for things to be just right.", "A fear of not being truly wanted for myself.", "Insecure about my intrinsic worth, driving my need for validation.", "More ordinary than I let on, despite my desire to be unique."], scoring: [[1], [2], [3], [4]] },
+            { text: "A hidden aspect of my personality might be:", options: ["My rich inner world that I don't always share.", "How much I test people to see if they are truly trustworthy.", "A fear of missing out that drives my constant activity.", "A softer, more vulnerable side that I protect fiercely."], scoring: [[5], [6], [7], [8]] },
+            { text: "I sometimes 'go along to get along' to such an extent that I:", options: ["Lose track of my own priorities and desires.", "Feel resentful later but struggle to express it directly.", "Get involved in things I'm not truly interested in.", "Avoid making decisions that might cause disagreement."], scoring: [[9], [9,1], [2,9], [9]] },
+            { text: "When I'm truly stressed, I'm most likely to:", options: ["Become overly critical and rigid.", "Try harder to please others, perhaps becoming clingy or manipulative.", "Push myself harder, potentially cutting corners.", "Withdraw into my feelings, becoming melancholic."], scoring: [[1], [2], [3], [4]] },
+            { text: "When under pressure, my default reaction is often to:", options: ["Detach and analyze, trying to conserve my energy.", "Become more anxious and doubtful.", "Seek distractions or new, more exciting options.", "Become more assertive and controlling."], scoring: [[5], [6], [7], [8]] },
+            { text: "I feel most content and at peace when:", options: ["Things are orderly and I've done my best to improve.", "I feel deeply connected and appreciated.", "I am successfully achieving my goals.", "I am able to express my unique self."], scoring: [[1], [2], [3], [4]] },
+            { text: "My ideal environment is one where:", options: ["I have space and resources without interruption.", "I feel secure and can trust those around me.", "There's a lot of positive energy and variety.", "I have autonomy and power to make an impact."], scoring: [[5], [6], [7], [8]] },
+            { text: "A recurring theme in my life is the tension between:", options: ["My desire for perfection and reality.", "My need to be loved and my fear of being unwanted.", "My drive for success and my fear of failure.", "My longing for connection and my feeling of difference."], scoring: [[1], [2], [3], [4]] },
+            { text: "I often find myself wrestling with:", options: ["Desire for knowledge and fear of overwhelm.", "Need for certainty and tendency to doubt.", "Urge for excitement and difficulty facing pain.", "Drive to be strong and fear of being weak."], scoring: [[5], [6], [7], [8]] },
+            { text: "In making important decisions, I tend to:", options: ["Find a compromise that keeps everyone happy.", "Rely on my principles and what is 'right'.", "Consider how it will impact my image and success.", "Trust my intuition and what feels authentic."], scoring: [[9], [1], [3], [4]] },
+            { text: "If people were honest, they might say I sometimes overlook:", options: ["The emotional impact of my directness.", "My own needs in my efforts to keep the peace.", "The value of 'being' versus 'doing'.", "How my need for order can feel restrictive."], scoring: [[8], [9], [3], [1]] },
+            { text: "I'm often drawn to activities that involve:", options: ["Helping or nurturing others.", "Deep investigation and learning.", "Planning for the future and safety.", "Experiencing novelty and fun."], scoring: [[2], [5], [6], [7]] },
+            { text: "One of my biggest unspoken fears is:", options: ["That I am inherently flawed.", "That I am ultimately unlovable.", "That I am worthless without achievements.", "That I have no true identity."], scoring: [[1], [2], [3], [4]] },
+            { text: "Deep down, I'm afraid of:", options: ["Being helpless or incapable.", "Being without support or guidance.", "Being trapped in pain or boredom.", "Being harmed or controlled."], scoring: [[5], [6], [7], [8]] },
+            { text: "My 'Achilles' heel' is my tendency towards:", options: ["Resentment when things aren't as they 'should' be.", "Pride in my helpfulness.", "Self-deceit, focusing on image.", "Envy, feeling others have what I lack."], scoring: [[1], [2], [3], [4]] },
+            { text: "A pattern I work against is:", options: ["Hoarding my time/energy (Avarice).", "Excessive worry (Fear/Anxiety).", "Over-indulging to avoid discomfort (Gluttony).", "Needing to assert control (Lust/Excess)."], scoring: [[5], [6], [7], [8]] },
+            { text: "To avoid conflict, I might sometimes:", options: ["Merge with others and neglect my own desires.", "Become overly agreeable.", "Downplay my strengths.", "Procrastinate on unpleasant tasks."], scoring: [[9], [9], [9,2], [9,7]] }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = []; 
+        let scores = {};
+        let participantData = {};
+
+        function initializeApp() {
+            document.getElementById('assessmentDate').value = new Date().toLocaleDateString();
+            document.getElementById('proceedToAssessmentButton').onclick = proceedToAssessment;
+            document.getElementById('startButton').onclick = startAssessment;
+            document.getElementById('prevButton').onclick = previousQuestion;
+            document.getElementById('nextButton').onclick = nextQuestion;
+            document.getElementById('finishButton').onclick = finishAssessment;
+            document.getElementById('restartButton').onclick = () => window.location.reload();
+            document.getElementById('messageBoxCloseButton').onclick = () => document.getElementById('messageBoxOverlay').classList.add('hidden');
+        }
+
+        function proceedToAssessment() {
+            const fName = document.getElementById('familyName').value.trim();
+            const lName = document.getElementById('firstName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            if (!fName || !lName || !email) {
+                document.getElementById('userInfoValidationMessage').classList.remove('hidden');
+                return;
+            }
+            participantData = {
+                familyName: fName, firstName: lName, email: email,
+                middleInitial: document.getElementById('middleInitial').value,
+                position: document.getElementById('position').value,
+                company: document.getElementById('company').value,
+                assessmentDate: document.getElementById('assessmentDate').value
+            };
+            document.getElementById('welcomeName').textContent = fName;
+            document.getElementById('userInfoSection').classList.add('hidden');
+            document.getElementById('welcomeSection').classList.remove('hidden');
+        }
+
+        function startAssessment() {
+            document.getElementById('welcomeSection').classList.add('hidden');
+            document.getElementById('questionnaireSection').classList.remove('hidden');
+            userAnswers = new Array(questions.length).fill(null);
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const question = questions[currentQuestionIndex];
+            const container = document.getElementById('questionContainer');
+            let html = `
+                <div class="mb-8">
+                    <p class="text-xs font-black text-amber-500 uppercase tracking-[0.2em] mb-2">Architectural Inquiry ${currentQuestionIndex + 1} / ${questions.length}</p>
+                    <h2 class="text-2xl font-bold text-slate-800 leading-tight">${question.text}</h2>
+                </div>
+                <div class="space-y-3">
+            `;
+            question.options.forEach((opt, idx) => {
+                const selected = userAnswers[currentQuestionIndex] === idx;
+                html += `<div onclick="selectOption(${idx})" class="option-label ${selected ? 'selected' : ''}">${opt}</div>`;
+            });
+            container.innerHTML = html + `</div>`;
+            document.getElementById('prevButton').classList.toggle('hidden', currentQuestionIndex === 0);
+            document.getElementById('nextButton').classList.toggle('hidden', currentQuestionIndex === questions.length - 1);
+            document.getElementById('finishButton').classList.toggle('hidden', currentQuestionIndex !== questions.length - 1);
+        }
+
+        window.selectOption = (idx) => {
+            userAnswers[currentQuestionIndex] = idx;
+            displayQuestion();
+            document.getElementById('validationMessage').classList.add('hidden');
+        };
+
+        function nextQuestion() {
+            if (userAnswers[currentQuestionIndex] === null) {
+                document.getElementById('validationMessage').classList.remove('hidden');
+                return;
+            }
+            currentQuestionIndex++;
+            displayQuestion();
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        async function finishAssessment() {
+            if (userAnswers[currentQuestionIndex] === null) return;
+
+            scores = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0};
+            userAnswers.forEach((ans, i) => {
+                questions[i].scoring[ans].forEach(type => scores[type]++);
+            });
+
+            const sortedTypes = Object.entries(scores).sort((a,b) => b[1] - a[1]);
+            const primaryType = parseInt(sortedTypes[0][0]);
+
+            document.getElementById('questionnaireSection').classList.add('hidden');
+            document.getElementById('resultsSection').classList.remove('hidden');
+            
+            renderResults(primaryType, scores);
+            
+            const resultData = { ...participantData, scores, primaryType: enneagramTypesData[primaryType].name };
+            sendResultsToBackend(resultData);
+        }
+
+        async function sendResultsToBackend(userData) {
+            const url = 'https://script.google.com/macros/s/AKfycbxyWY3MHZSKq7jQBqYS6duo2zageOFGendaJbzYEDZn1fs4wCeFy91gt5af0aqqpEq-3A/exec'; 
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+                showMessage("Results captured. A profile summary has been sent to your email and our consulting team.");
+            } catch (e) {
+                console.error("Reporting error:", e);
+                showMessage("Results saved locally. Email delivery failed, but our team will reach out to you.");
+            }
+        }
+
+        function showMessage(msg) {
+            document.getElementById('messageBoxText').textContent = msg;
+            document.getElementById('messageBoxOverlay').classList.remove('hidden');
+        }
+
+        function renderResults(type, scores) {
+            const data = enneagramTypesData[type];
+            document.getElementById('participantSummary').innerHTML = `
+                <div class="bg-indigo-900 border border-white/10 p-6 rounded-xl mb-6">
+                    <h4 class="text-white font-black uppercase tracking-widest text-xs mb-1">Architectural Integrity Analysis</h4>
+                    <p class="text-amber-400 font-bold">${participantData.firstName} ${participantData.familyName}</p>
+                </div>
+            `;
+            
+            document.getElementById('typeResult').innerHTML = `
+                <div class="bg-white p-8 rounded-xl border-2 border-amber-500 text-center mb-8">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Core Dominance Type</span>
+                    <h2 class="text-5xl font-black text-slate-900 mt-2">Type ${type}</h2>
+                    <p class="text-xl font-bold text-amber-600 mb-4">${data.name}</p>
+                    <div class="h-1 w-12 bg-slate-200 mx-auto mb-6"></div>
+                    <p class="text-slate-600 italic">Motivation: ${data.coreMotivation}</p>
+                </div>
+            `;
+
+            renderBarChart(scores, type);
+            renderCicularDiagram(type);
+        }
+
+        function renderBarChart(scores, primary) {
+            const container = document.getElementById('barChart');
+            container.innerHTML = '';
+            const max = Math.max(...Object.values(scores));
+            for(let i=1; i<=9; i++) {
+                const height = (scores[i] / max) * 180;
+                const div = document.createElement('div');
+                div.className = 'bar-wrapper';
+                div.innerHTML = `
+                    <span class="bar-score">${scores[i]}</span>
+                    <div class="bar ${i===primary ? 'primary-type-bar' : ''}" style="height:${height}px"></div>
+                    <span class="bar-label">T${i}<br>${enneagramTypesData[i].shortName}</span>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function renderCicularDiagram(primaryType) {
+            const svg = document.getElementById('enneagramCircleSvg');
+            const svgNS = "http://www.w3.org/2000/svg";
+            svg.innerHTML = '';
+            const cx = 160, cy = 160, r = 110;
+            const points = {};
+            const angles = { 9: 90, 1: 50, 2: 10, 3: 330, 4: 290, 5: 250, 6: 210, 7: 170, 8: 130 };
+
+            const circ = document.createElementNS(svgNS, "circle");
+            circ.setAttribute("cx", cx); circ.setAttribute("cy", cy); circ.setAttribute("r", r);
+            circ.setAttribute("class", "enneagram-outer-path");
+            svg.appendChild(circ);
+
+            for(let i=1; i<=9; i++) {
+                const rad = angles[i] * Math.PI / 180;
+                points[i] = { x: cx + r * Math.cos(rad), y: cy - r * Math.sin(rad) };
+            }
+
+            const pairs = [[9,3],[3,6],[6,9],[1,4],[4,2],[2,8],[8,5],[5,7],[7,1]];
+            pairs.forEach(p => {
+                const line = document.createElementNS(svgNS, "line");
+                line.setAttribute("x1", points[p[0]].x); line.setAttribute("y1", points[p[0]].y);
+                line.setAttribute("x2", points[p[1]].x); line.setAttribute("y2", points[p[1]].y);
+                line.setAttribute("class", "enneagram-inner-line");
+                svg.appendChild(line);
+            });
+
+            for(let i=1; i<=9; i++) {
+                const isPrimary = i === primaryType;
+                const g = document.createElementNS(svgNS, "g");
+                const c = document.createElementNS(svgNS, "circle");
+                c.setAttribute("cx", points[i].x); c.setAttribute("cy", points[i].y); c.setAttribute("r", isPrimary ? 16 : 12);
+                c.setAttribute("fill", isPrimary ? "#f59e0b" : "#fff");
+                c.setAttribute("stroke", "#1e1b4b");
+                
+                const t = document.createElementNS(svgNS, "text");
+                t.setAttribute("x", points[i].x); t.setAttribute("y", points[i].y + 4);
+                t.setAttribute("text-anchor", "middle");
+                t.setAttribute("class", "text-[10px] font-bold");
+                t.textContent = i;
+                t.setAttribute("fill", "#1e1b4b");
+
+                g.appendChild(c); g.appendChild(t);
+                svg.appendChild(g);
+            }
+        }
+
+        window.initializeApp = initializeApp;
+    </script>
   </body>
 </html>
