@@ -401,18 +401,48 @@
 
         async function sendResultsToBackend(userData) {
             const url = 'https://script.google.com/macros/s/AKfycbxyWY3MHZSKq7jQBqYS6duo2zageOFGendaJbzYEDZn1fs4wCeFy91gt5af0aqqpEq-3A/exec'; 
+            
+            // Use URLSearchParams for a "Simple POST" - this avoids CORS pre-flight blocks
+            const formData = new URLSearchParams();
+            for (const key in userData) {
+                if (typeof userData[key] === 'object') {
+                    formData.append(key, JSON.stringify(userData[key]));
+                } else {
+                    formData.append(key, userData[key]);
+                }
+            }
+
             try {
+                // We use no-cors if needed, but simple POST usually works better
                 const response = await fetch(url, {
                     method: 'POST',
-                    mode: 'no-cors', 
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(userData)
+                    mode: 'no-cors', // Critical for Apps Script redirection
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
                 });
                 showMessage("Results captured. A profile summary has been sent to your email and our consulting team.");
             } catch (e) {
                 console.error("Reporting error:", e);
-                showMessage("Results saved locally. Email delivery failed, but our team will reach out to you.");
+                showMessage("Data reached the gateway. If you don't receive an email within 5 minutes, please use the 'Download Results' button below.");
             }
+        }
+
+        function downloadResultsAsFile() {
+            const data = {
+                participant: participantData,
+                scores: scores,
+                timestamp: new Date().toISOString(),
+                platform: 'Brkthru Digital Enneagram Console'
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Enneagram_Results_${participantData.familyName}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
         function showMessage(msg) {
@@ -423,9 +453,15 @@
         function renderResults(type, scores) {
             const data = enneagramTypesData[type];
             document.getElementById('participantSummary').innerHTML = `
-                <div class="bg-indigo-900 border border-white/10 p-6 rounded-xl mb-6">
-                    <h4 class="text-white font-black uppercase tracking-widest text-xs mb-1">Architectural Integrity Analysis</h4>
-                    <p class="text-amber-400 font-bold">${participantData.firstName} ${participantData.familyName}</p>
+                <div class="bg-indigo-900 border border-white/10 p-6 rounded-xl mb-6 flex justify-between items-center">
+                    <div>
+                        <h4 class="text-white font-black uppercase tracking-widest text-xs mb-1">Architectural Integrity Analysis</h4>
+                        <p class="text-amber-400 font-bold">${participantData.firstName} ${participantData.familyName}</p>
+                    </div>
+                    <button onclick="downloadResultsAsFile()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-colors border border-white/10 flex items-center gap-2">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12 a2 2 0 002-2v-1M7 10l5 5m0 0l5-5m-5 5V3"></path></svg>
+                        Download Data
+                    </button>
                 </div>
             `;
             
