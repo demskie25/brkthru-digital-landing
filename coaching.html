@@ -41,7 +41,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="universal-header.css" />
+    <link rel="stylesheet" href="universal-header.css?v=1.1" />
     <link rel="stylesheet" href="responsive-global.css" />
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Inter:wght@300;400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap");
@@ -117,6 +117,16 @@
       </defs>
     </svg>
 
+    
+    <!-- SVG FILTER REGISTRY -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="univ-remove-white" color-interpolation-filters="sRGB">
+          <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -1.1 -1.1 -1.1 3 0" />
+        </filter>
+      </defs>
+    </svg>
+
     <!-- UNIVERSAL HEADER -->
     <nav class="univ-header">
         <div class="univ-container">
@@ -159,6 +169,7 @@
                 </div>
 
                 <a href="resources.html" class="univ-nav-item" id="nav-resources">RESOURCES</a>
+                <a href="assessments.html" class="univ-nav-item" id="nav-assessments">ASSESSMENTS</a>
                 <a href="shop.html" class="univ-nav-item" id="nav-shop">SHOP</a>
             </div>
 
@@ -199,6 +210,7 @@
       });
     </script>
     <!-- END UNIVERSAL HEADER -->
+
 
 
 

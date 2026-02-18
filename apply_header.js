@@ -54,6 +54,7 @@ const newHeader = `
                 </div>
 
                 <a href="resources.html" class="univ-nav-item" id="nav-resources">RESOURCES</a>
+                <a href="assessments.html" class="univ-nav-item" id="nav-assessments">ASSESSMENTS</a>
                 <a href="shop.html" class="univ-nav-item" id="nav-shop">SHOP</a>
             </div>
 
