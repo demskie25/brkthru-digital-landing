@@ -3,289 +3,129 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Enneagram Master Profile | Brkthru Digital</title>
-    <meta
-      name="description"
-      content="The Enneagram Master Profile: A precision psychological map for leadership, work, and relationships."
-    />
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- AOS Animation CSS -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-
-    <!-- Tailwind CSS -->
+    <title>Assessments Library | Brkthru Digital</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
-            fontFamily: {
-              sans: ["Inter", "sans-serif"],
-              heading: ["Poppins", "sans-serif"],
-            },
             colors: {
-              brand: {
-                900: "#0f172a", // slate-900
-                800: "#1e293b", // slate-800
-                50: "#f8fafc", // slate-50
-              },
-              accent: {
-                500: "#f59e0b", // amber-500
-                600: "#d97706", // amber-600
-                700: "#b45309", // amber-700
-              },
+              brand: { gold: "#D4AF37", amber: "#FFBF00", navy: "#0F172A", slate: "#1E293B" },
             },
+            fontFamily: { sans: ["Inter", "sans-serif"], heading: ["Poppins", "sans-serif"] },
           },
         },
       };
     </script>
-    <!-- Alpine.js -->
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
-    ></script>
-    <link rel="stylesheet" href="universal-header.css?v=1.1" />
-    <link rel="stylesheet" href="responsive-global.css" />
+    <link rel="stylesheet" href="universal-header.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
-      body {
-        background-color: #f8fafc;
-        color: #1e293b;
-      }
+      .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+      .premium-border { border: 2px solid #FFBF00; box-shadow: 0 0 25px rgba(255, 191, 0, 0.2); }
       [x-cloak] { display: none !important; }
-      .text-gradient {
-        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
     </style>
   </head>
-
-  <body
-    class="font-sans text-slate-800 bg-slate-50 antialiased"
+  <body 
+    class="bg-brand-navy text-slate-300 antialiased"
     x-data="{ 
-      scrolled: false, 
-      mobileMenuOpen: false,
-      hasEnneagramAccess: localStorage.getItem('enneagramAccess') === 'true'
+        enneagramUnlocked: false,
+        checkAccess() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('access') === 'enneagram') {
+                this.enneagramUnlocked = true;
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
     }"
+    x-init="checkAccess()"
   >
-
-    <!-- SVG FILTER REGISTRY -->
-    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="univ-remove-white" color-interpolation-filters="sRGB">
-          <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -1.1 -1.1 -1.1 3 0" />
-        </filter>
-      </defs>
-    </svg>
 
     <!-- UNIVERSAL HEADER -->
     <nav class="univ-header">
         <div class="univ-container">
-            <!-- LOGO -->
             <a href="index.html" class="univ-logo">
                 <img src="images/brkthru-logo.png" alt="BRKTHRU" class="univ-logo-img">
                 <span class="univ-logo-accent">DIGITAL</span>
             </a>
-
-            <!-- MOBILE HAMBURGER -->
-            <button class="univ-hamburger" onclick="toggleMobileMenu()" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-
-            <!-- NAV LINKS -->
             <div class="univ-nav">
-                <a href="index.html" class="univ-nav-item" id="nav-home">HOME</a>
-                <a href="odyssey.html" class="univ-nav-item" id="nav-odyssey">OUR ODYSSEY</a>
-                
-                <div class="univ-dropdown-container">
-                    <a href="corporate.html" class="univ-nav-item" id="nav-corporate">CORPORATE</a>
-                    <div class="univ-dropdown-menu">
-                        <a href="corporate.html#leadership" class="univ-dropdown-link">Leadership Edge</a>
-                        <a href="corporate.html#alignment" class="univ-dropdown-link">Systemic Alignment</a>
-                        <a href="corporate.html#excellence" class="univ-dropdown-link">Customer Excellence</a>
-                    </div>
-                </div>
-
-                <div class="univ-dropdown-container">
-                    <a href="coaching.html" class="univ-nav-item" id="nav-coaching">COACHING</a>
-                    <div class="univ-dropdown-menu">
-                        <a href="coaching.html#executive" class="univ-dropdown-link">Executive Coaching</a>
-                        <a href="coaching.html#sports" class="univ-dropdown-link">Sports Performance</a>
-                        <a href="coaching.html#adhd" class="univ-dropdown-link">ADHD & Resilience</a>
-                        <a href="coaching.html#relationships" class="univ-dropdown-link">Relationships</a>
-                        <a href="coaching.html#career" class="univ-dropdown-link">Career Direction & Transition</a>
-                    </div>
-                </div>
-
-                <a href="resources.html" class="univ-nav-item" id="nav-resources">RESOURCES</a>
-                <a href="assessments.html" class="univ-nav-item active" id="nav-assessments">ASSESSMENTS</a>
-                <a href="shop.html" class="univ-nav-item" id="nav-shop">SHOP</a>
+                <a href="index.html" class="univ-nav-item">HOME</a>
+                <a href="odyssey.html" class="univ-nav-item">OUR ODYSSEY</a>
+                <a href="assessments.html" class="univ-nav-item active">ASSESSMENTS</a>
+                <a href="shop.html" class="univ-nav-item">SHOP</a>
             </div>
-
-            <!-- UTILITY -->
             <div class="univ-utility">
-                <a href="javascript:void(0)" onclick="window.open('https://youtu.be/ICr8WGQbpjc', '_blank')" class="univ-btn-video">WATCH LOVE'S VIDEO</a>
-                <div class="univ-currency">
-                    <span class="active">USD</span> | <span>PHP</span>
-                </div>
                 <a href="index.html#tour" class="univ-btn-tour">TOUR 2026</a>
             </div>
         </div>
     </nav>
     <div class="univ-spacer"></div>
 
-    <!-- Mobile Menu Toggle Script -->
-    <script>
-      function toggleMobileMenu() {
-        const nav = document.querySelector('.univ-nav');
-        const hamburger = document.querySelector('.univ-hamburger');
-        if (nav && hamburger) {
-          nav.classList.toggle('mobile-open');
-          hamburger.classList.toggle('active');
-        }
-      }
-    </script>
-    <!-- END UNIVERSAL HEADER -->
+    <header class="py-20 bg-brand-navy text-center border-b border-white/5">
+        <h1 class="text-4xl md:text-6xl font-heading font-bold text-white uppercase tracking-tighter">Cognitive Audits</h1>
+        <p class="text-xl text-brand-amber font-serif italic mt-4">Measurement leads to Mastery.</p>
+    </header>
 
-    <!-- HERO SECTION -->
-    <section class="bg-slate-900 pt-32 pb-16 lg:pt-40 lg:pb-24 relative overflow-hidden">
-      <div class="absolute inset-0 z-0">
-        <img src="hero_v2.png" alt="" class="w-full h-full object-cover opacity-30" />
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
-      </div>
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white relative z-10">
-        <h1 class="text-4xl lg:text-7xl font-heading font-black mb-6 tracking-tight" data-aos="fade-up">
-          Enneagram Master Profile
-        </h1>
-        <p class="text-xl lg:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-light" data-aos="fade-up" data-aos-delay="100">
-          The ultimate structural map for understanding human architecture. Reveal the core motivations driving your life and leadership.
-        </p>
-      </div>
-    </section>
-
-    <!-- UNLOCK SECTION -->
-    <section class="py-24 bg-white relative">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-slate-50 rounded-[4rem] p-12 lg:p-20 shadow-2xl border border-slate-100 flex flex-col lg:flex-row gap-16 items-center" data-aos="zoom-in">
-            <div class="flex-1">
-                <span class="bg-accent-500 text-brand-900 text-[0.7rem] font-black px-6 py-2 rounded-full uppercase tracking-[0.3em] shadow-lg mb-8 inline-block">Premium Assessment</span>
-                <h2 class="text-4xl font-heading font-black text-brand-900 mb-6 leading-tight">Master the Internal Game.</h2>
-                <ul class="space-y-4 mb-10 text-slate-600 font-medium">
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-accent-600"></i> Deep Dive into 9 Type Architectures</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-accent-600"></i> Stress & Growth Directions mapping</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-accent-600"></i> Wings & Instinctual Variant analysis</li>
-                </ul>
+    <section class="py-24 bg-slate-50 text-brand-navy">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                 
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <!-- If Unlocked: Show Entry Button -->
-                    <template x-if="hasEnneagramAccess">
-                        <a href="enneagram-console.html" class="inline-flex items-center justify-center px-10 py-6 bg-accent-500 text-brand-900 rounded-[2rem] font-black uppercase tracking-[0.2em] text-sm hover:bg-accent-600 transition-all shadow-xl shadow-accent-500/20 text-center w-full">
-                            Launch Master Console
-                        </a>
-                    </template>
-                    
-                    <!-- If Locked: Show Payment Button -->
-                    <template x-if="!hasEnneagramAccess">
-                        <a href="https://hitpay.link/9mzhz1" class="inline-flex items-center justify-center px-10 py-6 bg-brand-900 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-sm hover:bg-slate-800 transition-all shadow-xl shadow-brand-900/20 text-center w-full">
-                            Unlock Full Profile - ₱299
-                        </a>
-                    </template>
-                </div>
-            </div>
-            <div class="w-full lg:w-[40%] text-center">
-                <div class="relative inline-block">
-                    <div class="absolute -inset-4 bg-accent-500/20 blur-2xl rounded-full"></div>
-                    <img src="images/brkthru-logo.png" alt="Enneagram" class="relative w-48 mx-auto grayscale opacity-40" />
-                </div>
-                <p class="mt-8 text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-loose">Secure Access & Universal <br>Reporting to brkthru.consulting@gmail.com</p>
-            </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- THE POWER OF ENNEAGRAM (DEEP EXPLANATION) -->
-    <section class="py-32 bg-slate-50 relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-20" data-aos="fade-up">
-                <h2 class="text-4xl lg:text-6xl font-heading font-black text-brand-900 mb-6">Why the Enneagram?</h2>
-                <div class="h-1.5 w-24 bg-accent-500 mx-auto rounded-full"></div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
-                <!-- FOR WORK -->
-                <div class="bg-white p-12 rounded-[3.5rem] shadow-xl border border-slate-100 group hover:-translate-y-2 transition-transform h-full flex flex-col" data-aos="fade-up">
-                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-500">
-                        <i class="fa-solid fa-briefcase"></i>
+                <!-- Assessment 1: FREE -->
+                <div class="bg-white rounded-[2.5rem] p-10 shadow-xl border border-slate-100 flex flex-col transition-transform hover:-translate-y-2">
+                    <div class="mb-8 flex justify-between items-center">
+                        <span class="bg-green-100 text-green-700 text-[10px] font-black uppercase px-3 py-1 rounded-full w-fit mb-6">Free Access</span>
+                        <i class="fa-solid fa-brain text-slate-200 text-3xl"></i>
                     </div>
-                    <h3 class="text-2xl font-heading font-bold text-brand-900 mb-6 uppercase tracking-tight">For Work & Productivity</h3>
-                    <p class="text-slate-600 leading-relaxed font-light text-lg mb-auto">
-                        In the modern workplace, friction isn't just a byproduct—it's a cost. The Enneagram allows teams to speak a common language of motivation. By understanding whether a colleague is driven by the need for accuracy, achievement, or harmony, you can bypass communication barriers and unlock high-velocity collaboration.
-                    </p>
+                    <h3 class="text-2xl font-heading font-bold mb-4">Leadership Resilience Audit</h3>
+                    <p class="text-slate-600 mb-10 flex-grow">A quick 12-point diagnostic to measure meta-state response.</p>
+                    <a href="audits/resilience-free.html" class="w-full py-4 bg-slate-100 text-brand-navy text-center font-bold rounded-xl hover:bg-slate-200 transition-all">Start Free Audit</a>
                 </div>
 
-                <!-- FOR LEADERSHIP -->
-                <div class="bg-white p-12 rounded-[3.5rem] shadow-xl border border-slate-100 group hover:-translate-y-2 transition-transform h-full flex flex-col" data-aos="fade-up" data-aos-delay="100">
-                    <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-500">
-                        <i class="fa-solid fa-crown"></i>
+                <!-- Assessment 2: ENNEAGRAM MASTER PROFILE (LIVE BASKET) -->
+                <div class="bg-white rounded-[2.5rem] p-10 shadow-2xl premium-border relative flex flex-col transform scale-105">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 bg-brand-amber text-brand-navy text-[10px] font-black px-6 py-2 rounded-full uppercase tracking-widest shadow-lg">New Release</div>
+                    <div class="mb-8 flex justify-between items-center pt-4">
+                        <span class="bg-brand-navy text-white text-[10px] font-black uppercase px-3 py-1 rounded-full">Premium Unlock</span>
+                        <i class="fa-solid fa-shapes text-brand-amber text-3xl"></i>
                     </div>
-                    <h3 class="text-2xl font-heading font-bold text-brand-900 mb-6 uppercase tracking-tight">For Precision Leadership</h3>
-                    <p class="text-slate-600 leading-relaxed font-light text-lg mb-auto">
-                        Leadership is the management of energy. The Enneagram reveals your "Leadership Architecture"—your strengths, your blind spots, and how you react under stress. It provides a map for moving from compulsive management to intentional influence, allowing you to lead with ruthless compassion and cognitive clarity.
-                    </p>
+                    <h3 class="text-2xl font-heading font-bold mb-4">Enneagram Leadership Profile</h3>
+                    <p class="text-slate-600 mb-8 flex-grow">Unlock the full Enneagram logic. Mapping your integration paths for peak leadership performance.</p>
+                    <div class="mb-8">
+                        <p class="text-4xl font-black text-brand-navy">₱599</p>
+                    </div>
+                    <!-- Linked to your specific HitPay link -->
+                    <a href="https://hitpay.link/of8ur1" class="w-full py-4 bg-brand-amber text-brand-navy text-center font-black rounded-xl hover:shadow-xl uppercase transition-all">Unlock Assessment</a>
                 </div>
 
-                <!-- FOR RELATIONSHIPS -->
-                <div class="bg-white p-12 rounded-[3.5rem] shadow-xl border border-slate-100 group hover:-translate-y-2 transition-transform h-full flex flex-col" data-aos="fade-up" data-aos-delay="200">
-                    <div class="w-16 h-16 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-rose-600 group-hover:text-white transition-colors duration-500">
-                        <i class="fa-solid fa-heart"></i>
+                <!-- Assessment 3: META-STATES MAPPING -->
+                <div class="bg-white rounded-[2.5rem] p-10 shadow-xl border border-slate-100 flex flex-col transition-transform hover:-translate-y-2 opacity-80">
+                    <div class="mb-8 flex justify-between items-center">
+                        <span class="bg-brand-navy text-white text-[10px] font-black uppercase px-3 py-1 rounded-full">Premium</span>
+                        <i class="fa-solid fa-diagram-project text-slate-300 text-3xl"></i>
                     </div>
-                    <h3 class="text-2xl font-heading font-bold text-brand-900 mb-6 uppercase tracking-tight">For Relationships & Empathy</h3>
-                    <p class="text-slate-600 leading-relaxed font-light text-lg mb-auto">
-                        Most relationship conflicts arise because we assume others see the world the same way we do. The Enneagram shatters this illusion, providing a profound empathy for the "other." It reveals the secret fears and desires of those around you, turning judgment into curiosity and conflict into deep connection.
-                    </p>
+                    <h3 class="text-2xl font-heading font-bold mb-4">Meta-States Mapping</h3>
+                    <p class="text-slate-600 mb-8 flex-grow">A deep-dive psychological assessment identifying focus triggers.</p>
+                    <div class="mb-8">
+                        <p class="text-3xl font-black text-brand-navy">₱499</p>
+                    </div>
+                    <a href="https://hitpay.link/mhy8sc" class="w-full py-4 bg-slate-100 text-brand-navy text-center font-bold rounded-xl hover:bg-slate-200 transition-all uppercase tracking-widest text-xs">Purchase Access</a>
                 </div>
 
-                <!-- FOR LIFE -->
-                <div class="bg-white p-12 rounded-[3.5rem] shadow-xl border border-slate-100 group hover:-translate-y-2 transition-transform h-full flex flex-col" data-aos="fade-up" data-aos-delay="300">
-                    <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-500">
-                        <i class="fa-solid fa-leaf"></i>
-                    </div>
-                    <h3 class="text-2xl font-heading font-bold text-brand-900 mb-6 uppercase tracking-tight">For Life & Integration</h3>
-                    <p class="text-slate-600 leading-relaxed font-light text-lg mb-auto">
-                        Personal growth is often a walk in the dark. The Enneagram turns the lights on. It identifies the ego structures you lean on for survival and shows you the path toward integration—becoming a whole, balanced human being who is no longer a prisoner to their unconscious patterns.
-                    </p>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="bg-brand-900 text-slate-400 py-16">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <img src="images/brkthru-logo.png" alt="Brkthru" class="h-10 mx-auto mb-8 opacity-50 grayscale" />
-        <p class="text-sm border-t border-white/5 pt-8 font-black uppercase tracking-ultra">
-          © 2026 Brkthru Digital. Strategically Humane Leadership.
-        </p>
-      </div>
-    </footer>
+    <!-- UNLOCKED ASSESSMENT IFRAME (Automatically opens after payment redirect) -->
+    <div x-show="enneagramUnlocked" x-cloak class="fixed inset-0 z-[9999] bg-brand-navy flex flex-col">
+        <div class="bg-white/5 border-b border-white/10 p-4 flex justify-between items-center px-8">
+            <span class="text-xs font-black uppercase text-brand-amber tracking-[0.2em]">Unlocked: Enneagram Assessment</span>
+            <button @click="enneagramUnlocked = false" class="text-white/50 hover:text-white uppercase text-xs font-bold border border-white/20 px-4 py-1 rounded">Close</button>
+        </div>
+        <div class="flex-grow bg-white">
+            <iframe src="https://serene-alfajores-aea820.netlify.app/" class="w-full h-full border-none" allow="autoplay; fullscreen"></iframe>
+        </div>
+    </div>
 
-    <!-- Scripts -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <script>
-      AOS.init({
-        duration: 1000,
-        once: true,
-      });
-    </script>
+    <!-- Alpine.js (Required for the unlock logic) -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </body>
 </html>
