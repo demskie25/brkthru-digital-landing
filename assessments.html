@@ -70,16 +70,20 @@
       enneagramUnlocked: false,
       checkAccess() {
           const params = new URLSearchParams(window.location.search);
-          if (params.get('status') === 'completed' || localStorage.getItem('enneagramAccess') === 'true') {
+          // Unlock if status is completed OR if secret review param is used OR if already in localStorage
+          if (params.get('status') === 'completed' || params.get('review') === 'true' || localStorage.getItem('enneagramAccess') === 'true') {
               this.enneagramUnlocked = true;
               localStorage.setItem('enneagramAccess', 'true');
+              // Clear URL params for clean session if not in dev
+              if (params.get('status') === 'completed') {
+                  window.history.replaceState({}, document.title, window.location.pathname);
+              }
           }
       }
     }"
     x-init="checkAccess()"
   >
 
-    
     <!-- SVG FILTER REGISTRY -->
     <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -157,22 +161,8 @@
           hamburger.classList.toggle('active');
         }
       }
-      
-      // Close menu when clicking a link
-      document.addEventListener('DOMContentLoaded', function() {
-        const links = document.querySelectorAll('.univ-nav-item, .univ-dropdown-link');
-        links.forEach(link => {
-          link.addEventListener('click', () => {
-            const nav = document.querySelector('.univ-nav');
-            const hamburger = document.querySelector('.univ-hamburger');
-            if (nav) nav.classList.remove('mobile-open');
-            if (hamburger) hamburger.classList.remove('active');
-          });
-        });
-      });
     </script>
     <!-- END UNIVERSAL HEADER -->
-
 
     <!-- HERO SECTION -->
     <section class="bg-slate-900 pt-32 pb-16 lg:pt-40 lg:pb-24 relative overflow-hidden">
@@ -218,6 +208,20 @@
                     <p class="text-slate-700 font-medium">Stress & Growth Directions</p>
                 </div>
                 <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-brand-900 font-bold">03</div>
+                    <p class="text-slate-700 font-medium">Comprehensive Strategy Guide</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-4">
+                <a href="https://hitpay.link/9mzhz1" class="inline-flex items-center justify-center px-8 py-5 bg-brand-900 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-sm hover:bg-slate-800 transition-all shadow-xl shadow-brand-900/20 text-center">
+                    Unlock Master Profile - ₱299
+                </a>
+                <p class="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest">Secure Payment via HitPay</p>
+            </div>
+          </div>
+
+          <!-- PLACEHOLDER / UPCOMING -->
           <div class="space-y-8">
             <div class="bg-slate-900/5 p-8 rounded-[2rem] border border-slate-200/50" data-aos="fade-left" data-aos-delay="100">
                 <h3 class="text-xl font-heading font-bold text-brand-900 mb-2">Role Behavior Alignment (RBA)</h3>
