@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Assessments Library | Brkthru Digital</title>
+    <title>Enneagram Master Profile | Brkthru Digital</title>
     <meta
       name="description"
-      content="Comprehensive psychological and leadership assessments for high-performing teams."
+      content="The Enneagram Master Profile: A precision psychological map for leadership, work, and relationships."
     />
 
     <!-- Fonts -->
@@ -59,6 +59,11 @@
         color: #1e293b;
       }
       [x-cloak] { display: none !important; }
+      .text-gradient {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
     </style>
   </head>
 
@@ -122,7 +127,7 @@
                 </div>
 
                 <a href="resources.html" class="univ-nav-item" id="nav-resources">RESOURCES</a>
-                <a href="assessments.html" class="univ-nav-item" id="nav-assessments">ASSESSMENTS</a>
+                <a href="assessments.html" class="univ-nav-item active" id="nav-assessments">ASSESSMENTS</a>
                 <a href="shop.html" class="univ-nav-item" id="nav-shop">SHOP</a>
             </div>
 
@@ -158,90 +163,116 @@
         <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
       </div>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white relative z-10">
-        <h1 class="text-4xl lg:text-6xl font-heading font-bold mb-6" data-aos="fade-up">
-          Assessments Library
+        <h1 class="text-4xl lg:text-7xl font-heading font-black mb-6 tracking-tight" data-aos="fade-up">
+          Enneagram Master Profile
         </h1>
-        <p class="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="100">
-          The Data of Transformation. Professional tools for revealing the hidden architecture of the human mind.
+        <p class="text-xl lg:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-light" data-aos="fade-up" data-aos-delay="100">
+          The ultimate structural map for understanding human architecture. Reveal the core motivations driving your life and leadership.
         </p>
       </div>
     </section>
 
-    <!-- ASSESSMENTS GRID -->
-    <section class="py-24">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          
-          <!-- FEATURED: ENNEAGRAM -->
-          <div class="bg-white rounded-[3rem] p-10 shadow-2xl border border-slate-100 relative overflow-hidden group" data-aos="fade-right">
-            <div class="absolute top-0 right-0 p-8">
-                <span class="bg-accent-500 text-brand-900 text-[0.7rem] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">New Release</span>
-            </div>
-            
-            <div class="mb-8">
-                <h2 class="text-3xl font-heading font-bold text-brand-900 mb-4">Enneagram Master Profile</h2>
-                <p class="text-slate-600 leading-relaxed font-light text-lg">
-                    The ultimate psychological map. Understand the core motivation, fear, and desire that drives your leadership style. Beyond traits—into the architecture of ego.
-                </p>
-            </div>
-
-            <div class="space-y-6 mb-10">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-brand-900 font-bold">01</div>
-                    <p class="text-slate-700 font-medium">9 Primary Types & Subtypes</p>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-brand-900 font-bold">02</div>
-                    <p class="text-slate-700 font-medium">Stress & Growth Directions</p>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-brand-900 font-bold">03</div>
-                    <p class="text-slate-700 font-medium">Comprehensive Strategy Guide</p>
-                </div>
-            </div>
-
-            <div class="flex flex-col gap-4">
-                <!-- If Unlocked: Show Entry Button -->
-                <template x-if="hasEnneagramAccess">
-                    <a href="enneagram-console.html" class="inline-flex items-center justify-center px-8 py-5 bg-accent-500 text-brand-900 rounded-2xl font-black uppercase tracking-[0.2em] text-sm hover:bg-accent-600 transition-all shadow-xl shadow-accent-500/20 text-center">
-                        Launch Master Console
-                    </a>
-                </template>
+    <!-- UNLOCK SECTION -->
+    <section class="py-24 bg-white relative">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-slate-50 rounded-[4rem] p-12 lg:p-20 shadow-2xl border border-slate-100 flex flex-col lg:flex-row gap-16 items-center" data-aos="zoom-in">
+            <div class="flex-1">
+                <span class="bg-accent-500 text-brand-900 text-[0.7rem] font-black px-6 py-2 rounded-full uppercase tracking-[0.3em] shadow-lg mb-8 inline-block">Premium Assessment</span>
+                <h2 class="text-4xl font-heading font-black text-brand-900 mb-6 leading-tight">Master the Internal Game.</h2>
+                <ul class="space-y-4 mb-10 text-slate-600 font-medium">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-accent-600"></i> Deep Dive into 9 Type Architectures</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-accent-600"></i> Stress & Growth Directions mapping</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-accent-600"></i> Wings & Instinctual Variant analysis</li>
+                </ul>
                 
-                <!-- If Locked: Show Payment Button -->
-                <template x-if="!hasEnneagramAccess">
-                    <a href="https://hitpay.link/9mzhz1" class="inline-flex items-center justify-center px-8 py-5 bg-brand-900 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-sm hover:bg-slate-800 transition-all shadow-xl shadow-brand-900/20 text-center">
-                        Unlock Master Profile - ₱299
-                    </a>
-                </template>
-                
-                <p class="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest">Secure Access via HitPay</p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <!-- If Unlocked: Show Entry Button -->
+                    <template x-if="hasEnneagramAccess">
+                        <a href="enneagram-console.html" class="inline-flex items-center justify-center px-10 py-6 bg-accent-500 text-brand-900 rounded-[2rem] font-black uppercase tracking-[0.2em] text-sm hover:bg-accent-600 transition-all shadow-xl shadow-accent-500/20 text-center w-full">
+                            Launch Master Console
+                        </a>
+                    </template>
+                    
+                    <!-- If Locked: Show Payment Button -->
+                    <template x-if="!hasEnneagramAccess">
+                        <a href="https://hitpay.link/9mzhz1" class="inline-flex items-center justify-center px-10 py-6 bg-brand-900 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-sm hover:bg-slate-800 transition-all shadow-xl shadow-brand-900/20 text-center w-full">
+                            Unlock Full Profile - ₱299
+                        </a>
+                    </template>
+                </div>
             </div>
-          </div>
-
-          <!-- PLACEHOLDER / UPCOMING -->
-          <div class="space-y-8">
-            <div class="bg-slate-900/5 p-8 rounded-[2rem] border border-slate-200/50" data-aos="fade-left" data-aos-delay="100">
-                <h3 class="text-xl font-heading font-bold text-brand-900 mb-2">Role Behavior Alignment (RBA)</h3>
-                <p class="text-slate-600 text-sm">Synchronizing your biological predispositions with professional expectations. Coming Soon.</p>
+            <div class="w-full lg:w-[40%] text-center">
+                <div class="relative inline-block">
+                    <div class="absolute -inset-4 bg-accent-500/20 blur-2xl rounded-full"></div>
+                    <img src="images/brkthru-logo.png" alt="Enneagram" class="relative w-48 mx-auto grayscale opacity-40" />
+                </div>
+                <p class="mt-8 text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-loose">Secure Access & Universal <br>Reporting to brkthru.consulting@gmail.com</p>
             </div>
-            <div class="bg-slate-900/5 p-8 rounded-[2rem] border border-slate-200/50" data-aos="fade-left" data-aos-delay="200">
-                <h3 class="text-xl font-heading font-bold text-brand-900 mb-2">Identity-Performance Matrix</h3>
-                <p class="text-slate-600 text-sm">Measuring the gap between who you believe you are and what you produce. Coming Soon.</p>
-            </div>
-          </div>
-
         </div>
       </div>
     </section>
 
-    <!-- MODAL LOGIC REMOVED - NOW IN ENNEAGRAM-CONSOLE.HTML -->
+    <!-- THE POWER OF ENNEAGRAM (DEEP EXPLANATION) -->
+    <section class="py-32 bg-slate-50 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-20" data-aos="fade-up">
+                <h2 class="text-4xl lg:text-6xl font-heading font-black text-brand-900 mb-6">Why the Enneagram?</h2>
+                <div class="h-1.5 w-24 bg-accent-500 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+                <!-- FOR WORK -->
+                <div class="bg-white p-12 rounded-[3.5rem] shadow-xl border border-slate-100 group hover:-translate-y-2 transition-transform h-full flex flex-col" data-aos="fade-up">
+                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-500">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+                    <h3 class="text-2xl font-heading font-bold text-brand-900 mb-6 uppercase tracking-tight">For Work & Productivity</h3>
+                    <p class="text-slate-600 leading-relaxed font-light text-lg mb-auto">
+                        In the modern workplace, friction isn't just a byproduct—it's a cost. The Enneagram allows teams to speak a common language of motivation. By understanding whether a colleague is driven by the need for accuracy, achievement, or harmony, you can bypass communication barriers and unlock high-velocity collaboration.
+                    </p>
+                </div>
+
+                <!-- FOR LEADERSHIP -->
+                <div class="bg-white p-12 rounded-[3.5rem] shadow-xl border border-slate-100 group hover:-translate-y-2 transition-transform h-full flex flex-col" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-500">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <h3 class="text-2xl font-heading font-bold text-brand-900 mb-6 uppercase tracking-tight">For Precision Leadership</h3>
+                    <p class="text-slate-600 leading-relaxed font-light text-lg mb-auto">
+                        Leadership is the management of energy. The Enneagram reveals your "Leadership Architecture"—your strengths, your blind spots, and how you react under stress. It provides a map for moving from compulsive management to intentional influence, allowing you to lead with ruthless compassion and cognitive clarity.
+                    </p>
+                </div>
+
+                <!-- FOR RELATIONSHIPS -->
+                <div class="bg-white p-12 rounded-[3.5rem] shadow-xl border border-slate-100 group hover:-translate-y-2 transition-transform h-full flex flex-col" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-16 h-16 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-rose-600 group-hover:text-white transition-colors duration-500">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <h3 class="text-2xl font-heading font-bold text-brand-900 mb-6 uppercase tracking-tight">For Relationships & Empathy</h3>
+                    <p class="text-slate-600 leading-relaxed font-light text-lg mb-auto">
+                        Most relationship conflicts arise because we assume others see the world the same way we do. The Enneagram shatters this illusion, providing a profound empathy for the "other." It reveals the secret fears and desires of those around you, turning judgment into curiosity and conflict into deep connection.
+                    </p>
+                </div>
+
+                <!-- FOR LIFE -->
+                <div class="bg-white p-12 rounded-[3.5rem] shadow-xl border border-slate-100 group hover:-translate-y-2 transition-transform h-full flex flex-col" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-500">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <h3 class="text-2xl font-heading font-bold text-brand-900 mb-6 uppercase tracking-tight">For Life & Integration</h3>
+                    <p class="text-slate-600 leading-relaxed font-light text-lg mb-auto">
+                        Personal growth is often a walk in the dark. The Enneagram turns the lights on. It identifies the ego structures you lean on for survival and shows you the path toward integration—becoming a whole, balanced human being who is no longer a prisoner to their unconscious patterns.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- FOOTER -->
     <footer class="bg-brand-900 text-slate-400 py-16">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <img src="images/brkthru-logo.png" alt="Brkthru" class="h-10 mx-auto mb-8 opacity-50 grayscale" />
-        <p class="text-sm border-t border-white/5 pt-8">
+        <p class="text-sm border-t border-white/5 pt-8 font-black uppercase tracking-ultra">
           © 2026 Brkthru Digital. Strategically Humane Leadership.
         </p>
       </div>
@@ -249,9 +280,10 @@
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <script>
       AOS.init({
-        duration: 800,
+        duration: 1000,
         once: true,
       });
     </script>
