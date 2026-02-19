@@ -1,54 +1,349 @@
-<!doctype html>
-<html lang="en" class="scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Assessments Library | Brkthru Digital</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              brand: { gold: "#D4AF37", amber: "#FFBF00", navy: "#0F172A", slate: "#1E293B" },
-            },
-            fontFamily: { sans: ["Inter", "sans-serif"], heading: ["Poppins", "sans-serif"] },
-          },
-        },
-      };
-    </script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
     <link rel="stylesheet" href="universal-header.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <style>
-      .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
-      .premium-border { border: 2px solid #FFBF00; box-shadow: 0 0 25px rgba(255, 191, 0, 0.2); }
-      [x-cloak] { display: none !important; }
-    </style>
-    <!-- Alpine.js (Moved to head for better initialization) -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  </head>
-    <body 
-    class="bg-brand-navy text-slate-300 antialiased"
-    x-data="{ 
-        enneagramUnlocked: false,
-        backdoorClicks: 0,
-        checkAccess() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('access') === 'enneagram') {
-                this.enneagramUnlocked = true;
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
-        },
-        triggerBackdoor() {
-            this.backdoorClicks++;
-            if (this.backdoorClicks >= 6) {
-                this.enneagramUnlocked = true;
-                this.backdoorClicks = 0;
-            }
+    <style>
+        [x-cloak] { display: none !important; }
+        .backdoor-indicator {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: #4A148C; color: #FFD700; text-align: center;
+            font-size: 10px; font-weight: bold; z-index: 99999;
+            padding: 4px; border-bottom: 2px solid #FFD700;
         }
-    }"
-    x-init="checkAccess()"
-  >
+    </style>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enneagram Assessment for Leaders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PDF Generation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // --- PASTE YOUR FIREBASE CONFIG HERE ---
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make db available globally
+        window.saveToFirebase = async (data) => {
+            try {
+                await addDoc(collection(db, "enneagram_submissions"), {
+                    ...data,
+                    timestamp: serverTimestamp()
+                });
+                console.log("Saved to Firebase");
+            } catch(e) { console.error("Firebase Error", e); }
+        };
+    </script>
+    <style>
+        /* Theme Colors */
+        :root {
+            --aubergine: #4A148C;
+            --chartreuse-bright: #ADFF2F;
+            --chartreuse-muted: #9ACD32;
+            --gold-main: #FFD700;
+            --gold-light: #FFF8DC;
+            --gold-dark: #B8860B;
+            --royal-navy: #000080;
+            --text-on-dark: var(--gold-light);
+            --text-on-light: var(--royal-navy);
+            --container-bg: var(--aubergine);
+            --page-bg: #fdfbf6;
+            --section-bg: #ffffff;
+            --input-border: var(--gold-dark);
+            --ai-section-bg: #eef2ff;
+            --ai-text-color: #312e81;
+            --red-flag: #B91C1C;
+            --strategy-blue: #1E40AF;
+        }
+
+        /* Access Denied Overlay */
+        #accessDeniedOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: white; text-align: center;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--page-bg);
+            color: var(--text-on-light);
+        }
+        .assessment-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background-color: var(--container-bg);
+            color: var(--text-on-dark);
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            border: 3px solid var(--gold-dark);
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .btn:disabled {
+            background-color: #9ca3af !important; 
+            color: #e5e7eb !important;
+            cursor: not-allowed;
+        }
+        .btn-primary {
+            background-color: var(--chartreuse-muted);
+            color: var(--royal-navy);
+            border: 1px solid var(--gold-dark);
+        }
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--chartreuse-bright);
+            box-shadow: 0 0 15px var(--chartreuse-bright);
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background-color: var(--royal-navy);
+            color: var(--gold-light);
+            border: 1px solid var(--gold-main);
+        }
+        .input-field {
+            width: 100%;
+            padding: 0.85rem;
+            border: 2px solid var(--input-border);
+            border-radius: 0.375rem;
+            margin-bottom: 1.25rem;
+            background-color: var(--page-bg);
+            color: var(--text-on-light);
+            font-weight: 500;
+        }
+        .label-text {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: var(--gold-light);
+        }
+        .question-card, .graph-container, .circular-diagram-container {
+            background-color: var(--section-bg);
+            color: var(--text-on-light);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--gold-dark);
+        }
+        
+        /* New Creative Report Card Style */
+        .report-card {
+            background-color: #ffffff;
+            color: #374151;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--gold-dark); /* Accent Border */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
+            page-break-inside: avoid; /* Prevents cutting cards in PDF */
+        }
+        .report-card h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--aubergine);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+        }
+        .report-card h3::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--chartreuse-muted);
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .option-label {
+            display: block;
+            padding: 1.25rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background-color: #f9fafb;
+            color: var(--text-on-light);
+            font-weight: 500;
+        }
+        .option-label:hover {
+            background-color: var(--gold-light);
+            border-color: var(--gold-main);
+            transform: translateX(5px);
+        }
+        .option-label.selected {
+            background-color: var(--chartreuse-muted); 
+            border-color: var(--gold-dark);
+            color: var(--royal-navy);
+            font-weight: 800;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Graph & Diagram Styling */
+        .bar-chart {
+            border-bottom: 3px solid var(--gold-dark);
+            background-color: #f0f4f8;
+            padding: 3rem 1rem 1rem 1rem;
+            border-radius: 0.75rem;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 380px;
+        }
+        .bar-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 10%;
+        }
+        .bar {
+            background-color: var(--royal-navy);
+            width: 75%;
+            border-radius: 6px 6px 0 0;
+            transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        .bar.primary-type-bar {
+            background-color: var(--chartreuse-muted);
+            box-shadow: 0 0 20px var(--chartreuse-bright);
+        }
+        .bar-score {
+            color: var(--aubergine);
+            font-weight: 900;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        .bar-label {
+            color: var(--royal-navy);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-align: center;
+            margin-top: 1.25rem;
+            line-height: 1.3;
+            height: 3.5em;
+        }
+        .enneagram-outer-path { stroke: var(--gold-dark); stroke-width: 2.5; }
+        .enneagram-inner-line { stroke: var(--gold-main); stroke-width: 1.5; opacity: 0.6; }
+        .enneagram-node-circle.other-type { fill: var(--gold-light); stroke: var(--royal-navy); }
+        .enneagram-node-circle.primary-type { fill: var(--gold-main); stroke: var(--gold-dark); stroke-width: 3; }
+        .enneagram-node-circle.wing-type { fill: var(--chartreuse-muted); stroke: var(--gold-dark); }
+        
+        .wing-indicator-text { font-size: 10px; font-weight: 900; fill: var(--aubergine); text-anchor: middle; }
+        .main-title { color: var(--gold-main); border-bottom: 3px solid var(--gold-dark); padding-bottom: 1rem; margin-bottom: 2rem; font-weight: 900; }
+        .section-title { color: var(--chartreuse-muted); font-weight: 800; margin-bottom: 1.5rem; }
+        .disclaimer-box { background-color: rgba(0, 0, 0, 0.4); border: 2px solid var(--gold-main); padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 2rem; color: var(--gold-light); }
+        
+        .deep-dive-section {
+            margin-top: 1.5rem;
+            padding: 1.75rem;
+            background-color: #f8fafc;
+            border-left: 4px solid var(--royal-navy);
+            border-radius: 0 0.75rem 0.75rem 0;
+            color: var(--ai-text-color);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+        .deep-dive-section h4 {
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--aubergine);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .context-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid var(--chartreuse-muted);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: #166534;
+            font-size: 0.95rem;
+        }
+        .wing-box {
+            background-color: #fffbeb;
+            border: 1px solid var(--gold-dark);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+        .intro-section-card {
+            background-color: #fff;
+            border-top: 6px solid var(--aubergine);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .intro-section-card h3 {
+            color: var(--aubergine);
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--gold-main);
+            padding-bottom: 1rem;
+        }
+        
+        /* Red/Blue Text Classes */
+        .text-red-flag { color: var(--red-flag); font-weight: 600; }
+        .text-strategy { color: var(--strategy-blue); font-weight: 500; font-style: italic; display: block; margin-top: 0.25rem; margin-bottom: 1rem;}
+        
+        .center-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            height: 100%;
+        }
+        .center-active {
+            background-color: #eff6ff;
+            border: 2px solid var(--royal-navy);
+            transform: scale(1.02);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .reference-guide {
+            margin-top: 2rem;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        .reference-item {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px dotted #d1d5db;
+            padding-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body x-data="{ enneagramUnlocked: false, backdoorClicks: 0 }">
 
     <!-- UNIVERSAL HEADER -->
     <nav class="univ-header">
@@ -69,75 +364,993 @@
         </div>
     </nav>
     <div class="univ-spacer"></div>
+    
+    <div x-show="enneagramUnlocked" x-cloak class="backdoor-indicator uppercase tracking-widest">Master Access: Assessment Unlocked</div>
+    
 
-    <header class="py-20 bg-brand-navy text-center border-b border-white/5">
-        <h1 
-            @mousedown.prevent
-            @click.stop="triggerBackdoor()" 
-            class="text-4xl md:text-6xl font-heading font-bold text-white uppercase tracking-tighter cursor-pointer select-none active:scale-95 transition-transform"
-        >Cognitive Audits</h1>
-        <p class="text-xl text-brand-amber font-serif italic mt-4">Measurement leads to Mastery.</p>
-    </header>
-
-    <section class="py-24 bg-slate-50 text-brand-navy">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                
-                <!-- Assessment 1: FREE -->
-                <div class="bg-white rounded-[2.5rem] p-10 shadow-xl border border-slate-100 flex flex-col transition-transform hover:-translate-y-2">
-                    <div class="mb-8 flex justify-between items-center">
-                        <span class="bg-green-100 text-green-700 text-[10px] font-black uppercase px-3 py-1 rounded-full w-fit mb-6">Free Access</span>
-                        <i class="fa-solid fa-brain text-slate-200 text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-heading font-bold mb-4">Leadership Resilience Audit</h3>
-                    <p class="text-slate-600 mb-10 flex-grow">A quick 12-point diagnostic to measure meta-state response.</p>
-                    <a href="audits/resilience-free.html" class="w-full py-4 bg-slate-100 text-brand-navy text-center font-bold rounded-xl hover:bg-slate-200 transition-all">Start Free Audit</a>
-                </div>
-
-                <!-- Assessment 2: ENNEAGRAM MASTER PROFILE (LIVE BASKET) -->
-                <div class="bg-white rounded-[2.5rem] p-10 shadow-2xl premium-border relative flex flex-col transform scale-105">
-                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 bg-brand-amber text-brand-navy text-[10px] font-black px-6 py-2 rounded-full uppercase tracking-widest shadow-lg">New Release</div>
-                    <div class="mb-8 flex justify-between items-center pt-4">
-                        <span class="bg-brand-navy text-white text-[10px] font-black uppercase px-3 py-1 rounded-full">Premium Unlock</span>
-                        <i class="fa-solid fa-shapes text-brand-amber text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-heading font-bold mb-4">Enneagram Leadership Profile</h3>
-                    <p class="text-slate-600 mb-8 flex-grow">Unlock the full Enneagram logic. Mapping your integration paths for peak leadership performance.</p>
-                    <div class="mb-8">
-                        <p class="text-4xl font-black text-brand-navy">₱299</p>
-                    </div>
-                    <!-- Linked to your specific HitPay link -->
-                    <a href="https://hitpay.link/of8ur1" class="w-full py-4 bg-brand-amber text-brand-navy text-center font-black rounded-xl hover:shadow-xl uppercase transition-all">Unlock Assessment</a>
-                </div>
-
-                <!-- Assessment 3: META-STATES MAPPING -->
-                <div class="bg-white rounded-[2.5rem] p-10 shadow-xl border border-slate-100 flex flex-col transition-transform hover:-translate-y-2 opacity-80">
-                    <div class="mb-8 flex justify-between items-center">
-                        <span class="bg-brand-navy text-white text-[10px] font-black uppercase px-3 py-1 rounded-full">Premium</span>
-                        <i class="fa-solid fa-diagram-project text-slate-300 text-3xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-heading font-bold mb-4">Meta-States Mapping</h3>
-                    <p class="text-slate-600 mb-8 flex-grow">A deep-dive psychological assessment identifying focus triggers.</p>
-                    <div class="mb-8">
-                        <p class="text-3xl font-black text-brand-navy">₱499</p>
-                    </div>
-                    <a href="https://hitpay.link/mhy8sc" class="w-full py-4 bg-slate-100 text-brand-navy text-center font-bold rounded-xl hover:bg-slate-200 transition-all uppercase tracking-widest text-xs">Purchase Access</a>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- UNLOCKED ASSESSMENT IFRAME (Automatically opens after payment redirect) -->
-    <div x-show="enneagramUnlocked" x-cloak class="fixed inset-0 z-[10000] bg-brand-navy flex flex-col">
-        <div class="bg-white/5 border-b border-white/10 p-4 flex justify-between items-center px-8">
-            <span class="text-xs font-black uppercase text-brand-amber tracking-[0.2em]">Unlocked: Enneagram Assessment (Backdoor Active)</span>
-            <button @click="enneagramUnlocked = false" class="text-white/50 hover:text-white uppercase text-xs font-bold border border-white/20 px-4 py-1 rounded">Close</button>
-        </div>
-        <div class="flex-grow bg-white">
-            <iframe src="https://serene-alfajores-aea820.netlify.app/" class="w-full h-full border-none" allow="autoplay; fullscreen"></iframe>
+    <!-- 1. GATEKEEPER OVERLAY -->
+    <div id="accessDeniedOverlay">
+        <div>
+            <h1 class="text-4xl font-bold mb-4">Access Restricted</h1>
+            <p class="text-xl mb-6">Please unlock this assessment via the assessments page.</p>
+            <a href="/assessments" class="btn btn-primary bg-white text-black font-bold">Go to Assessments</a>
         </div>
     </div>
 
-  </body>
+    <!-- 2. MAIN APP CONTENT (Hidden by default) -->
+    <div id="appContent" class="hidden">
+        <div class="assessment-container">
+            <div id="userInfoSection">
+                <h1 @click="backdoorClicks++; if(backdoorClicks >= 6) { enneagramUnlocked = true; document.getElementById('accessDeniedOverlay').classList.add('hidden'); document.getElementById('appContent').classList.remove('hidden'); backdoorClicks = 0; }" class="text-4xl main-title text-center cursor-pointer select-none">Meta-Programs Assessment for Leaders</h1>
+                <div class="intro-text space-y-4 text-lg">
+                    <p>This meta-programs assessment helps managers understand the subconscious mental "filters" or "operating systems" people use to process information, make decisions, and react. Recognizing these filters allows you to:</p>
+                    <ul class="list-disc ml-10 space-y-2">
+                        <li><strong>Communicate more effectively:</strong> Tailor your message to resonate with individual processing styles.</li>
+                        <li><strong>Delegate smarter:</strong> Match tasks to those best suited to handle them.</li>
+                        <li><strong>Coach powerfully:</strong> Understand motivations and frame guidance for greater impact.</li>
+                        <li><strong>Predict behavior:</strong> Anticipate responses in various situations.</li>
+                    </ul>
+                    <p>The assessment isn't a test, but a method to identify these influential filters. Understanding meta-programs provides practical "people literacy" to boost team productivity and your overall leadership effectiveness.</p>
+                </div>
+                
+                <h2 class="text-2xl section-title mt-10 text-center">Assessment Instructions</h2>
+                <p class="intro-text mb-6 text-center text-gold-light">Read each statement carefully. Choose the option that most accurately reflects your typical behaviors. <strong>The app will auto-advance once you select an answer.</strong></p>
+
+                <div class="disclaimer-box">
+                    <h3 class="font-bold text-chartreuse-bright mb-3 text-xl">Important Note:</h3>
+                    <p class="leading-relaxed">This tool is for self-discovery. The Enneagram is a dynamic system; use these results as a starting point for deeper exploration rather than a definitive label. It describes tendencies, not fixed destinies, and should never be used to pigeonhole or excuse behavior.</p>
+                </div>
+
+                <h2 class="text-2xl section-title border-t border-gold-dark pt-10 text-center">Participant Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 mt-6">
+                    <div>
+                        <label for="firstName" class="label-text">First Name</label>
+                        <input type="text" id="firstName" class="input-field" placeholder="Enter first name" required>
+                    </div>
+                    <div>
+                        <label for="familyName" class="label-text">Family Name</label>
+                        <input type="text" id="familyName" class="input-field" placeholder="Enter family name" required>
+                    </div>
+                    <div>
+                        <label for="position" class="label-text">Position</label>
+                        <input type="text" id="position" class="input-field" placeholder="Enter your role" required>
+                    </div>
+                    <div>
+                        <label for="company" class="label-text">Company</label>
+                        <input type="text" id="company" class="input-field" placeholder="Enter your company" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="email" class="label-text">Email for Results</label>
+                        <input type="email" id="email" class="input-field" placeholder="you@example.com" required>
+                    </div>
+                    <input type="hidden" id="assessmentDate">
+                </div>
+                <button id="proceedToAssessmentButton" class="btn btn-primary w-full mt-8 text-xl h-16 shadow-xl">Begin Assessment</button>
+                <p id="userInfoValidationMessage" class="text-red-400 text-lg mt-6 text-center hidden font-bold">Please fill in all participant information fields to continue.</p>
+            </div>
+
+            <div id="questionnaireSection" class="hidden">
+                <div class="flex justify-between items-center mb-10">
+                    <h2 class="text-2xl font-black text-chartreuse-bright" id="questionCounter">Question 1 of 27</h2>
+                    <button id="prevButton" class="btn btn-secondary py-2 px-6">Previous</button>
+                </div>
+                <div id="questionContainer" class="question-card"></div>
+                 <div class="flex justify-center">
+                    <button id="finishButton" class="btn btn-primary hidden w-full md:w-auto mt-6 text-2xl px-12 py-5 shadow-2xl">Generate Detailed Report</button> 
+                 </div>
+            </div>
+
+            <!-- RESULTS SECTION (To be Printed to PDF) -->
+            <div id="resultsSection" class="hidden">
+                 <!-- PDF Download Button -->
+                 <div class="flex justify-between items-center mb-8 no-print">
+                    <h1 class="text-3xl font-black text-gold-main">Full Report Generated</h1>
+                    <button onclick="generatePDF()" class="btn btn-secondary text-lg">Download PDF</button>
+                </div>
+                
+                <div id="pdfContentArea">
+                    <h1 class="text-5xl font-black text-center mb-10 text-gold-main tracking-tight">Full Leadership Intelligence Report</h1>
+                    
+                    <!-- INTRODUCTORY REPORT SECTIONS -->
+                    <div id="introReportContent"></div>
+
+                    <div id="participantSummary" class="report-card text-lg"></div>
+                    <div id="typeResult" class="report-card border-l-8 border-chartreuse-bright bg-aubergine/10"></div>
+
+                    <div class="graph-container">
+                        <h3 class="text-3xl font-bold text-aubergine mb-8 text-center">Your Enneagram Score Distribution</h3>
+                        <div id="barChart" class="bar-chart"></div>
+                        <!-- Reference Guide will be inserted here dynamically -->
+                    </div>
+
+                    <div class="circular-diagram-container">
+                        <h3 class="text-3xl font-bold text-aubergine mb-8 text-center">Interconnected Type Map</h3>
+                        <svg id="enneagramCircleSvg" viewBox="0 0 320 360" class="mx-auto w-full max-w-md h-auto"></svg> 
+                        <div class="mt-6 flex justify-center gap-8 text-sm font-bold">
+                            <span class="flex items-center"><span class="w-4 h-4 bg-[#22C55E] rounded-full mr-2"></span> Growth Path</span>
+                            <span class="flex items-center"><span class="w-4 h-4 bg-[#EF4444] rounded-full mr-2"></span> Stress Path</span>
+                            <span class="flex items-center"><span class="w-4 h-4 bg-[#ADFF2F] rounded-full mr-2"></span> Wings</span>
+                        </div>
+                    </div>
+                    
+                    <!-- MOVED SECTIONS WILL APPEAR HERE -->
+                    <div id="movedSectionsContainer"></div>
+
+                    <div id="detailedReport" class="space-y-8"></div>
+                </div>
+
+                 <div class="flex justify-center mt-12"><button id="returnButton" class="btn btn-primary w-full md:w-auto py-4 px-10 text-lg shadow-xl">Return to Website</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="messageBoxOverlay" class="message-box-overlay hidden">
+        <div class="message-box-content">
+            <p id="messageBoxText" class="font-bold text-xl mb-6"></p>
+            <button id="messageBoxCloseButton" class="btn btn-primary px-8 py-3">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. GATEKEEPER LOGIC ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const access = urlParams.get('access');
+            // Check for access=enneagram or token or localhost
+            if (access === 'enneagram' || token || window.location.hostname === 'localhost' || window.location.hostname.includes('antigravity')) {
+                document.getElementById('accessDeniedOverlay').classList.add('hidden');
+                document.getElementById('appContent').classList.remove('hidden');
+            }
+        });
+
+        // --- 2. PDF GENERATION LOGIC ---
+        window.generatePDF = function() {
+            const element = document.getElementById('pdfContentArea');
+            const opt = {
+                margin:       0.3,
+                filename:     'Leadership_Assessment_Report.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            // Temporarily fix height issues for PDF
+            element.style.width = '100%';
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Restore if needed
+            });
+        };
+
+        const centersData = {
+            "Head": {
+                name: "The Head (Thinking) Center",
+                types: "5, 6, 7",
+                focus: "Security, Certainty, and Future Planning.",
+                priorities: "They prioritize analyzing information, predicting outcomes, and understanding the world to avoid pain or danger. They lead with their intellect.",
+                downplay: "They often downplay instincts and pure emotion, preferring to 'think through' their feelings before expressing them."
+            },
+            "Heart": {
+                name: "The Heart (Feeling) Center",
+                types: "2, 3, 4",
+                focus: "Identity, Connection, and Validation.",
+                priorities: "They prioritize relationships, how they are perceived by others, and emotional resonance. They lead with their ability to connect and influence.",
+                downplay: "They often downplay their own true needs or objective facts if they conflict with the image or connection they are trying to maintain."
+            },
+            "Gut": {
+                name: "The Gut (Instinctive) Center",
+                types: "8, 9, 1",
+                focus: "Autonomy, Justice, and Reality.",
+                priorities: "They prioritize control, fairness, and gut-level knowing. They lead with their presence and a desire to impact the environment directly.",
+                downplay: "They often downplay their own feelings (especially vulnerability) and over-thinking, preferring immediate action or stance."
+            }
+        };
+
+        const enneagramTypesData = {
+            1: { 
+                name: "The Reformer / Perfectionist", 
+                shortName: "Reformer",
+                briefDescription: "The Rational, Idealistic Type: Principled, Purposeful, Self-Controlled, and Perfectionistic.",
+                center: "Gut",
+                relatingTo: {
+                    1: "Acknowledge their hard work and fairness. Avoid criticism.",
+                    2: "Be warm and appreciative. Don't take their help for granted.",
+                    3: "Be efficient and competent. Don't waste their time.",
+                    4: "Validate their feelings and uniqueness. Don't be dismissive.",
+                    5: "Respect their privacy and need for logic. Don't overwhelm them emotionally.",
+                    6: "Be consistent and trustworthy. Reduce their anxiety with clarity.",
+                    7: "Allow them freedom and fun, but gently ground them.",
+                    8: "Stand your ground respectfully. Be direct and honest.",
+                    9: "Encourage them to speak up. Don't pressure them too hard."
+                },
+                leadershipStyle: "Type Ones lead with high integrity, discipline, and a focus on improvement. They are principled and reliable, often creating orderly, efficient systems. However, they can become critical, rigid, or micromanage when things fall short of their high expectations.",
+                leadershipDeepDive: "Type One leaders operate through a 'Comparison Filter.' They are constantly evaluating current reality against an internalized 'Ideal Standard.' This makes them exceptional at quality control, ethics, and long-term planning. They lead by example, often working harder than anyone else to ensure accuracy. Challenges arise when their 'Inner Critic' turns outward, causing them to focus more on what is wrong than what is right. In high-stakes environments, they excel in compliance, turnaround strategies, and establishing rigorous operational foundations.",
+                coreMotivation: "To be right, to have integrity, to be balanced, accurate, and fair. They are driven by a need to improve themselves and the world.",
+                basicDesire: "To be good, virtuous, and beyond reproach.",
+                coreFear: "Of being corrupt, evil, defective, or fundamentally flawed. (Why you need to know this: Your fear drives your perfectionism. Recognizing it helps you realize that making a mistake doesn't make *you* bad.)",
+                basicWeaknessVice: "Resentment (often experienced as righteous anger or irritation).",
+                commonBlindSpots: [
+                    "You likely repress your anger until it explodes as resentment.",
+                    "You may not realize how critical your 'helpful corrections' sound to others.",
+                    "You assume everyone shares your high standards and get frustrated when they don't."
+                ],
+                blindSpotStrategies: [
+                    "Practice the 80/20 rule: Accept that 80% perfect is often enough to move forward.",
+                    "Reframe 'wrong' as 'different' to reduce immediate judgment of others' methods.",
+                    "Schedule time for pure fun with no goal to silence the inner critic."
+                ],
+                workImplications: "High school level: Imagine the person who always makes sure the homework is formatted perfectly and the rules are strictly followed. At work, they are the ones you trust to get the details 100% correct. They excel in quality control, ethics, and process improvement.",
+                workStrengths: "Detail-oriented, ethical, reliable, organized, disciplined, high standards.",
+                workStruggles: "Delegation (trusting others to do it right), flexibility, speed vs. perfection, dealing with ambiguity.",
+                relationshipImplications: "They value loyalty and shared values. They can be critical of partners, but only because they want the best for them. They show love through being responsible and helpful.",
+                growthPoint: 7, stressPoint: 4, 
+                growthPointExplanation: "Path to Growth: Integration toward Type 7. When healthy, Ones learn to be more spontaneous, joyful, and less rigid. They allow for mistakes and embrace variety.",
+                growthStrategies: "1. Practice 'Intentional Imperfection' on low-stakes tasks to lower the inner critic. 2. Schedule 'Unstructured Time' weekly to practice spontaneity. 3. Use the '80/20 Rule' to determine when high standards are necessary versus when 'done is better than perfect.' 4. Practice vocalizing appreciation for others' effort, not just the result. 5. Engage in a hobby purely for fun with no measurable goal.",
+                stressPointExplanation: "Stress Reaction: Disintegration toward Type 4. Under pressure, Ones become moody, withdrawn, and feel that no one else cares about quality as much as they do.",
+                stressManagement: ["1. Recognize when the 'Internal Critic' is becoming destructive.", "2. Engage in physical grounding activities to move out of the mind.", "3. Journal about feelings without judging them as 'wrong' or 'unreasonable'."],
+                wing1: 9, wing2: 2,
+                wing1Explanation: "Wing 9 (The Peacemaker): Adds a sense of calm, detachment, and an ability to see multiple perspectives. Expanding here helps you relax and pick your battles.",
+                wing2Explanation: "Wing 2 (The Helper): Adds warmth, empathy, and a focus on people rather than just rules. Expanding here helps you connect with your team on a human level."
+            },
+            2: { 
+                name: "The Helper / Giver", 
+                shortName: "Helper",
+                briefDescription: "The Caring, Interpersonal Type: Demonstrative, Generous, People-Pleasing, and Possessive.",
+                center: "Heart",
+                relatingTo: {
+                    1: "Be responsible and ethical. Show them you care about doing things right.",
+                    2: "Connect emotionally. Express appreciation often.",
+                    3: "Support their goals. Affirm their success.",
+                    4: "Be compassionate and present. Don't fix their feelings.",
+                    5: "Respect their boundaries. Don't take their withdrawal personally.",
+                    6: "Be loyal and reassuring. Calm their fears.",
+                    7: "Join in their fun. Don't be a wet blanket.",
+                    8: "Be direct but loving. Stand up for yourself.",
+                    9: "Be patient and gentle. Encourage them."
+                },
+                leadershipStyle: "Type Twos lead through relationships and empathy. They are nurturing and supportive, excelling at motivating teams through appreciation. However, they may struggle with boundaries and direct feedback.",
+                leadershipDeepDive: "Type Two leaders focus on the 'Interpersonal Operating System.' They believe that a happy, cared-for team is a productive team. They excel at identifying the individual motivations of their staff and providing the mentorship needed for growth. Their leadership is often hands-on and highly communicative. The risk for a Type Two leader is over-extending themselves to please others, which can lead to burnout or avoiding necessary but difficult performance conversations. They shine in HR, customer-facing roles, and collaborative team-building efforts.",
+                coreMotivation: "To be loved, needed, and appreciated. They want to express their feelings for others and be indispensable.",
+                basicDesire: "To feel wanted and loved for who they are.",
+                coreFear: "Of being unwanted, unloved, unworthy of love, or dispensable. (Why you need to know this: This fear drives you to over-give. Realizing this helps you understand that you are valuable even when you aren't helping someone.)",
+                basicWeaknessVice: "Pride (The belief that you alone can help everyone, while denying your own needs).",
+                commonBlindSpots: [
+                    "You may not realize how intrusive your help can feel to independent people.",
+                    "You likely expect others to read your mind about your own needs, then get resentful when they don't.",
+                    "You might use flattery or assistance to 'buy' allegiance and love."
+                ],
+                blindSpotStrategies: [
+                    "Ask yourself 'What do I want?' before automatically saying yes to a request.",
+                    "Wait for someone to actually ask for help before offering it.",
+                    "Express your needs directly rather than hinting at them."
+                ],
+                workImplications: "The kid who always brings snacks and asks how your weekend was. In the workplace, they are the 'heart' of the team, excelling in HR, customer service, and mentoring.",
+                workStrengths: "Building relationships, empathy, customer service, morale boosting, networking, anticipation of needs.",
+                workStruggles: "Setting boundaries, delivering negative feedback, working alone for long periods, separating personal worth from work approval.",
+                relationshipImplications: "Deeply committed and warm, but can become possessive or 'martyr-like' if they feel their efforts aren't acknowledged. They need frequent gratitude.",
+                growthPoint: 4, stressPoint: 8, 
+                growthPointExplanation: "Path to Growth: Integration toward Type 4. Twos learn to connect with their own authentic needs and develop a unique identity separate from helping others.",
+                growthStrategies: "1. Practice saying 'no' to one request per day to establish boundaries. 2. Spend 15 minutes daily in introspection to identify your own needs. 3. Ask for specific help from a colleague to practice receiving. 4. Journal about your feelings without relating them to anyone else. 5. Find a creative outlet that is purely for your own enjoyment.",
+                stressPointExplanation: "Stress Reaction: Disintegration toward Type 8. Under extreme pressure, Twos can become surprisingly bossy, aggressive, and demanding.",
+                stressManagement: ["1. Step back from 'fixing' others' problems when feeling overwhelmed.", "2. Practice direct communication instead of hinting at needs.", "3. Set clear time limits for your availability to others."],
+                wing1: 1, wing2: 3,
+                wing1Explanation: "Wing 1 (The Reformer): Adds a sense of conscience, duty, and objectivity. Expanding here helps you set clearer principles and boundaries.",
+                wing2Explanation: "Wing 3 (The Achiever): Adds ambition, adaptability, and a focus on results. Expanding here helps you become more goal-oriented and efficient."
+            },
+            3: { 
+                name: "The Achiever / Performer", 
+                shortName: "Achiever",
+                briefDescription: "The Success-Oriented, Pragmatic Type: Adaptable, Excelling, Driven, and Image-Conscious.",
+                center: "Heart",
+                relatingTo: {
+                    1: "Be competent and correct. Help them improve systems.",
+                    2: "Appreciate their help. Connect personally.",
+                    3: "Work hard. Acknowledge their success.",
+                    4: "Value their uniqueness. Don't be fake.",
+                    5: "Be logical and brief. Respect their time.",
+                    6: "Be loyal and prepared. Reassure them.",
+                    7: "Be positive and open. Keep up with their pace.",
+                    8: "Be direct and confident. Don't waste time.",
+                    9: "Be patient. Don't push them too hard."
+                },
+                leadershipStyle: "Type Threes are dynamic, goal-oriented, and charismatic. They lead with high energy and focus on results. They can be workaholics and may prioritize image over authentic connection.",
+                leadershipDeepDive: "Type Three leaders are the 'Engine of Productivity.' They are masters of the 'Outcome Filter,' always looking for the most efficient path to success. They are often the face of the organization, possessing a natural ability to inspire confidence and market the team's wins. However, they may struggle with the 'becoming' process, focusing so much on the goal that they neglect the emotional health of the team. They excel in high-pressure sales environments, start-up growth phases, and roles requiring rapid execution.",
+                coreMotivation: "To be valuable, successful, and admired. They need to be affirmed to feel worthwhile.",
+                basicDesire: "To feel worthwhile and competent.",
+                coreFear: "Of being worthless, a failure, or without inherent value apart from their achievements. (Why you need to know this: This fear drives your workaholism. Seeing it helps you realize you are more than your resume.)",
+                basicWeaknessVice: "Deceit (Deceiving yourself that you are only your image/role).",
+                commonBlindSpots: [
+                    "You often confuse your true self with your job or role.",
+                    "You might cut corners or gloss over details to get to the 'win' faster.",
+                    "You can be impatient with feelings or 'slow' people who block progress."
+                ],
+                blindSpotStrategies: [
+                    "Define success metrics that include team health, not just output.",
+                    "Practice listening without trying to 'solve' or 'fix' immediately.",
+                    "Share a failure or struggle to build authentic connection."
+                ],
+                workImplications: "The student who wants to be class president and get the highest grades. At work, they are the competitive high-performers who hit every target and drive growth.",
+                workStrengths: "Efficiency, productivity, marketing, goal-setting, motivating others, adaptability.",
+                workStruggles: "Burnout, impatience with process/feelings, authenticity, prioritizing image over substance, admitting failure.",
+                relationshipImplications: "Can focus more on how the relationship 'looks' to others. They need to practice being real and vulnerable.",
+                growthPoint: 6, stressPoint: 9, 
+                growthPointExplanation: "Path to Growth: Integration toward Type 6. Threes become more cooperative, loyal to the group, and honest about their feelings rather than just their image.",
+                growthStrategies: "1. Share a personal failure or struggle with a trusted peer to build authenticity. 2. Practice 'Process Praise'—compliment the effort and teamwork, not just the win. 3. Commit to a project where you are not the leader. 4. Schedule one day a week with no work-related goals. 5. Practice active listening without planning your next achievement-based response.",
+                stressPointExplanation: "Stress Reaction: Disintegration toward Type 9. Under stress, Threes become disengaged, apathetic, and lose their characteristic drive.",
+                stressManagement: ["1. Recognize the early signs of 'autopilot' behavior.", "2. Reconnect with core values that are not tied to work.", "3. Engage in physical exercise to reconnect with the body's needs."],
+                wing1: 2, wing2: 4,
+                wing1Explanation: "Wing 2 (The Helper): Adds charm, people skills, and generosity. Expanding here helps you connect with your team and mentor others.",
+                wing2Explanation: "Wing 4 (The Individualist): Adds depth, creativity, and introspection. Expanding here helps you bring authenticity and meaning to your work."
+            },
+            4: { 
+                name: "The Individualist / Romantic", 
+                shortName: "Individualist",
+                briefDescription: "The Sensitive, Withdrawn Type: Expressive, Dramatic, Self-Absorbed, and Temperamental.",
+                center: "Heart",
+                relatingTo: {
+                    1: "Respect their standards. Be authentic.",
+                    2: "Connect emotionally. Show appreciation.",
+                    3: "Value their achievements. Be real.",
+                    4: "Understand their depth. Don't dismiss feelings.",
+                    5: "Respect their space. Engage intellectually.",
+                    6: "Be loyal and consistent. Reassure them.",
+                    7: "Be positive but don't force cheer. Be deep.",
+                    8: "Be honest and direct. Don't be fake.",
+                    9: "Be gentle and accepting. Don't pressure."
+                },
+                leadershipStyle: "Type Four leaders bring a unique blend of authenticity, creativity, and emotional depth to their roles. They inspire others by being true to themselves and encouraging self-expression and meaningful work within their teams. They value originality and can often see possibilities that others miss. However, their introspective nature and emotional sensitivity can sometimes lead to moodiness, withdrawal, or difficulty with purely practical or mundane demands. They may take feedback very personally or struggle if they feel misunderstood or unappreciated for their unique contributions.",
+                leadershipDeepDive: "Type Four leaders bring the 'Depth and Authenticity Filter' to the workplace. They are often the creative visionaries who aren't afraid to challenge the status quo to find more meaningful ways of working. They excel at identifying the 'subtext' in a room and are highly empathetic to the emotional states of their team. The challenge for a Four leader is the 'Comparison Trap,' where they may feel their team is never quite as ideal as they imagined. They shine in design, branding, strategy, and roles requiring high emotional intelligence.",
+                coreMotivation: "To find themselves and their significance. They want to create an identity out of their inner experience.",
+                basicDesire: "To create a unique identity and find personal significance.",
+                coreFear: "Of having no identity, no personal significance, or being plain/ordinary.",
+                basicWeaknessVice: "Envy (Feeling that others possess a quality of happiness/wholeness that you lack).",
+                commonBlindSpots: [
+                    "You may be self-absorbed and unaware of how your moodiness affects the room.",
+                    "You might withdraw to punish others or make them come to you.",
+                    "You often focus on what is missing rather than what is present and good."
+                ],
+                blindSpotStrategies: [
+                    "Focus on objective facts and data when feeling moody.",
+                    "Create a daily gratitude list to combat the focus on what's missing.",
+                    "Engage in physical activity to get out of your head and into your body."
+                ],
+                workImplications: "The artistic student with a unique style. At work, they excel in design, strategy, and roles requiring emotional depth or 'out-of-the-box' thinking.",
+                workStrengths: "Creativity, empathy, vision, depth, aesthetic sensibility, questioning the status quo.",
+                workStruggles: "Routine/mundane tasks, taking things personally, mood fluctuations affecting productivity, feeling misunderstood.",
+                relationshipImplications: "Intense and empathetic. They aren't afraid of the difficult parts of life, but can be self-absorbed and sensitive to perceived slights.",
+                growthPoint: 1, stressPoint: 2, 
+                growthPointExplanation: "Path to Growth: Integration toward Type 1. Fours become more disciplined, objective, and grounded in practical action rather than just feelings.",
+                growthStrategies: "1. Establish a rigid morning routine to ground your emotional energy. 2. Complete one mundane, practical task before moving to creative work. 3. Practice 'Emotional Labeling'—recognize a feeling without letting it dictate your schedule. 4. Focus on serving the team's objective needs rather than your own creative ideals. 5. Set measurable deadlines for your creative projects.",
+                stressPointExplanation: "Stress Reaction: Disintegration toward Type 2. Under stress, Fours become overly dependent on others for emotional validation and connection.",
+                stressManagement: ["1. Limit social media comparison when feeling low.", "2. Practice self-soothing techniques that don't involve other people.", "3. Write down three objective facts about your current situation to combat moodiness."],
+                wing1: 3, wing2: 5,
+                wing1Explanation: "Wing 3 (The Achiever): Adds ambition, drive, and a focus on presentation. Expanding here helps you bring your creative visions to market.",
+                wing2Explanation: "Wing 5 (The Investigator): Adds objectivity, intellectual depth, and observation. Expanding here helps you analyze your feelings rather than drowning in them."
+            },
+            5: { 
+                name: "The Investigator / Observer", 
+                shortName: "Investigator",
+                briefDescription: "The Intense, Cerebral Type: Perceptive, Innovative, Secretive, and Isolated.",
+                center: "Head",
+                relatingTo: {
+                    1: "Be logical and precise. Respect their standards.",
+                    2: "Appreciate their warmth but set boundaries.",
+                    3: "Be competent and efficient. Don't be flashy.",
+                    4: "Engage intellectually. Respect their depth.",
+                    5: "Respect privacy. Connect through ideas.",
+                    6: "Be reliable and logical. Reduce uncertainty.",
+                    7: "Be interesting. Don't overwhelm with emotion.",
+                    8: "Be direct and strong. Don't be intrusive.",
+                    9: "Be gentle and patient. Give them space."
+                },
+                leadershipStyle: "Type Five leaders are typically analytical, strategic, and visionary, valuing knowledge, competence, and foresight. They lead by providing well-thought-out insights, encouraging independent thinking, and maintaining a calm, objective demeanor. They prefer to understand systems deeply before acting. However, their tendency to withdraw and conserve energy can make them seem detached, overly reserved with information or resources, or dismissive of emotional considerations in decision-making. They might struggle with the interpersonal aspects of leadership or appear unapproachable if they retreat too much into their own thoughts.",
+                leadershipDeepDive: "Type Five leaders operate through the 'Expertise and Information Filter.' They believe that knowledge is power and safety. They are often the calmest people in a crisis, using logic to navigate complexity. They are highly strategic and objective. However, they may struggle with the social demands of leadership, viewing team interactions as 'energy drains.' They excel in technical leadership, financial strategy, and R&D. To be more effective, they must learn to share information as a bridge to connection rather than hoarding it as a resource.",
+                coreMotivation: "To be competent and knowledgeable. They want to understand the world and possess skills to navigate it.",
+                basicDesire: "To be capable and independent.",
+                coreFear: "Of being helpless, useless, incapable, or overwhelmed.",
+                basicWeaknessVice: "Avarice (Hoarding of time, energy, and resources).",
+                commonBlindSpots: [
+                    "You likely appear more intellectually arrogant or distant than you intend.",
+                    "You may withhold information simply because no one asked the exact right question.",
+                    "You underestimate how much your team needs emotional connection, not just data."
+                ],
+                blindSpotStrategies: [
+                    "Share your thoughts before they feel 100% perfect or complete.",
+                    "Set a timer for social engagement so you know there is an end point.",
+                    "Practice physical engagement (eye contact, nodding) to show you are listening."
+                ],
+                workImplications: "The quiet student who knows everything about a niche topic. At work, they are the tech experts, engineers, and strategists who solve complex problems.",
+                workStrengths: "Objective analysis, expertise, complex problem solving, calm in crisis, strategic planning.",
+                workStruggles: "Social exhaustion, communication, sharing information, moving from planning to action, empathy.",
+                relationshipImplications: "Value space and intellectual connection. They show love through sharing information and objective support, but need plenty of 'alone time.'",
+                growthPoint: 8, stressPoint: 7, 
+                growthPointExplanation: "Path to Growth: Integration toward Type 8. Fives move out of their minds and into the world, becoming more assertive, confident, and action-oriented.",
+                growthStrategies: "1. Practice vocalizing your ideas before you feel they are 'fully baked.' 2. Lead a meeting with a focus on physical presence and energy. 3. Share a piece of information you would normally keep to yourself. 4. Engage in physical activity (like weightlifting) to connect with your gut instinct. 5. Practice 'direct eye contact' in your one-on-one meetings.",
+                stressPointExplanation: "Stress Reaction: Disintegration toward Type 7. Under stress, Fives become scattered, frantic, and seek superficial distractions.",
+                stressManagement: ["1. Create a quiet, stimulus-free environment when feeling overwhelmed.", "2. Limit the number of open 'tabs' (tasks) you are managing.", "3. Re-read familiar, comforting research to ground your focus."],
+                wing1: 4, wing2: 6,
+                wing1Explanation: "Wing 4 (The Individualist): Adds creativity, intuition, and a personal touch. Expanding here helps you connect your intellect with your own unique perspective.",
+                wing2Explanation: "Wing 6 (The Loyalist): Adds loyalty, troubleshooting, and a focus on community. Expanding here helps you collaborate and trust your team."
+            },
+            6: { 
+                name: "The Loyalist / Skeptic", 
+                shortName: "Loyalist",
+                briefDescription: "The Committed, Security-Oriented Type: Engaging, Responsible, Anxious, and Suspicious.",
+                center: "Head",
+                relatingTo: {
+                    1: "Be responsible and consistent. Follow rules.",
+                    2: "Be supportive and warm. Reassure them.",
+                    3: "Be productive and reliable. Help them succeed.",
+                    4: "Be authentic and emotional. Validate them.",
+                    5: "Be logical and calm. Respect their mind.",
+                    6: "Build trust. Be loyal and consistent.",
+                    7: "Be positive and fun. Don't be reckless.",
+                    8: "Be strong and direct. Show loyalty.",
+                    9: "Be patient and gentle. Don't force them."
+                },
+                leadershipStyle: "Type Six leaders are typically responsible, hardworking, and deeply committed to their teams and organizations. They are excellent troubleshooters, anticipating potential problems and preparing for contingencies. They value security, loyalty, and clear guidelines, and work to create a sense of trust and predictability. However, their underlying anxiety can lead to indecisiveness, excessive questioning of authority (or, conversely, over-reliance on it), or resistance to change if it feels threatening. They may struggle with ambiguity and can sometimes project their own fears onto situations or people.",
+                leadershipDeepDive: "Type Six leaders utilize the 'Risk and Contingency Filter.' They are the ultimate protectors of the organization, always three steps ahead of potential problems. They are fiercely loyal to their staff and create deep bonds of trust. Their leadership is often cautious and thorough. The challenge for a Six leader is 'analysis paralysis' or projecting their own anxieties onto others. They shine in operations, crisis management, and roles where reliability is the most important metric. They are the backbone of any healthy culture.",
+                coreMotivation: "To find security and support. They seek to feel safe and prepared, often by anticipating what could go wrong.",
+                basicDesire: "To have security and guidance.",
+                coreFear: "Of being without support or guidance.",
+                basicWeaknessVice: "Fear/Anxiety (Constantly scanning the horizon for threats).",
+                commonBlindSpots: [
+                    "You may project your own fears onto others (accusing them of being untrustworthy).",
+                    "Your 'devil's advocacy' can sound like pessimism or lack of faith to your team.",
+                    "You often look for authority figures to either obey or rebel against."
+                ],
+                blindSpotStrategies: [
+                    "Fact-check your fears: Ask 'Is this true, or is this a feeling?'",
+                    "Trust your gut instinct on small decisions to build confidence.",
+                    "Limit your information intake (news/data) when feeling anxious."
+                ],
+                workImplications: "The student who always asks 'Is this on the test?' They are incredibly reliable, hard-working, and the backbone of any stable team.",
+                workStrengths: "Risk management, loyalty, troubleshooting, preparation, team building, reliability.",
+                workStruggles: "Decision paralysis, excessive worry, skepticism of new ideas, lack of self-confidence.",
+                relationshipImplications: "Loyal forever once trust is earned. They can be prone to worrying about the future of the relationship and need consistent reassurance.",
+                growthPoint: 9, stressPoint: 3, 
+                growthPointExplanation: "Path to Growth: Integration toward Type 9. Sixes become more relaxed, trusting, and connected to their own inner stability and gut feelings.",
+                growthStrategies: "1. When anxious, ask yourself: 'Is this a real threat or a mental story?' 2. Practice delegating a task and intentionally not checking on it. 3. Use deep breathing exercises to calm the nervous system before big decisions. 4. Write down three things that went right at the end of each day. 5. Practice trusting your first instinct on small decisions.",
+                stressPointExplanation: "Stress Reaction: Disintegration toward Type 3. Under stress, Sixes become competitive and obsessed with image and productivity to mask their fear.",
+                stressManagement: ["1. Reach out to a trusted mentor for a 'reality check.'", "2. Physical grounding (walking, stretching) to get out of the 'worry loop.'", "3. Limit your consumption of news or negative data."],
+                wing1: 5, wing2: 7,
+                wing1Explanation: "Wing 5 (The Investigator): Adds analysis, objectivity, and focus. Expanding here helps you back up your fears with facts and logic.",
+                wing2Explanation: "Wing 7 (The Enthusiast): Adds optimism, energy, and future-thinking. Expanding here helps you see possibilities rather than just threats."
+            },
+            7: { 
+                name: "The Enthusiast / Epicure", 
+                shortName: "Enthusiast",
+                briefDescription: "The Spontaneous, Versatile Type: Acquisitive, Scattered, and Future-Oriented.",
+                center: "Head",
+                relatingTo: {
+                    1: "Be responsible and fun. Don't be too rigid.",
+                    2: "Be appreciative and engaged. Don't smother.",
+                    3: "Be successful and exciting. Keep up.",
+                    4: "Be authentic and deep. Don't be superficial.",
+                    5: "Be interesting. Respect their space.",
+                    6: "Be loyal and fun. Don't add to anxiety.",
+                    7: "Share adventures. Enjoy life together.",
+                    8: "Be strong and direct. Have fun.",
+                    9: "Be easygoing. Don't force them."
+                },
+                leadershipStyle: "Type Sevens lead with optimism and innovation. They are energetic and motivate others with excitement. They can be scattered and may avoid difficult conversations or follow-through.",
+                leadershipDeepDive: "Type Seven leaders operate through the 'Possibility and Variety Filter.' They are the visionary light-starters of the Enneagram, capable of generating ideas that disrupt entire industries. They lead with high energy, positivity, and a 'sky is the limit' attitude. This makes them magnetic motivators. However, they may struggle with the 'grind' of follow-through or hearing negative news. They shine in start-ups, marketing, creative direction, and any role requiring high-level innovation. To grow, they must learn that satisfaction often comes from finishing one thing rather than starting ten.",
+                coreMotivation: "To be satisfied and content. They seek pleasure and avoid pain, wanting to experience as much of life as possible.",
+                basicDesire: "To be happy and have their needs fulfilled.",
+                coreFear: "Of being deprived and in pain.",
+                basicWeaknessVice: "Gluttony (An insatiable desire for *more*—more ideas, more experiences, more stimulation).",
+                commonBlindSpots: [
+                    "You often reframe negative realities into positives to avoid dealing with them.",
+                    "You may leave a trail of unfinished projects that frustrates your team.",
+                    "You likely overestimate your capacity and overcommit."
+                ],
+                blindSpotStrategies: [
+                    "Practice 'sticking with it' for just 1 hour longer than comfortable.",
+                    "Journal about negative feelings instead of distracting yourself.",
+                    "Focus on quality over quantity in your experiences."
+                ],
+                workImplications: "The kid who is in five different clubs and always has a new idea. At work, they are the sales stars, creative directors, and start-up entrepreneurs.",
+                workStrengths: "Innovation, brainstorming, optimism, adaptability, quick thinking, high energy.",
+                workStruggles: "Follow-through, routine tasks, dealing with negative feedback/conflict, impulsivity.",
+                relationshipImplications: "Fun and adventurous. They keep things light and exciting, but may struggle when the relationship requires heavy emotional labor or boredom.",
+                growthPoint: 5, stressPoint: 1, 
+                growthPointExplanation: "Path to Growth: Integration toward Type 5. Sevens learn to focus deeply, master their craft, and find satisfaction in depth rather than just novelty.",
+                growthStrategies: "1. Commit to finishing one project before starting a new one. 2. Practice 'Silence' for 10 minutes a day with no stimulation. 3. Lean into a difficult conversation instead of using humor to deflect. 4. Focus on the details of one specific process until you master it. 5. Practice 'Single-Tasking'—no multitasking for two hours each day.",
+                stressPointExplanation: "Stress Reaction: Disintegration toward Type 1. Under stress, Sevens become critical, rigid, and surprisingly grumpy and demanding.",
+                stressManagement: ["1. Acknowledge that discomfort is a temporary part of growth.", "2. Use a structured to-do list to organize your scattered energy.", "3. Practice gratitude for the present moment."],
+                wing1: 6, wing2: 8,
+                wing1Explanation: "Wing 6 (The Loyalist): Adds loyalty, responsibility, and awareness of risk. Expanding here helps you ground your ideas in reality.",
+                wing2Explanation: "Wing 8 (The Challenger): Adds confidence, decisiveness, and power. Expanding here helps you push your ideas through to completion."
+            },
+            8: { 
+                name: "The Challenger / Protector", 
+                shortName: "Challenger",
+                briefDescription: "The Powerful, Dominating Type: Self-Confident, Decisive, Willful, and Confrontational.",
+                center: "Gut",
+                relatingTo: {
+                    1: "Be honest and fair. Stand your ground.",
+                    2: "Be appreciative. Don't take advantage.",
+                    3: "Be competent. Don't be fake.",
+                    4: "Be real. Don't be emotional manipulative.",
+                    5: "Be direct. Respect their mind.",
+                    6: "Be loyal. Don't betray them.",
+                    7: "Be fun and strong. Keep up.",
+                    8: "Be strong and honest. Respect boundaries.",
+                    9: "Be gentle. Don't steamroll them."
+                },
+                leadershipStyle: "Type Eights lead with power and decisiveness. They are protective of their team and drive results through willpower. They can be domineering and intimidating if unaware.",
+                leadershipDeepDive: "Type Eight leaders use the 'Strength and Impact Filter.' They are the natural 'Captains' of the system, capable of moving mountains through sheer willpower. They lead by making quick, bold decisions and standing up for their people. They value honesty and directness above all else. The risk for an Eight leader is that their 'Vibe' is so strong it can unintentionally silence or intimidate others. They excel in C-suite leadership, high-stakes negotiations, and roles requiring intense courage. They are the ultimate champions for the underdog.",
+                coreMotivation: "To protect themselves and maintain control. They want to assert their strength and resist being vulnerable.",
+                basicDesire: "To be strong and autonomous.",
+                coreFear: "Of being harmed, controlled, or violated.",
+                basicWeaknessVice: "Lust (Intensity/Excess). A need to push against reality to feel alive and in control.",
+                commonBlindSpots: [
+                    "You often don't realize how intimidating your 'normal' energy is to others.",
+                    "You deny your own vulnerability and needs, leading to exhaustion.",
+                    "You may view compromise as weakness."
+                ],
+                blindSpotStrategies: [
+                    "Pause for 3 seconds before responding to lower the intensity.",
+                    "Ask 'What is your perspective?' and truly listen.",
+                    "Admit a small weakness or error to build trust."
+                ],
+                workImplications: "The student who stands up to bullies. At work, they are the CEOs and managers who aren't afraid of a fight to get the right thing done.",
+                workStrengths: "Decisiveness, courage, big-picture strategy, protecting the team, moving obstacles.",
+                workStruggles: "Collaboration, patience, sensitivity to feelings, intimidation, micromanagement (via control).",
+                relationshipImplications: "Passionate and fiercely protective. They value honesty above all else. They can be difficult to get close to because they fear being weak.",
+                growthPoint: 2, stressPoint: 5, 
+                growthPointExplanation: "Path to Growth: Integration toward Type 2. Eights connect with their hearts, becoming more empathetic, nurturing, and compassionate in their leadership.",
+                growthStrategies: "1. Practice 'Active Listening'—repeat what someone said before you respond. 2. Ask for your team's input before stating your own opinion. 3. Share a vulnerability or a mistake you made to build team safety. 4. Practice 'Softness' in your physical tone and volume. 5. Perform an anonymous act of kindness for a team member.",
+                stressPointExplanation: "Stress Reaction: Disintegration toward Type 5. Under threat, Eights become surprisingly secretive, withdrawn, and suspicious of others.",
+                stressManagement: ["1. Notice when you are pulling away into 'fortress mode.'", "2. Trust at least one person with your concerns.", "3. Physical movement (gym, boxing) to release built-up intensity."],
+                wing1: 7, wing2: 9,
+                wing1Explanation: "Wing 7 (The Enthusiast): Adds energy, quick thinking, and a future focus. Expanding here helps you be more visionary and social.",
+                wing2Explanation: "Wing 9 (The Peacemaker): Adds calm, patience, and receptivity. Expanding here helps you pick your battles and listen to others."
+            },
+            9: { 
+                name: "The Peacemaker / Mediator", 
+                shortName: "Peacemaker",
+                briefDescription: "The Easygoing, Self-Effacing Type: Receptive, Reassuring, Agreeable, and Complacent.",
+                center: "Gut",
+                relatingTo: {
+                    1: "Be calm and fair. Don't be critical.",
+                    2: "Be kind and appreciative. Connect.",
+                    3: "Be supportive. Don't push too hard.",
+                    4: "Be gentle. Listen to their feelings.",
+                    5: "Respect their space. Be calm.",
+                    6: "Be reassuring and loyal. Reduce stress.",
+                    7: "Be positive. Join in the fun.",
+                    8: "Be direct but kind. Don't be aggressive.",
+                    9: "Be patient. Encourage their voice."
+                },
+                leadershipStyle: "Type Nine leaders are typically inclusive, steady, and supportive, striving to create harmonious and stable work environments. They are excellent mediators, skilled at seeing multiple perspectives and fostering consensus. They lead with a calm, reassuring presence and value the well-being of their team. However, their desire to avoid conflict can lead them to be overly passive, indecisive on tough issues, or struggle with setting clear priorities if it means displeasing someone. They might become complacent or disengaged if the environment is too stressful or demanding.",
+                leadershipDeepDive: "Type Nine leaders operation through the 'Harmony and Inclusion Filter.' They are the master mediators and consensus builders. They ensure that every voice on the team is heard. They lead with a calm, steady presence that reduces team stress and fosters a psychologically safe environment. They are excellent at seeing multiple perspectives and synthesizing them into a unified plan. The challenge for a Nine leader is 'Self-Forgetting,' where they may avoid taking a necessary stand to keep the peace. They shine in mediation, project management, and roles where steady, consistent progress is key.",
+                coreMotivation: "To maintain inner and outer peace. They want to avoid tension and discord, creating harmony in their environment.",
+                basicDesire: "To have inner stability and 'peace of mind.'",
+                coreFear: "Of loss, separation, and fragmentation.",
+                basicWeaknessVice: "Sloth (Psychological/Spiritual inertia—staying in comfort zones to avoid waking up to life's demands).",
+                commonBlindSpots: [
+                    "You may be passive-aggressive (stubbornness) instead of saying 'no' directly.",
+                    "You often merge with others' agendas and lose your own priorities.",
+                    "You minimize problems until they become crises."
+                ],
+                blindSpotStrategies: [
+                    "State your opinion first in a meeting, before hearing others.",
+                    "Set a firm deadline for decisions to avoid procrastination.",
+                    "Practice saying 'I disagree' in low-stakes situations."
+                ],
+                workImplications: "The student who gets along with everyone. At work, they are the mediators and project managers who keep everything running smoothly without drama.",
+                workStrengths: "Mediation, consensus building, patience, inclusivity, consistency, reducing team stress.",
+                workStruggles: "Decisiveness, conflict resolution, asserting own agenda, procrastination, prioritizing.",
+                relationshipImplications: "Very easygoing and accepting. However, they might 'agree' just to avoid a fight while feeling differently inside. They need encouragement to speak up.",
+                growthPoint: 3, stressPoint: 6, 
+                growthPointExplanation: "Path to Growth: Integration toward Type 3. Nines become more assertive, set goals, and acknowledge their own value and personal power.",
+                growthStrategies: "1. State your opinion first in the next three meetings. 2. Set three 'Non-Negotiable' goals for yourself each day. 3. Practice saying 'I disagree' in a calm, constructive way. 4. Engage in high-energy activity to boost your personal 'presence.' 5. Acknowledge and name your own successes to your manager.",
+                stressPointExplanation: "Stress Reaction: Disintegration toward Type 6. Under stress, Nines become anxious, worried, and overly cautious about the future.",
+                stressManagement: ["1. Break big, scary tasks into tiny, five-minute steps.", "2. Focus on what you *can* control right now.", "3. Practice grounding exercises (5-4-3-2-1 technique)."],
+                wing1: 8, wing2: 1,
+                wing1Explanation: "Wing 8 (The Challenger): Adds strength, assertiveness, and energy. Expanding here helps you take charge and set boundaries.",
+                wing2Explanation: "Wing 1 (The Reformer): Adds structure, discipline, and idealism. Expanding here helps you organize your life and stick to priorities."
+            }
+        };
+
+        const questions = [
+            { text: "When facing a difficult task, my primary concern is often:", options: ["Ensuring it's done correctly and to the highest standard.", "How it will affect my relationships and if I can help others.", "Achieving the goal efficiently and being recognized for success.", "Whether it feels meaningful and authentic to me personally."], scoring: [[1], [2], [3], [4]] },
+            { text: "I feel most anxious or unsettled when I perceive a threat of:", options: ["Being seen as flawed, wrong, or unethical.", "Being unwanted, unloved, or dispensable to others.", "Failing or being seen as incompetent or worthless.", "Lacking a unique identity or profound significance."], scoring: [[1], [2], [3], [4]] },
+            { text: "My natural tendency in a group is to:", options: ["Observe and understand before actively participating.", "Look for potential problems and ensure we are prepared.", "Bring energy, enthusiasm, and explore new possibilities.", "Take charge or ensure things are moving forward decisively."], scoring: [[5], [6], [7], [8]] },
+            { text: "I am most driven by a need for:", options: ["Competence and understanding; I want to know how things work.", "Security and support; I need to feel safe and guided.", "Satisfaction and new experiences; I want to avoid boredom.", "Control over my environment and to protect myself."], scoring: [[5], [6], [7], [8]] },
+            { text: "When conflict arises, my first instinct is often to:", options: ["Try to smooth things over and maintain harmony.", "Analyze it objectively and understand all sides.", "Confront it directly to resolve it and assert my position.", "Feel anxious and seek reassurance or prepare for the worst."], scoring: [[9], [5], [8], [6]] },
+            { text: "A common piece of feedback I receive is that I can be:", options: ["Too critical or demanding (of self and others).", "Overly accommodating or focused on others' needs.", "Too competitive or image-conscious.", "Too moody, dramatic, or self-absorbed."], scoring: [[1], [2], [3], [4]] },
+            { text: "I tend to avoid situations or feelings that make me feel:", options: ["Overwhelmed by demands or strong emotions.", "Unsupported, uncertain, or at risk.", "Trapped, bored, or in physical/emotional pain.", "Vulnerable or controlled by others."], scoring: [[5], [6], [7], [8]] },
+            { text: "My greatest struggle is often with:", options: ["My inner critic and feeling things aren't good enough.", "Needing to be needed and feeling prideful.", "Focusing too much on achieving, losing authenticity.", "Feeling like something is missing in me compared to others."], scoring: [[1], [2], [3], [4]] },
+            { text: "I am most comfortable when:", options: ["I have my own space and time to think and recharge.", "I know what to expect and feel supported by those I trust.", "I am exploring exciting new options and possibilities.", "I am in control and feel strong and capable."], scoring: [[5], [6], [7], [8]] },
+            { text: "In relationships, I primarily seek:", options: ["Peace and stability, avoiding conflict as much as possible.", "To be a source of help and support, wanting love in return.", "To be admired for my accomplishments and talents.", "Deep, authentic connection, even if intense or complicated."], scoring: [[9], [2], [3], [4]] },
+            { text: "Others might not realize that I often feel:", options: ["A deep sense of responsibility for things to be just right.", "A fear of not being truly wanted for myself.", "Insecure about my intrinsic worth, driving my need for validation.", "More ordinary than I let on, despite my desire to be unique."], scoring: [[1], [2], [3], [4]] },
+            { text: "A hidden aspect of my personality might be:", options: ["My rich inner world and complex thoughts.", "How much I test people to see if they are truly trustworthy.", "A fear of missing out that drives my constant activity.", "A softer, more vulnerable side that I protect fiercely."], scoring: [[5], [6], [7], [8]] },
+            { text: "I sometimes 'go along to get along' to such an extent that I:", options: ["Lose track of my own priorities and desires.", "Feel resentful later but struggle to express it.", "Get involved in things I'm not truly interested in.", "Avoid making decisions that might cause disagreement."], scoring: [[9], [9], [9], [9]] },
+            { text: "When I'm truly stressed, I'm most likely to:", options: ["Become overly critical and rigid (my way or the highway).", "Try harder to please others, becoming clingy.", "Push myself even harder, becoming more image-focused.", "Withdraw into my feelings and feel misunderstood."], scoring: [[1], [2], [3], [4]] },
+            { text: "When under pressure, my default reaction is:", options: ["Detach and analyze to conserve my resources.", "Become more anxious and scan for worst-case scenarios.", "Seek distractions or new options to escape pressure.", "Become more assertive and push back against the pressure."], scoring: [[5], [6], [7], [8]] },
+            { text: "I feel most content when:", options: ["Things are orderly and I've done my best.", "I feel deeply connected and appreciated.", "I am successfully achieving my goals.", "I am able to express my unique self."], scoring: [[1], [2], [3], [4]] },
+            { text: "My ideal environment is one where:", options: ["I have space to pursue my interests without interruption.", "I feel secure and can trust those around me.", "There's positive energy and opportunities for enjoyment.", "I have autonomy and the power to make an impact."], scoring: [[5], [6], [7], [8]] },
+            { text: "A recurring theme in my life is the tension between:", options: ["My desire for perfection and an imperfect world.", "My need to be loved and fear of being a burden.", "My drive for success and fear of being seen as a failure.", "My longing for connection and feeling different."], scoring: [[1], [2], [3], [4]] },
+            { text: "I often wrestle with:", options: ["Desire for knowledge vs. fear of being overwhelmed.", "Need for certainty vs. tendency to doubt authority.", "Urge for pleasure vs. difficulty facing pain.", "Drive to be strong vs. fear of being weak."], scoring: [[5], [6], [7], [8]] },
+            { text: "When making life decisions, I tend to:", options: ["Find a compromise that keeps everyone happy.", "Rely on my principles and what is 'right'.", "Consider how it will impact my image and success.", "Trust my intuition and what feels most authentic."], scoring: [[9], [1], [3], [4]] },
+            { text: "People might say I sometimes overlook:", options: ["The emotional impact of my directness.", "My own needs while keeping the peace.", "The value of just 'being' vs. always 'doing'.", "How my need for order can feel restrictive to others."], scoring: [[8], [9], [3], [1]] },
+            { text: "I'm often drawn to activities that involve:", options: ["Helping or nurturing others.", "Deep investigation and learning complex subjects.", "Planning for the future and ensuring safety.", "Experiencing novelty, fun, and variety."], scoring: [[2], [5], [6], [7]] },
+            { text: "One of my biggest unspoken fears is:", options: ["That I am inherently flawed or bad.", "That I am ultimately unlovable.", "That I am worthless without achievements.", "That I have no true identity."], scoring: [[1], [2], [3], [4]] },
+            { text: "Deep down, I'm afraid of:", options: ["Being helpless or incapable.", "Being without support or guidance.", "Being trapped in pain or boredom.", "Being harmed or controlled by others."], scoring: [[5], [6], [7], [8]] },
+            { text: "My 'Achilles' heel' is my tendency towards:", options: ["Resentment when things aren't as they 'should' be.", "Pride in my helpfulness.", "Self-deceit regarding my true image.", "Envy of what others possess."], scoring: [[1], [2], [3], [4]] },
+            { text: "A pattern I have to work against is:", options: ["Hoarding my time/energy (Avarice).", "Excessive worry (Fear/Anxiety).", "Over-indulging to avoid discomfort (Gluttony).", "Needing to assert control (Lust)."], scoring: [[5], [6], [7], [8]] },
+            { text: "To avoid discomfort, I might sometimes:", options: ["Merge with others and neglect my own desires.", "Become overly agreeable despite reservations.", "Downplay my accomplishments to fit in.", "Procrastinate on tasks that feel overwhelming."], scoring: [[9], [9], [9], [9]] }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(questions.length).fill(undefined); 
+        let participantData = {};
+
+        const userInfoSection = document.getElementById('userInfoSection');
+        const questionnaireSection = document.getElementById('questionnaireSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const questionContainer = document.getElementById('questionContainer');
+        const barChartContainer = document.getElementById('barChart');
+        const circularDiagramSvg = document.getElementById('enneagramCircleSvg');
+
+        function handleOptionClick(val) {
+            userAnswers[currentQuestionIndex] = val;
+            displayQuestion();
+            setTimeout(() => {
+                if (currentQuestionIndex < questions.length - 1) {
+                    currentQuestionIndex++;
+                    displayQuestion();
+                } else {
+                    document.getElementById('finishButton').classList.remove('hidden');
+                    document.getElementById('finishButton').scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 300); 
+        }
+
+        function displayQuestion() {
+            const q = questions[currentQuestionIndex];
+            document.getElementById('questionCounter').textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+            questionContainer.innerHTML = `<p class="mb-10 font-bold text-3xl text-royal-navy leading-tight">${q.text}</p>` + q.options.map((o, i) => `
+                <label class="option-label ${userAnswers[currentQuestionIndex] === i ? 'selected' : ''}" onclick="handleOptionClick(${i})">
+                    ${o}
+                </label>
+            `).join('');
+            document.getElementById('prevButton').classList.toggle('invisible', currentQuestionIndex === 0);
+        }
+
+        function calculateWingsAndLean(primaryType, scores) {
+            let w1, w2;
+            if (primaryType === 1) { w1 = 9; w2 = 2; }
+            else if (primaryType === 9) { w1 = 8; w2 = 1; }
+            else { w1 = primaryType - 1; w2 = primaryType + 1; }
+            
+            const s1 = scores[w1] || 0;
+            const s2 = scores[w2] || 0;
+            
+            let lean = "";
+            if (s1 > s2) lean = `You show a stronger lean towards Wing ${w1} (${enneagramTypesData[w1].shortName}).`;
+            else if (s2 > s1) lean = `You show a stronger lean towards Wing ${w2} (${enneagramTypesData[w2].shortName}).`;
+            else lean = "Your wings are balanced.";
+
+            return { w1, w2, lean };
+        }
+
+        function displayResults(fs) {
+            questionnaireSection.classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+            const sorted = Object.keys(fs).sort((a,b) => fs[b] - fs[a]);
+            const primary = parseInt(sorted[0]);
+            const info = enneagramTypesData[primary];
+            const { w1, w2, lean } = calculateWingsAndLean(primary, fs);
+
+            const introHTML = `
+                <div class="report-card intro-section-card">
+                    <h3>Understanding Your Enneagram Results</h3>
+                    
+                    <div class="mb-6">
+                        <h4 class="text-xl font-bold text-royal-navy mb-2">Why the Enneagram?</h4>
+                        <p>Unlike other personality tests that focus on behaviors ("what" you do), the Enneagram focuses on motivations ("why" you do it). It describes 9 distinct archetypes, or "operating systems," that drive how you see the world. Knowing your type isn't about putting you in a box—it's about showing you the box you're already in so you can climb out.</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <h4 class="text-xl font-bold text-royal-navy mb-2">A Brief History</h4>
+                        <p>The Enneagram (from Greek ennea, "nine", and grammos, "figure") has ancient roots in philosophy and mathematics, but was developed into a psychological tool in the 20th century. Today, it is used by organizations worldwide to build emotional intelligence, reduce conflict, and foster authentic leadership.</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <h4 class="text-xl font-bold text-royal-navy mb-2">How This System Works</h4>
+                        <ul class="list-disc ml-6 space-y-2 text-lg">
+                            <li><strong>Your Core Type:</strong> Your dominant operating system. We all have all 9 types in us, but one is dominant.</li>
+                            <li><strong>Wings:</strong> The adjacent numbers (e.g., if you are a 9, your wings are 8 and 1). These "flavor" your personality. No one is a pure type.</li>
+                            <li><strong>Growth & Stress:</strong> The lines on the diagram show movement. You change when you feel secure (Growth) and when you feel pressured (Stress). You aren't static.</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('introReportContent').innerHTML = introHTML;
+
+            document.getElementById('participantSummary').innerHTML = `
+                <h3 class="text-3xl font-black mb-4 text-aubergine">Participant: ${participantData.firstName} ${participantData.familyName}</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xl">
+                    <p><strong>Position:</strong> ${participantData.position}</p>
+                    <p><strong>Company:</strong> ${participantData.company}</p>
+                </div>
+                <p class="mt-4 text-gray-500 font-bold">Assessment Date: ${new Date().toLocaleDateString()}</p>
+            `;
+
+            document.getElementById('typeResult').innerHTML = `
+                <h2 class="text-4xl font-black text-aubergine mb-2">Primary Type: ${primary} - ${info.name}</h2>
+            `;
+
+            displayBarChart(fs, [primary]);
+            displayCircularDiagram(primary);
+
+            let allTypesHTML = `<div class="report-card reference-guide">
+                <h3 class="text-2xl font-bold text-aubergine mb-4">Reference: The 9 Leadership Styles</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+            for (let i = 1; i <= 9; i++) {
+                allTypesHTML += `<div class="reference-item"><strong>Type ${i} (${enneagramTypesData[i].shortName}):</strong> ${enneagramTypesData[i].briefDescription}</div>`;
+            }
+            allTypesHTML += `</div></div>`;
+            document.getElementById('barChart').insertAdjacentHTML('afterend', allTypesHTML);
+
+            const growthStressWingsHTML = `
+                <div id="movedSectionsContainer">
+                     <div class="report-card">
+                        <div class="context-box">
+                            <p class="font-bold">Why you need to know this:</p>
+                            <p>The Enneagram is not a static box; it's a map for growth. Knowing where you go in stress helps you catch it early. Knowing your growth path gives you a specific developmental goal.</p>
+                        </div>
+                        <h3 class="text-2xl font-bold text-aubergine mb-6">Growth & Stress Mastery</h3>
+                        <div class="space-y-4 mb-8">
+                            <p class="text-lg"><strong>Growth Path (Type ${info.growthPoint}):</strong> ${info.growthPointExplanation}</p>
+                            <p class="text-lg"><strong>Stress Pattern (Type ${info.stressPoint}):</strong> ${info.stressPointExplanation}</p>
+                        </div>
+                        <div class="deep-dive-section">
+                            <h4>Actionable Growth Strategies:</h4>
+                            <p>${info.growthStrategies}</p>
+                        </div>
+                        <div class="mt-6">
+                            <h4 class="text-xl font-bold text-royal-navy mb-2">Stress Coping Mechanisms:</h4>
+                            <ul class="list-disc ml-6 text-lg">${info.stressManagement.map(s => `<li>${s}</li>`).join('')}</ul>
+                        </div>
+                    </div>
+
+                    <div class="report-card">
+                        <div class="context-box">
+                            <p class="font-bold">Why you need to know this:</p>
+                            <p>Your "Wings" are the adjacent types that flavor your personality. Expanding into both wings gives you balance—like a bird needs two wings to fly straight.</p>
+                        </div>
+                        <h3 class="text-2xl font-bold text-aubergine mb-6">Your Wings & Balance</h3>
+                        <p class="text-lg font-bold text-royal-navy mb-4">${lean}</p>
+                        
+                        <div class="wing-box">
+                            <h4 class="text-xl font-bold text-aubergine mb-2">Wing ${w1}: ${enneagramTypesData[w1].name}</h4>
+                            <p class="text-lg">${info.wing1Explanation}</p>
+                        </div>
+                        <div class="wing-box">
+                            <h4 class="text-xl font-bold text-aubergine mb-2">Wing ${w2}: ${enneagramTypesData[w2].name}</h4>
+                            <p class="text-lg">${info.wing2Explanation}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('movedSectionsContainer').innerHTML = growthStressWingsHTML;
+
+            document.getElementById('detailedReport').innerHTML = `
+                <div class="report-card">
+                    <div class="context-box">
+                        <p class="font-bold">Why you need to know this:</p>
+                        <p>Your core drivers explain the subconscious "why" behind every decision you make. Understanding this stops you from running on autopilot.</p>
+                    </div>
+                    <h3 class="text-2xl font-bold text-aubergine mb-4">Core Drivers</h3>
+                    <p class="mb-4"><strong class="text-royal-navy">Core Motivation:</strong> ${info.coreMotivation}</p>
+                    <p class="mb-4"><strong class="text-royal-navy">Basic Desire:</strong> ${info.basicDesire}</p>
+                    <p class="mb-4"><strong class="text-royal-navy">Core Fear:</strong> <span class="text-red-flag">${info.coreFear}</span></p>
+                    <p><strong class="text-royal-navy">Basic Weakness (Vice):</strong> <span class="text-red-flag">${info.basicWeaknessVice}</span></p>
+                </div>
+                
+                <div class="report-card">
+                    <h3 class="text-2xl font-bold text-aubergine mb-6">Your Center of Intelligence</h3>
+                    <div class="mb-6">
+                        <p>The 9 types are grouped into three Centers. Your type determines your dominant Center:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                            <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                                <h5 class="font-bold text-aubergine mb-1">Gut/Instinctive Center (8, 9, 1)</h5>
+                                <p class="text-sm">Driven by instinct. Focus on autonomy and justice. Core emotion: Anger (often repressed).</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                                <h5 class="font-bold text-aubergine mb-1">Heart/Feeling Center (2, 3, 4)</h5>
+                                <p class="text-sm">Driven by emotion. Focus on identity and connection. Core emotion: Shame (often ignored).</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                                <h5 class="font-bold text-aubergine mb-1">Head/Thinking Center (5, 6, 7)</h5>
+                                <p class="text-sm">Driven by intellect. Focus on security and certainty. Core emotion: Fear (often rationalized).</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="center-card center-active">
+                        <p class="font-bold text-xl text-royal-navy mb-3">You are in the ${centersData[info.center].name}</p>
+                        <p class="mb-2"><strong class="text-aubergine">Focus:</strong> ${centersData[info.center].focus}</p>
+                        <p class="mb-2"><strong class="text-aubergine">Priority:</strong> ${centersData[info.center].priorities}</p>
+                        <p><strong class="text-aubergine">What you might downplay:</strong> ${centersData[info.center].downplay}</p>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <div class="context-box">
+                        <p class="font-bold">Why you need to know this:</p>
+                        <p>We cannot fix what we cannot see. Your blind spots are the primary cause of friction in your leadership and relationships.</p>
+                    </div>
+                    <h3 class="text-2xl font-bold text-aubergine mb-4">Blind Spots & Hidden Fears</h3>
+                    <ul class="list-disc ml-6 text-lg space-y-4 mb-4">
+                        ${info.commonBlindSpots.map((s, index) => `
+                            <li>
+                                <span class="text-red-flag">${s}</span>
+                                <span class="text-strategy">💡 Strategy: ${info.blindSpotStrategies[index]}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+
+                <div class="report-card">
+                    <div class="context-box">
+                        <p class="font-bold">Why you need to know this:</p>
+                        <p>Aligning your role with your natural strengths creates flow. Ignoring your natural struggles creates burnout.</p>
+                    </div>
+                    <h3 class="text-2xl font-bold text-aubergine mb-4">Work Strengths & Struggles</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-xl font-bold text-[#22C55E] mb-2">Where You Shine (Strengths)</h4>
+                            <p class="text-lg">${info.workStrengths}</p>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold text-[#EF4444] mb-2">Potential Pitfalls (Struggles)</h4>
+                            <p class="text-lg">${info.workStruggles}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="report-card">
+                    <h3 class="text-2xl font-bold text-aubergine mb-6">Leadership Strategy & Deep Dive</h3>
+                    <p class="text-lg leading-relaxed mb-6">${info.leadershipStyle}</p>
+                    <div class="deep-dive-section">
+                        <h4>Expert Deep Dive:</h4>
+                        <p>${info.leadershipDeepDive}</p>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <h3 class="text-2xl font-bold text-aubergine mb-6">Work & Relationship Implications</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-xl font-bold text-royal-navy mb-2">In the Workplace:</h4>
+                            <p class="text-lg leading-relaxed">${info.workImplications}</p>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold text-royal-navy mb-2">In Relationships:</h4>
+                            <p class="text-lg leading-relaxed">${info.relationshipImplications}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                     <h3 class="text-2xl font-bold text-aubergine mb-6">How You Can Relate Better to Others</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${Object.entries(info.relatingTo).map(([key, val]) => `
+                            <div class="p-3 bg-gray-50 border border-gray-200 rounded">
+                                <p class="font-bold text-aubergine">To Type ${key} (${enneagramTypesData[key].shortName}):</p>
+                                <p class="text-sm italic text-royal-navy">${val}</p>
+                            </div>
+                        `).join('')}
+                     </div>
+                </div>
+            `;
+
+            // Save to Firebase (using the exposed function)
+            if(window.saveToFirebase) {
+                window.saveToFirebase({
+                    participantInfo: participantData,
+                    scores: fs,
+                    primaryType: primary,
+                    typeData: info
+                });
+            }
+        }
+
+        function displayBarChart(fs, pot) {
+            barChartContainer.innerHTML = '';
+            const maxVal = Math.max(...Object.values(fs), 1);
+            for (let i = 1; i <= 9; i++) {
+                const s = fs[i] || 0;
+                const h = (s / maxVal) * 250;
+                const w = document.createElement('div');
+                w.className = 'bar-wrapper';
+                w.innerHTML = `<div class="bar-score">${s}</div><div class="bar ${pot.includes(i) ? 'primary-type-bar' : ''}" style="height: ${h}px;"></div><div class="bar-label">Type ${i}<br>${enneagramTypesData[i].shortName}</div>`;
+                barChartContainer.appendChild(w);
+            }
+        }
+
+        function displayCircularDiagram(p) {
+            const svgNS = "http://www.w3.org/2000/svg";
+            circularDiagramSvg.innerHTML = '';
+            const cx = 160, cy = 160, r = 100, nr = 18;
+            const ags = { 9: 90, 1: 50, 2: 10, 3: 330, 4: 290, 5: 250, 6: 210, 7: 170, 8: 130 };
+            const pts = {};
+            const outer = document.createElementNS(svgNS, "circle");
+            outer.setAttribute("cx", cx); outer.setAttribute("cy", cy); outer.setAttribute("r", r);
+            outer.setAttribute("class", "enneagram-outer-path"); outer.setAttribute("fill", "none");
+            circularDiagramSvg.appendChild(outer);
+            for (let i = 1; i <= 9; i++) {
+                const rd = ags[i] * Math.PI / 180;
+                pts[i] = { x: cx + r * Math.cos(rd), y: cy - r * Math.sin(rd) };
+            }
+            const lines = [[9,3],[3,6],[6,9],[1,4],[4,2],[2,8],[8,5],[5,7],[7,1]];
+            lines.forEach(([a,b]) => {
+                const l = document.createElementNS(svgNS, "line");
+                l.setAttribute("x1", pts[a].x); l.setAttribute("y1", pts[a].y);
+                l.setAttribute("x2", pts[b].x); l.setAttribute("y2", pts[b].y);
+                l.setAttribute("class", "enneagram-inner-line");
+                circularDiagramSvg.appendChild(l);
+            });
+            const arrowSets = [[enneagramTypesData[p].growthPoint, "#22C55E"], [enneagramTypesData[p].stressPoint, "#EF4444"]];
+            arrowSets.forEach(([target, color]) => {
+                const l = document.createElementNS(svgNS, "line");
+                l.setAttribute("x1", pts[p].x); l.setAttribute("y1", pts[p].y);
+                l.setAttribute("x2", pts[target].x); l.setAttribute("y2", pts[target].y);
+                l.setAttribute("stroke", color); l.setAttribute("stroke-width", "4");
+                circularDiagramSvg.appendChild(l);
+            });
+            const wings = [p === 1 ? 9 : p - 1, p === 9 ? 1 : p + 1];
+            for (let i = 1; i <= 9; i++) {
+                const g = document.createElementNS(svgNS, "g");
+                const c = document.createElementNS(svgNS, "circle");
+                c.setAttribute("cx", pts[i].x); c.setAttribute("cy", pts[i].y); c.setAttribute("r", nr);
+                let cls = "enneagram-node-circle " + (i === p ? "primary-type" : (wings.includes(i) ? "wing-type" : "other-type"));
+                c.setAttribute("class", cls);
+                g.appendChild(c);
+                const t = document.createElementNS(svgNS, "text");
+                t.setAttribute("x", pts[i].x); t.setAttribute("y", pts[i].y); t.setAttribute("dy", "5"); t.textContent = i;
+                t.setAttribute("class", "enneagram-node-text font-bold text-center " + (i === p ? "primary-type" : "other-type"));
+                t.setAttribute("text-anchor", "middle");
+                g.appendChild(t);
+                if (wings.includes(i)) {
+                    const wl = document.createElementNS(svgNS, "text");
+                    wl.setAttribute("x", pts[i].x); wl.setAttribute("y", pts[i].y - 25);
+                    wl.textContent = "Wing"; wl.setAttribute("class", "wing-indicator-text");
+                    g.appendChild(wl);
+                }
+                circularDiagramSvg.appendChild(g);
+            }
+        }
+
+        document.getElementById('proceedToAssessmentButton').onclick = () => {
+            const f = document.getElementById('firstName').value.trim();
+            const l = document.getElementById('familyName').value.trim();
+            const e = document.getElementById('email').value.trim();
+            const p = document.getElementById('position').value.trim();
+            const c = document.getElementById('company').value.trim();
+            if (!f || !l || !e || !p || !c) {
+                document.getElementById('userInfoValidationMessage').classList.remove('hidden');
+                return;
+            }
+            participantData = { firstName: f, familyName: l, email: e, position: p, company: c };
+            userInfoSection.classList.add('hidden');
+            questionnaireSection.classList.remove('hidden');
+            displayQuestion();
+        };
+
+        document.getElementById('prevButton').onclick = () => { if (currentQuestionIndex > 0) { currentQuestionIndex--; displayQuestion(); } };
+        document.getElementById('finishButton').onclick = () => {
+            const fs = {}; for(let i=1; i<=9; i++) fs[i] = 0;
+            userAnswers.forEach((ans, i) => { if(ans !== undefined) questions[i].scoring[ans].forEach(t => fs[t]++); });
+            displayResults(fs);
+        };
+        document.getElementById('messageBoxCloseButton').onclick = () => document.getElementById('messageBoxOverlay').classList.add('hidden');
+        document.getElementById('returnButton').onclick = () => { window.location.href = "https://www.brkthrucoaching.com"; };
+        window.onload = () => { document.getElementById('assessmentDate').value = new Date().toLocaleDateString(); };
+    </script>
+</body>
 </html>
