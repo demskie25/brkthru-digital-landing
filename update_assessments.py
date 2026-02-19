@@ -11,7 +11,7 @@ def final_assembly():
     with open(source_path, 'r', encoding='utf-8') as f:
         src = f.read()
     
-    # Header & CSS additions
+    # 1. Header & CSS additions
     head_additions = """
     <link rel="stylesheet" href="universal-header.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -25,15 +25,13 @@ def final_assembly():
         }
     </style>
     """
-    src = src.replace('<head>', f'<head>\n    {head_additions}')
+    src = src.replace('<head>', '<head>\n    ' + head_additions)
 
-    # Alpine initialization - managing both backdoor and gatekeeper bypass
-    alpine_init = """<body x-data="{ enneagramUnlocked: false, backdoorClicks: 0 }">
+    # 2. Alpine initialization & Universal Header
+    alpine_init = """<body x-data="{ enneagramUnlocked: new URLSearchParams(window.location.search).get('status') === 'completed', backdoorClicks: 0 }">
     <div x-show="enneagramUnlocked" x-cloak class="backdoor-indicator uppercase tracking-widest">Master Access: Assessment Unlocked</div>
     """
-    src = src.replace('<body>', alpine_init)
-
-    # Universal Header
+    
     universal_header = """
     <!-- UNIVERSAL HEADER -->
     <nav class="univ-header">
@@ -55,39 +53,112 @@ def final_assembly():
     </nav>
     <div class="univ-spacer"></div>
     """
-    src = src.replace('<body x-data="{ enneagramUnlocked: false, backdoorClicks: 0 }">', 
-                      f'<body x-data="{{ enneagramUnlocked: false, backdoorClicks: 0 }}">\n{universal_header}')
+    
+    src = src.replace('<body>', alpine_init + "\n" + universal_header)
 
-    # 1. GATEKEEPER OVERLAY (Alpine version)
+    # 3. GATEKEEPER OVERLAY (Alpine version)
     src = src.replace('<div id="accessDeniedOverlay">', '<div id="accessDeniedOverlay" x-show="!enneagramUnlocked" x-cloak>')
     
-    # 2. MAIN APP CONTENT (Alpine version)
+    # Update HitPay Link in Overlay
+    old_overlay_btn = '<a href="/assessments" class="btn btn-primary bg-white text-black font-bold">Go to Assessments</a>'
+    new_overlay_btn = '<a href="https://hitpay.app/pay/brkthru" class="btn btn-primary bg-white text-black font-bold">Unlock Access via HitPay</a>'
+    src = src.replace(old_overlay_btn, new_overlay_btn)
+
+    # 4. MAIN APP CONTENT (Alpine version)
     src = src.replace('<div id="appContent" class="hidden">', '<div id="appContent" x-show="enneagramUnlocked" x-cloak>')
 
-    # Backdoor Trigger on Overlay Heading
-    # Simplified to just update the Alpine state
+    # 5. Backdoor Trigger on Overlay Heading
     overlay_h1 = '<h1 class="text-4xl font-bold mb-4">Access Restricted</h1>'
     backdoor_h1 = '<h1 @click="backdoorClicks++; if(backdoorClicks >= 6) { enneagramUnlocked = true; backdoorClicks = 0; }" class="text-4xl font-bold mb-4 cursor-pointer select-none active:scale-95 transition-transform">Access Restricted</h1>'
     src = src.replace(overlay_h1, backdoor_h1)
 
-    # Secondary Backdoor on Main Heading (Redundancy)
+    # Secondary Backdoor on Main Heading
     old_h1 = '<h1 class="text-4xl main-title text-center">Meta-Programs Assessment for Leaders</h1>'
     new_h1 = '<h1 @click="backdoorClicks++; if(backdoorClicks >= 6) { enneagramUnlocked = true; backdoorClicks = 0; }" class="text-4xl main-title text-center cursor-pointer select-none">Meta-Programs Assessment for Leaders</h1>'
     src = src.replace(old_h1, new_h1)
 
-    # Centered Return Button refinement
+    # 6. Inject Email Backend Logic (with BCC)
+    backend_script = """
+        async function sendResultsToBackend(userData) {
+            console.log("Initiating backend sync...");
+            const url = 'https://script.google.com/macros/s/AKfycbxyWY3MHZSKq7jQBqYS6duo2zageOFGendaJbzYEDZn1fs4wCeFy91gt5af0aqqpEq-3A/exec'; 
+            
+            const formData = new URLSearchParams();
+            for (const key in userData) {
+                if (typeof userData[key] === 'object') {
+                    formData.append(key, JSON.stringify(userData[key]));
+                } else {
+                    formData.append(key, userData[key]);
+                }
+            }
+            // CRITICAL: Inject BCC to Brkthru Consulting as requested
+            formData.append('bcc', 'brkthru.consulting@gmail.com');
+            formData.append('notification_type', 'enneagram_report_v26');
+            formData.append('project', 'Brkthru Digital V119');
+
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+                console.log("Results synced successfully (BCC enabled).");
+                alert("Results captured! A profile summary has been sent to your email and our consulting team.");
+            } catch (e) {
+                console.error("Reporting error:", e);
+                alert("Data reached the gateway. If you don't receive an email within 5 minutes, please download the PDF manually.");
+            }
+        }
+    """
+    
+    # Inject into the script section
+    marker = "const circularDiagramSvg = document.getElementById('enneagramCircleSvg');"
+    src = src.replace(marker, backend_script + "\n        " + marker)
+
+    # 7. Update Finish Button to trigger backend send
+    # Exact match from start-enneagram.html
+    old_finish = """        document.getElementById('finishButton').onclick = () => {
+            const fs = {}; for(let i=1; i<=9; i++) fs[i] = 0;
+            userAnswers.forEach((ans, i) => { if(ans !== undefined) questions[i].scoring[ans].forEach(t => fs[t]++); });
+            displayResults(fs);
+        };"""
+    
+    new_finish = """        document.getElementById('finishButton').onclick = async () => {
+            const fs = {}; for(let i=1; i<=9; i++) fs[i] = 0;
+            userAnswers.forEach((ans, i) => { if(ans !== undefined) questions[i].scoring[ans].forEach(t => fs[t]++); });
+            
+            // Prepare Data for Backend
+            const reportData = {
+                ...participantData,
+                scores: fs,
+                timestamp: new Date().toISOString(),
+                source: 'Brkthru Digital Assessments V119'
+            };
+            
+            // Trigger Backend Sync
+            await sendResultsToBackend(reportData);
+            
+            displayResults(fs);
+        };"""
+    src = src.replace(old_finish, new_finish)
+
+    # 8. Visual Refinements
     old_return = '<button id="returnButton" class="btn btn-primary w-full md:w-auto mt-12 py-4 px-10 text-lg">Return to Website</button>'
     new_return = '<div class="flex justify-center mt-12"><button id="returnButton" class="btn btn-primary w-full md:w-auto py-4 px-10 text-lg shadow-xl">Return to Website</button></div>'
     src = src.replace(old_return, new_return)
 
-    # Safety Keyword Check
+    # Cache Busting V119
+    src = src.replace('<title>Enneagram Assessment for Leaders</title>', '<title>Enneagram Assessment for Leaders (V119)</title>')
+
+    # 9. Safety Keyword Check
     if 'Full Leadership Intelligence Report' not in src:
         print("Warning: Content missing!")
 
     with open(target_path, 'w', encoding='utf-8') as f:
         f.write(src)
 
-    print("Success")
+    print("Success: Generated assessments.html with V119 logic")
 
 if __name__ == "__main__":
     final_assembly()

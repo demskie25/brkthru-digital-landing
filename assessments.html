@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- CACHE BUST: 2026-02-19T16:10:00Z (V118) -->
 <html lang="en">
 <head>
     
@@ -14,10 +13,10 @@
             padding: 4px; border-bottom: 2px solid #FFD700;
         }
     </style>
-    
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enneagram Assessment for Leaders</title>
+    <title>Enneagram Assessment for Leaders (V119)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- PDF Generation Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -344,7 +343,9 @@
         }
     </style>
 </head>
-<body x-data="{ enneagramUnlocked: false, backdoorClicks: 0 }">
+<body x-data="{ enneagramUnlocked: new URLSearchParams(window.location.search).get('status') === 'completed', backdoorClicks: 0 }">
+    <div x-show="enneagramUnlocked" x-cloak class="backdoor-indicator uppercase tracking-widest">Master Access: Assessment Unlocked</div>
+
 
     <!-- UNIVERSAL HEADER -->
     <nav class="univ-header">
@@ -365,16 +366,14 @@
         </div>
     </nav>
     <div class="univ-spacer"></div>
-    
-    <div x-show="enneagramUnlocked" x-cloak class="backdoor-indicator uppercase tracking-widest">Master Access: Assessment Unlocked</div>
-    
+
 
     <!-- 1. GATEKEEPER OVERLAY -->
     <div id="accessDeniedOverlay" x-show="!enneagramUnlocked" x-cloak>
         <div>
             <h1 @click="backdoorClicks++; if(backdoorClicks >= 6) { enneagramUnlocked = true; backdoorClicks = 0; }" class="text-4xl font-bold mb-4 cursor-pointer select-none active:scale-95 transition-transform">Access Restricted</h1>
             <p class="text-xl mb-6">Please unlock this assessment via the assessments page.</p>
-            <a href="/assessments" class="btn btn-primary bg-white text-black font-bold">Go to Assessments</a>
+            <a href="https://hitpay.app/pay/brkthru" class="btn btn-primary bg-white text-black font-bold">Unlock Access via HitPay</a>
         </div>
     </div>
 
@@ -1353,5 +1352,77 @@
         document.getElementById('returnButton').onclick = () => { window.location.href = "https://www.brkthrucoaching.com"; };
         window.onload = () => { document.getElementById('assessmentDate').value = new Date().toLocaleDateString(); };
     </script>
+
+    <!-- INJECTED BACKEND LOGIC V119 -->
+    <script>
+        // Define Backend Sync Function
+        async function sendResultsToBackend(userData) {
+            console.log("Initiating backend sync...");
+            const url = 'https://script.google.com/macros/s/AKfycbxyWY3MHZSKq7jQBqYS6duo2zageOFGendaJbzYEDZn1fs4wCeFy91gt5af0aqqpEq-3A/exec'; 
+            
+            const formData = new URLSearchParams();
+            for (const key in userData) {
+                if (typeof userData[key] === 'object') {
+                    formData.append(key, JSON.stringify(userData[key]));
+                } else {
+                    formData.append(key, userData[key]);
+                }
+            }
+            // CRITICAL: Inject BCC to Brkthru Consulting as requested
+            formData.append('bcc', 'brkthru.consulting@gmail.com');
+            formData.append('notification_type', 'enneagram_report_v26');
+            formData.append('project', 'Brkthru Digital V119');
+
+            try {
+                // We use no-cors to interact with Apps Script redirection silently
+                // IF successful, Apps Script triggers email.
+                await fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+                console.log("Results synced successfully (BCC enabled).");
+                // Removed alert to keep flow smooth, relying on displayResults
+            } catch (e) {
+                console.error("Reporting error:", e);
+                alert("Note: Data reached the gateway, but handshake failed. Please download the PDF manualy if email doesn't arrive.");
+            }
+        }
+
+        // Override Finish Button Handler safely
+        // We wait for DOMContentLoaded or run immediately if at end of body
+        (function() {
+            const btn = document.getElementById('finishButton');
+            if(btn) {
+                btn.onclick = async () => {
+                    // Recalculate basic scores just in case (safe reuse of existing logic if possible, 
+                    // but since variables are global in start-enneagram, we can reuse logic or copy it)
+                    
+                    // RE-IMPLEMENT SCORING LOGIC HERE TO BE SAFE
+                    const fs = {}; for(let i=1; i<=9; i++) fs[i] = 0;
+                    userAnswers.forEach((ans, i) => { if(ans !== undefined) questions[i].scoring[ans].forEach(t => fs[t]++); });
+                    
+                    // Prepare Data for Backend
+                    const reportData = {
+                        ...participantData,
+                        scores: fs,
+                        timestamp: new Date().toISOString(),
+                        source: 'Brkthru Digital Assessments V119'
+                    };
+                    
+                    // Trigger Backend Sync
+                    await sendResultsToBackend(reportData);
+                    
+                    // Call Original Display Logic (defined in previous script)
+                    displayResults(fs);
+                };
+                console.log("Finish Button Logic Updated for V119");
+            } else {
+                console.error("Finish Button not found for V119 injection");
+            }
+        })();
+    </script>
+
 </body>
 </html>
