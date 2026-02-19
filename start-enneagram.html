@@ -460,8 +460,9 @@
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const token = urlParams.get('token');
-            // Check for token or localhost (for testing)
-            if (token || window.location.hostname === 'localhost' || window.location.hostname.includes('antigravity')) {
+            const access = urlParams.get('access');
+            // Check for access=enneagram or token or localhost
+            if (access === 'enneagram' || token || window.location.hostname === 'localhost' || window.location.hostname.includes('antigravity')) {
                 document.getElementById('accessDeniedOverlay').classList.add('hidden');
                 document.getElementById('appContent').classList.remove('hidden');
             }
