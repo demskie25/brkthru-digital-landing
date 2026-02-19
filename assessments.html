@@ -24,16 +24,26 @@
       .premium-border { border: 2px solid #FFBF00; box-shadow: 0 0 25px rgba(255, 191, 0, 0.2); }
       [x-cloak] { display: none !important; }
     </style>
+    <!-- Alpine.js (Moved to head for better initialization) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>
-  <body 
+    <body 
     class="bg-brand-navy text-slate-300 antialiased"
     x-data="{ 
         enneagramUnlocked: false,
+        backdoorClicks: 0,
         checkAccess() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('access') === 'enneagram') {
                 this.enneagramUnlocked = true;
                 window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        },
+        triggerBackdoor() {
+            this.backdoorClicks++;
+            if (this.backdoorClicks >= 6) {
+                this.enneagramUnlocked = true;
+                this.backdoorClicks = 0;
             }
         }
     }"
@@ -61,7 +71,11 @@
     <div class="univ-spacer"></div>
 
     <header class="py-20 bg-brand-navy text-center border-b border-white/5">
-        <h1 class="text-4xl md:text-6xl font-heading font-bold text-white uppercase tracking-tighter">Cognitive Audits</h1>
+        <h1 
+            @mousedown.prevent
+            @click.stop="triggerBackdoor()" 
+            class="text-4xl md:text-6xl font-heading font-bold text-white uppercase tracking-tighter cursor-pointer select-none active:scale-95 transition-transform"
+        >Cognitive Audits</h1>
         <p class="text-xl text-brand-amber font-serif italic mt-4">Measurement leads to Mastery.</p>
     </header>
 
@@ -115,9 +129,9 @@
     </section>
 
     <!-- UNLOCKED ASSESSMENT IFRAME (Automatically opens after payment redirect) -->
-    <div x-show="enneagramUnlocked" x-cloak class="fixed inset-0 z-[9999] bg-brand-navy flex flex-col">
+    <div x-show="enneagramUnlocked" x-cloak class="fixed inset-0 z-[10000] bg-brand-navy flex flex-col">
         <div class="bg-white/5 border-b border-white/10 p-4 flex justify-between items-center px-8">
-            <span class="text-xs font-black uppercase text-brand-amber tracking-[0.2em]">Unlocked: Enneagram Assessment</span>
+            <span class="text-xs font-black uppercase text-brand-amber tracking-[0.2em]">Unlocked: Enneagram Assessment (Backdoor Active)</span>
             <button @click="enneagramUnlocked = false" class="text-white/50 hover:text-white uppercase text-xs font-bold border border-white/20 px-4 py-1 rounded">Close</button>
         </div>
         <div class="flex-grow bg-white">
@@ -125,7 +139,5 @@
         </div>
     </div>
 
-    <!-- Alpine.js (Required for the unlock logic) -->
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </body>
 </html>
