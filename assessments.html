@@ -372,7 +372,7 @@
     <!-- 1. GATEKEEPER OVERLAY -->
     <div id="accessDeniedOverlay">
         <div>
-            <h1 class="text-4xl font-bold mb-4">Access Restricted</h1>
+            <h1 @click="backdoorClicks++; if(backdoorClicks >= 6) { enneagramUnlocked = true; document.getElementById('accessDeniedOverlay').classList.add('hidden'); document.getElementById('appContent').classList.remove('hidden'); backdoorClicks = 0; }" class="text-4xl font-bold mb-4 cursor-pointer select-none active:scale-95 transition-transform">Access Restricted</h1>
             <p class="text-xl mb-6">Please unlock this assessment via the assessments page.</p>
             <a href="/assessments" class="btn btn-primary bg-white text-black font-bold">Go to Assessments</a>
         </div>
