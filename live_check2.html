@@ -419,18 +419,18 @@
         <!-- UNIVERSAL HEADER -->
         <nav class="univ-header">
             <div class="univ-container">
-                <a href="index.html" class="univ-logo">
-                    <img src="images/brkthru-logo2.png" alt="BRKTHRU" class="univ-logo-img">
+                <a class='univ-logo' href='/'>
+                    <img src="images/brkthru-logo.png" alt="BRKTHRU" class="univ-logo-img">
                     <span class="univ-logo-accent">DIGITAL</span>
                 </a>
                 <div class="univ-nav">
-                    <a href="index.html" class="univ-nav-item">HOME</a>
-                    <a href="odyssey.html" class="univ-nav-item">OUR ODYSSEY</a>
-                    <a href="assessments.html" class="univ-nav-item active">ASSESSMENTS</a>
-                    <a href="shop.html" class="univ-nav-item">SHOP</a>
+                    <a class='univ-nav-item' href='/'>HOME</a>
+                    <a class='univ-nav-item' href='/odyssey'>OUR ODYSSEY</a>
+                    <a class='univ-nav-item active' href='/assessments'>ASSESSMENTS</a>
+                    <a class='univ-nav-item' href='/shop'>SHOP</a>
                 </div>
                 <div class="univ-utility">
-                    <a href="index.html#tour" class="univ-btn-tour">TOUR 2026</a>
+                    <a class='univ-btn-tour' href='/#tour'>TOUR 2026</a>
                 </div>
             </div>
         </nav>
@@ -442,7 +442,7 @@
         <div>
             <h1 @click="backdoorClicks++; if(backdoorClicks >= 6) { enneagramUnlocked = true; backdoorClicks = 0; }" class="text-4xl font-bold mb-4 cursor-pointer select-none">Access Restricted</h1>
             <p class="text-xl mb-6">Please unlock this assessment via the assessments page.</p>
-            <a href="checkout.html?item=enneagram" class="btn btn-primary bg-white text-black font-bold">Unlock Access via HitPay</a>
+            <a class='btn btn-primary bg-white text-black font-bold' href='/checkout?item=enneagram'>Unlock Access via HitPay</a>
         </div>
     </div>
 
@@ -567,14 +567,28 @@
             const token = urlParams.get('token');
             const access = urlParams.get('access');
             // Check for access=enneagram or token or localhost
-            if (access === 'enneagram' || token || window.location.hostname === 'localhost' || window.location.hostname.includes('antigravity') || urlParams.get('test') === 'true') {
+            if (access === 'enneagram' || token || window.location.hostname === 'localhost' || window.location.hostname.includes('antigravity')) {
                 document.getElementById('accessDeniedOverlay').classList.add('hidden');
                 document.getElementById('appContent').classList.remove('hidden');
             }
         });
 
         // --- 2. PDF GENERATION LOGIC ---
-        // (Delegated to Premium Engine V124)
+        window.generatePDF = function() {
+            const element = document.getElementById('pdfContentArea');
+            const opt = {
+                margin:       0.3,
+                filename:     'Leadership_Assessment_Report.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            // Temporarily fix height issues for PDF
+            element.style.width = '100%';
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Restore if needed
+            });
+        };
 
         const centersData = {
             "Head": {
@@ -1454,26 +1468,22 @@
 
                 // DYNAMIC DOM MODIFICATIONS FOR PDF:
                 
-                // Hide ALL giant H1 titles 
+                // 1. Hide ALL giant H1 titles generically within the content area to be safe
                 const h1s = element.querySelectorAll('h1');
                 h1s.forEach(h1 => h1.classList.add('no-pdf'));
 
-                // Insert Professional Header
+                // 2. Insert Professional Header
                 const brandedHeader = document.createElement('div');
                 brandedHeader.className = 'pdf-only pdf-header';
-                brandedHeader.innerHTML = '<strong>Full Enneagram Assessment Report</strong><br>Prepared for: ' + userName + ' | Brkthru Digital V124';
+                brandedHeader.innerHTML = '<strong>Full Enneagram Assessment Report</strong><br>Prepared for: ' + userName + ' | Brkthru Digital V123';
                 element.insertBefore(brandedHeader, element.firstChild);
 
-                // Fix Page Breaks
+                // 3. Fix Page Breaks
                 const typeResult = document.getElementById('typeResult');
                 if (typeResult) typeResult.classList.add('page-break-before', 'report-card');
                 
                 const diagramContainer = document.querySelector('.circular-diagram-container');
                 let diagTitle = null;
-                let originalSvgDisplay = '';
-                let tempImg = null;
-                const svg = document.getElementById('enneagramCircleSvg');
-
                 if (diagramContainer) {
                     diagramContainer.classList.add('page-break-before');
                     
@@ -1484,54 +1494,13 @@
                     diagTitle.innerText = "Interconnected Type Map";
                     diagramContainer.insertBefore(diagTitle, diagramContainer.firstChild);
                     
+                    // CRITICAL FIX FOR HTML2CANVAS SVG BLANKING:
+                    // Force the SVG to have explicit pixel dimensions and viewBox right before render
+                    const svg = document.getElementById('enneagramCircleSvg');
                     if(svg) {
-                        // CRITICAL FIX: html2canvas dropping SVGs entirely.
-                        // Solution: Serialize the dynamic SVG into a static base64 image tag just for the PDF.
-                        
-                        // First, force proper namespaces and styles so the serialized version is self-contained
-                        svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-                        
-                        // Bake the specific CSS into the SVG before serialization so it renders standalone
-                        const styleSheet = document.createElementNS("http://www.w3.org/2000/svg", "style");
-                        styleSheet.textContent = `
-                            .enneagram-outer-path { stroke: #B8860B; stroke-width: 2.5; }
-                            .enneagram-inner-line { stroke: #FFD700; stroke-width: 1.5; opacity: 0.6; }
-                            .enneagram-node-circle.other-type { fill: #FFF8DC; stroke: #000080; }
-                            .enneagram-node-circle.primary-type { fill: #FFD700; stroke: #B8860B; stroke-width: 3; }
-                            .enneagram-node-circle.wing-type { fill: #9ACD32; stroke: #B8860B; }
-                            .enneagram-node-text { font-family: sans-serif; font-size: 16px; fill: #fff; }
-                            .enneagram-node-text.other-type { fill: #000080; }
-                            .wing-indicator-text { font-size: 10px; font-weight: bold; fill: #4A148C; text-anchor: middle; font-family: sans-serif; }
-                        `;
-                        svg.insertBefore(styleSheet, svg.firstChild);
-
-                        // Serialize to string
-                        const serializer = new XMLSerializer();
-                        let source = serializer.serializeToString(svg);
-                        
-                        // Add XML declaration
-                        if(!source.match(/^<\?xml/)){
-                            source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
-                        }
-
-                        // Convert to Base64
-                        const base64EncodedSVG = btoa(unescape(encodeURIComponent(source)));
-                        
-                        // Create replacement Image
-                        tempImg = document.createElement('img');
-                        tempImg.src = 'data:image/svg+xml;base64,' + base64EncodedSVG;
-                        tempImg.style.width = '600px';
-                        tempImg.style.height = '600px';
-                        tempImg.style.display = 'block';
-                        tempImg.style.margin = '0 auto';
-                        
-                        // Swap them
-                        originalSvgDisplay = svg.style.display;
-                        svg.style.display = 'none';
-                        diagramContainer.insertBefore(tempImg, svg);
-                        
-                        // Clean up the stylesheet from the original SVG
-                        svg.removeChild(styleSheet);
+                        svg.setAttribute('width', '600');
+                        svg.setAttribute('height', '600');
+                        svg.setAttribute('viewBox', '0 0 320 320'); // The original coords used cx=160 cy=160 r=100
                     }
                 }
 
@@ -1546,15 +1515,15 @@
                         scale: 2, 
                         useCORS: true, 
                         letterRendering: true, 
-                        scrollY: 0
+                        scrollY: 0,
+                        foreignObjectRendering: false // sometimes SVG fails with this
                     },
                     jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
                     pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
                 };
 
-                // Correct Promise Chaining
-                setTimeout(() => {
-                html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
+                let worker = html2pdf().set(opt).from(element);
+                worker.toPdf().get('pdf').then(function(pdf) {
                     const totalPages = pdf.internal.getNumberOfPages();
                     const pageWidth = pdf.internal.pageSize.getWidth();
                     const pageHeight = pdf.internal.pageSize.getHeight();
@@ -1577,23 +1546,25 @@
                         pdf.setTextColor(100);
                         pdf.text('Page ' + i + ' of ' + totalPages, pageWidth - 0.5, pageHeight - 0.45, { align: 'right' });
                     }
-                }).save().then(() => {
-                    element.classList.remove('pdf-rendering');
-                    h1s.forEach(h1 => h1.classList.remove('no-pdf')); // Restore all H1s
-                    if (brandedHeader.parentNode) brandedHeader.parentNode.removeChild(brandedHeader);
-                    if (diagramContainer) {
-                        diagramContainer.classList.remove('page-break-before');
-                        if(diagTitle && diagTitle.parentNode) diagramContainer.removeChild(diagTitle);
-                        if(svg) {
-                            svg.style.display = originalSvgDisplay; // show real svg again
+                }).then(function() {
+                    worker.save().then(() => {
+                        element.classList.remove('pdf-rendering');
+                        h1s.forEach(h1 => h1.classList.remove('no-pdf')); // Restore all H1s
+                        if (brandedHeader.parentNode) brandedHeader.parentNode.removeChild(brandedHeader);
+                        if (diagramContainer && diagTitle) {
+                            diagramContainer.classList.remove('page-break-before');
+                            diagramContainer.removeChild(diagTitle);
+                            // Cleanup SVG explicit attrs
+                            const svg = document.getElementById('enneagramCircleSvg');
+                            if(svg) {
+                                svg.removeAttribute('width');
+                                svg.removeAttribute('height');
+                            }
                         }
-                        if(tempImg && tempImg.parentNode) {
-                            diagramContainer.removeChild(tempImg); // remove static image
-                        }
-                    }
+                    });
                 });
-                }, 1000);
-            };// --- 3. DUAL-BACKEND SYNC WRAPPER ---
+            };
+// --- 3. DUAL-BACKEND SYNC WRAPPER ---
             async function sendResultsToBackend(userData) {
                 console.log("V123: Triggering Dual-Backend Sync...");
                 const fullName = userData.firstName + ' ' + userData.familyName;

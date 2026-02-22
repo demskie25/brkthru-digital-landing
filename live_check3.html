@@ -419,18 +419,18 @@
         <!-- UNIVERSAL HEADER -->
         <nav class="univ-header">
             <div class="univ-container">
-                <a href="index.html" class="univ-logo">
-                    <img src="images/brkthru-logo2.png" alt="BRKTHRU" class="univ-logo-img">
+                <a class='univ-logo' href='/'>
+                    <img src="images/brkthru-logo.png" alt="BRKTHRU" class="univ-logo-img">
                     <span class="univ-logo-accent">DIGITAL</span>
                 </a>
                 <div class="univ-nav">
-                    <a href="index.html" class="univ-nav-item">HOME</a>
-                    <a href="odyssey.html" class="univ-nav-item">OUR ODYSSEY</a>
-                    <a href="assessments.html" class="univ-nav-item active">ASSESSMENTS</a>
-                    <a href="shop.html" class="univ-nav-item">SHOP</a>
+                    <a class='univ-nav-item' href='/'>HOME</a>
+                    <a class='univ-nav-item' href='/odyssey'>OUR ODYSSEY</a>
+                    <a class='univ-nav-item active' href='/assessments'>ASSESSMENTS</a>
+                    <a class='univ-nav-item' href='/shop'>SHOP</a>
                 </div>
                 <div class="univ-utility">
-                    <a href="index.html#tour" class="univ-btn-tour">TOUR 2026</a>
+                    <a class='univ-btn-tour' href='/#tour'>TOUR 2026</a>
                 </div>
             </div>
         </nav>
@@ -442,7 +442,7 @@
         <div>
             <h1 @click="backdoorClicks++; if(backdoorClicks >= 6) { enneagramUnlocked = true; backdoorClicks = 0; }" class="text-4xl font-bold mb-4 cursor-pointer select-none">Access Restricted</h1>
             <p class="text-xl mb-6">Please unlock this assessment via the assessments page.</p>
-            <a href="checkout.html?item=enneagram" class="btn btn-primary bg-white text-black font-bold">Unlock Access via HitPay</a>
+            <a class='btn btn-primary bg-white text-black font-bold' href='/checkout?item=enneagram'>Unlock Access via HitPay</a>
         </div>
     </div>
 
@@ -567,14 +567,28 @@
             const token = urlParams.get('token');
             const access = urlParams.get('access');
             // Check for access=enneagram or token or localhost
-            if (access === 'enneagram' || token || window.location.hostname === 'localhost' || window.location.hostname.includes('antigravity') || urlParams.get('test') === 'true') {
+            if (access === 'enneagram' || token || window.location.hostname === 'localhost' || window.location.hostname.includes('antigravity')) {
                 document.getElementById('accessDeniedOverlay').classList.add('hidden');
                 document.getElementById('appContent').classList.remove('hidden');
             }
         });
 
         // --- 2. PDF GENERATION LOGIC ---
-        // (Delegated to Premium Engine V124)
+        window.generatePDF = function() {
+            const element = document.getElementById('pdfContentArea');
+            const opt = {
+                margin:       0.3,
+                filename:     'Leadership_Assessment_Report.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            // Temporarily fix height issues for PDF
+            element.style.width = '100%';
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Restore if needed
+            });
+        };
 
         const centersData = {
             "Head": {
@@ -1553,7 +1567,6 @@
                 };
 
                 // Correct Promise Chaining
-                setTimeout(() => {
                 html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
                     const totalPages = pdf.internal.getNumberOfPages();
                     const pageWidth = pdf.internal.pageSize.getWidth();
@@ -1592,7 +1605,6 @@
                         }
                     }
                 });
-                }, 1000);
             };// --- 3. DUAL-BACKEND SYNC WRAPPER ---
             async function sendResultsToBackend(userData) {
                 console.log("V123: Triggering Dual-Backend Sync...");

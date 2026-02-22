@@ -58,10 +58,11 @@ src = src.replace('<body>', `${alpineInit}\n${universalHeader}`);
 // 3. GATEKEEPER OVERLAY (Alpine version)
 src = src.replace('<div id="accessDeniedOverlay">', '<div id="accessDeniedOverlay" x-show="!enneagramUnlocked" x-cloak>');
 
-// Update HitPay Link in Overlay
-const oldOverlayBtn = '<a href="/assessments" class="btn btn-primary bg-white text-black font-bold">Go to Assessments</a>';
-const newOverlayBtn = '<a href="https://hitpay.app/pay/brkthru" class="btn btn-primary bg-white text-black font-bold">Unlock Access via HitPay</a>';
-src = src.replace(oldOverlayBtn, newOverlayBtn);
+// Update HitPay Link in Overlay - USING ROBUST REGEX REPLACEMENT
+// Matches "Go to Assessments" button regardless of whitespace
+const overlayBtnRegex = /<a href="\/assessments" class="btn btn-primary[^>]*>Go to Assessments<\/a>/;
+const newOverlayBtn = '<a href="checkout.html?item=enneagram" class="btn btn-primary bg-white text-black font-bold">Unlock Access via HitPay</a>';
+src = src.replace(overlayBtnRegex, newOverlayBtn);
 
 // 4. MAIN APP CONTENT (Alpine version)
 src = src.replace('<div id="appContent" class="hidden">', '<div id="appContent" x-show="enneagramUnlocked" x-cloak>');
@@ -82,8 +83,6 @@ const newReturn = '<div class="flex justify-center mt-12"><button id="returnButt
 src = src.replace(oldReturn, newReturn);
 
 // 7. Inject Email Backend Logic (using append approach)
-// We inject a script at the end of the body that defines the backend function
-// AND overwrites the finishButton.onclick handler.
 const backendInjection = `
     <!-- INJECTED BACKEND LOGIC V119 -->
     <script>
@@ -107,7 +106,6 @@ const backendInjection = `
 
             try {
                 // We use no-cors to interact with Apps Script redirection silently
-                // IF successful, Apps Script triggers email.
                 await fetch(url, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -115,7 +113,6 @@ const backendInjection = `
                     body: formData.toString()
                 });
                 console.log("Results synced successfully (BCC enabled).");
-                // Removed alert to keep flow smooth, relying on displayResults
             } catch (e) {
                 console.error("Reporting error:", e);
                 alert("Note: Data reached the gateway, but handshake failed. Please download the PDF manualy if email doesn't arrive.");
@@ -123,15 +120,11 @@ const backendInjection = `
         }
 
         // Override Finish Button Handler safely
-        // We wait for DOMContentLoaded or run immediately if at end of body
         (function() {
             const btn = document.getElementById('finishButton');
             if(btn) {
                 btn.onclick = async () => {
-                    // Recalculate basic scores just in case (safe reuse of existing logic if possible, 
-                    // but since variables are global in start-enneagram, we can reuse logic or copy it)
-                    
-                    // RE-IMPLEMENT SCORING LOGIC HERE TO BE SAFE
+                   // Reuse global variables from original script
                     const fs = {}; for(let i=1; i<=9; i++) fs[i] = 0;
                     userAnswers.forEach((ans, i) => { if(ans !== undefined) questions[i].scoring[ans].forEach(t => fs[t]++); });
                     
@@ -160,8 +153,8 @@ const backendInjection = `
 // Append before body closing tag
 src = src.replace('</body>', `${backendInjection}\n</body>`);
 
-// Cache Busting V119
-src = src.replace('<title>Enneagram Assessment for Leaders</title>', '<title>Enneagram Assessment for Leaders (V119)</title>');
+// Cache Busting V119 - Update Title for Version
+src = src.replace('<title>Enneagram Assessment for Leaders</title>', '<title>Enneagram Assessment for Leaders (V120)</title>');
 
 fs.writeFileSync(targetPath, src, 'utf8');
-console.log("Success: Generated assessments.html with V119 logic (Robust Injection)");
+console.log("Success: Generated assessments.html with V120 logic (Premium Checkout Redirect)");

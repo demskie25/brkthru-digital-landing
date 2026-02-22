@@ -219,6 +219,12 @@ const content = `<!DOCTYPE html>
                 price: 'PHP 359.00', 
                 img: 'https://img-thumb.mailinblue.com/10571077/images/content_library/original/69804bc73dad4cc88c5856e7.jpeg', 
                 link: 'https://hitpay.link/9zlbvf' 
+            },
+            'enneagram': {
+                name: 'Meta-Programs Assessment',
+                price: 'PHP 299.00',
+                img: 'images/maps.jpg', 
+                link: 'https://hitpay.app/pay/brkthru'
             }
         };
         window.onload = () => {
@@ -236,6 +242,7 @@ const content = `<!DOCTYPE html>
     </script>
 </body>
 </html>`;
+
 fs.writeFileSync('checkout.html', content, { encoding: 'utf8' });
 fs.writeFileSync('public/checkout.html', content, { encoding: 'utf8' });
-console.log('SUCCESS: Written premium checkout.html and public/checkout.html as UTF-8');"
+console.log('SUCCESS: Written premium checkout.html and public/checkout.html as UTF-8');

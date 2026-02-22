@@ -2,90 +2,21 @@
 <html lang="en">
 <head>
     
-        <link rel="stylesheet" href="universal-header.css">
-        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-        <style>
-            [x-cloak] { display: none !important; }
-            .backdoor-indicator {
-                position: fixed; top: 0; left: 0; right: 0;
-                background: #4A148C; color: #FFD700; text-align: center;
-                font-size: 10px; font-weight: bold; z-index: 99999;
-                padding: 4px; border-bottom: 2px solid #FFD700;
-            }
-            
-            
-            
-            /* PDF Branding Styles (V123 Fidelity Fix) */
-            .pdf-only { display: none !important; }
-            .pdf-rendering .pdf-only { display: block !important; }
-            .pdf-rendering .no-pdf { display: none !important; }
-            
-            /* Professional Header applied via DOM */
-            .pdf-header {
-                text-align: center;
-                font-size: 16px;
-                color: #4A148C;
-                margin-bottom: 25px;
-                padding-bottom: 12px;
-                border-bottom: 2px solid #e2e8f0;
-                font-weight: bold;
-            }
+    <link rel="stylesheet" href="universal-header.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .backdoor-indicator {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: #4A148C; color: #FFD700; text-align: center;
+            font-size: 10px; font-weight: bold; z-index: 99999;
+            padding: 4px; border-bottom: 2px solid #FFD700;
+        }
+    </style>
 
-            /* Prevention of premature cuts */
-            .pdf-rendering .report-card { 
-                page-break-inside: avoid !important; 
-                margin-bottom: 40px !important;
-                display: block !important; 
-            }
-            .pdf-rendering h1, .pdf-rendering h2, .pdf-rendering h3 { 
-                page-break-after: avoid !important; 
-                page-break-inside: avoid !important;
-            }
-            .pdf-rendering .graph-container {
-                page-break-inside: avoid !important;
-            }
-            
-            /* Explicit Page Breaks */
-            .page-break-before {
-                page-break-before: always !important;
-                clear: both;
-            }
-
-            /* Map Enlarge - FIX for html2canvas SVG dropping */
-            .pdf-rendering #movedSectionsContainer {
-                 page-break-before: always !important;
-            }
-            .pdf-rendering .circular-diagram-container {
-                page-break-before: always !important;
-                padding-top: 60px !important;
-                padding-bottom: 60px !important;
-                display: block !important; /* Flex breaks html2canvas sometimes */
-                text-align: center;
-                width: 100% !important;
-            }
-            .pdf-rendering #enneagramCircleSvg {
-                width: 600px !important; /* EXPLICIT PIXEL WIDTH FOR HTML2CANVAS */
-                height: 600px !important; /* EXPLICIT PIXEL HEIGHT FOR HTML2CANVAS */
-                max-width: none !important;
-                margin: 0 auto !important;
-                display: inline-block;
-            }
-            /* Explicit styles for SVG text to render in canvas */
-            .pdf-rendering .enneagram-node-text {
-                font-family: sans-serif !important;
-                font-size: 16px !important;
-                fill: #fff !important;
-            }
-            .pdf-rendering .wing-indicator-text {
-                font-family: sans-serif !important;
-                font-size: 12px !important;
-                fill: #64748B !important;
-            }
-</style>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enneagram Assessment for Leaders (V123)</title>
+    <title>Enneagram Assessment for Leaders (V119)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- PDF Generation Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -413,36 +344,36 @@
     </style>
 </head>
 <body x-data="{ enneagramUnlocked: new URLSearchParams(window.location.search).get('status') === 'completed', backdoorClicks: 0 }">
-        <div x-show="enneagramUnlocked" x-cloak class="backdoor-indicator uppercase tracking-widest">Master Access: Assessment Unlocked</div>
-    
+    <div x-show="enneagramUnlocked" x-cloak class="backdoor-indicator uppercase tracking-widest">Master Access: Assessment Unlocked</div>
 
-        <!-- UNIVERSAL HEADER -->
-        <nav class="univ-header">
-            <div class="univ-container">
-                <a href="index.html" class="univ-logo">
-                    <img src="images/brkthru-logo2.png" alt="BRKTHRU" class="univ-logo-img">
-                    <span class="univ-logo-accent">DIGITAL</span>
-                </a>
-                <div class="univ-nav">
-                    <a href="index.html" class="univ-nav-item">HOME</a>
-                    <a href="odyssey.html" class="univ-nav-item">OUR ODYSSEY</a>
-                    <a href="assessments.html" class="univ-nav-item active">ASSESSMENTS</a>
-                    <a href="shop.html" class="univ-nav-item">SHOP</a>
-                </div>
-                <div class="univ-utility">
-                    <a href="index.html#tour" class="univ-btn-tour">TOUR 2026</a>
-                </div>
+
+    <!-- UNIVERSAL HEADER -->
+    <nav class="univ-header">
+        <div class="univ-container">
+            <a class='univ-logo' href='/'>
+                <img src="images/brkthru-logo.png" alt="BRKTHRU" class="univ-logo-img">
+                <span class="univ-logo-accent">DIGITAL</span>
+            </a>
+            <div class="univ-nav">
+                <a class='univ-nav-item' href='/'>HOME</a>
+                <a class='univ-nav-item' href='/odyssey'>OUR ODYSSEY</a>
+                <a class='univ-nav-item active' href='/assessments'>ASSESSMENTS</a>
+                <a class='univ-nav-item' href='/shop'>SHOP</a>
             </div>
-        </nav>
-        <div class="univ-spacer"></div>
-    
+            <div class="univ-utility">
+                <a class='univ-btn-tour' href='/#tour'>TOUR 2026</a>
+            </div>
+        </div>
+    </nav>
+    <div class="univ-spacer"></div>
+
 
     <!-- 1. GATEKEEPER OVERLAY -->
     <div id="accessDeniedOverlay" x-show="!enneagramUnlocked" x-cloak>
         <div>
-            <h1 @click="backdoorClicks++; if(backdoorClicks >= 6) { enneagramUnlocked = true; backdoorClicks = 0; }" class="text-4xl font-bold mb-4 cursor-pointer select-none">Access Restricted</h1>
+            <h1 @click="backdoorClicks++; if(backdoorClicks >= 6) { enneagramUnlocked = true; backdoorClicks = 0; }" class="text-4xl font-bold mb-4 cursor-pointer select-none active:scale-95 transition-transform">Access Restricted</h1>
             <p class="text-xl mb-6">Please unlock this assessment via the assessments page.</p>
-            <a href="checkout.html?item=enneagram" class="btn btn-primary bg-white text-black font-bold">Unlock Access via HitPay</a>
+            <a href="https://hitpay.app/pay/brkthru" class="btn btn-primary bg-white text-black font-bold">Unlock Access via HitPay</a>
         </div>
     </div>
 
@@ -567,14 +498,28 @@
             const token = urlParams.get('token');
             const access = urlParams.get('access');
             // Check for access=enneagram or token or localhost
-            if (access === 'enneagram' || token || window.location.hostname === 'localhost' || window.location.hostname.includes('antigravity') || urlParams.get('test') === 'true') {
+            if (access === 'enneagram' || token || window.location.hostname === 'localhost' || window.location.hostname.includes('antigravity')) {
                 document.getElementById('accessDeniedOverlay').classList.add('hidden');
                 document.getElementById('appContent').classList.remove('hidden');
             }
         });
 
         // --- 2. PDF GENERATION LOGIC ---
-        // (Delegated to Premium Engine V124)
+        window.generatePDF = function() {
+            const element = document.getElementById('pdfContentArea');
+            const opt = {
+                margin:       0.3,
+                filename:     'Leadership_Assessment_Report.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            // Temporarily fix height issues for PDF
+            element.style.width = '100%';
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Restore if needed
+            });
+        };
 
         const centersData = {
             "Head": {
@@ -1331,7 +1276,6 @@
         function displayCircularDiagram(p) {
             const svgNS = "http://www.w3.org/2000/svg";
             circularDiagramSvg.innerHTML = '';
-            circularDiagramSvg.setAttribute('viewBox', '0 0 320 320'); // CRITICAL FOR PDF SCALING
             const cx = 160, cy = 160, r = 100, nr = 18;
             const ags = { 9: 90, 1: 50, 2: 10, 3: 330, 4: 290, 5: 250, 6: 210, 7: 170, 8: 130 };
             const pts = {};
@@ -1409,228 +1353,76 @@
         window.onload = () => { document.getElementById('assessmentDate').value = new Date().toLocaleDateString(); };
     </script>
 
-        <!-- V123 RELIABILITY & REPORTING ENGINE -->
-        <script>
-            const BRKTHRU_LOGO_B64 = "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";
-
-            // --- 1. ZERO-HANDSHAKE PABBLY SYNC ---
-            function submitToPabblyHidden(payload) {
-                console.log("V123: Zero-Handshake Pabbly Sync Initiated...");
-                const iframeName = 'pabbly_sync_frame_' + Date.now();
-                const iframe = document.createElement('iframe');
-                iframe.name = iframeName;
-                iframe.style.display = 'none';
-                document.body.appendChild(iframe);
-
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'https://connect.pabbly.com/workflow/sendwebhookdata/IjU3NjcwNTZjMDYzNTA0MzQ1MjZiNTUzNjUxMzYi_pc';
-                form.target = iframeName;
-
-                for (const key in payload) {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    input.value = typeof payload[key] === 'object' ? JSON.stringify(payload[key]) : payload[key];
-                    form.appendChild(input);
+    <!-- INJECTED BACKEND LOGIC V119 -->
+    <script>
+        // Define Backend Sync Function
+        async function sendResultsToBackend(userData) {
+            console.log("Initiating backend sync...");
+            const url = 'https://script.google.com/macros/s/AKfycbxyWY3MHZSKq7jQBqYS6duo2zageOFGendaJbzYEDZn1fs4wCeFy91gt5af0aqqpEq-3A/exec'; 
+            
+            const formData = new URLSearchParams();
+            for (const key in userData) {
+                if (typeof userData[key] === 'object') {
+                    formData.append(key, JSON.stringify(userData[key]));
+                } else {
+                    formData.append(key, userData[key]);
                 }
-
-                document.body.appendChild(form);
-                form.submit();
-                setTimeout(() => {
-                    if(document.body.contains(form)) document.body.removeChild(form);
-                    if(document.body.contains(iframe)) document.body.removeChild(iframe);
-                    console.log("Pabbly Sync Cleanup Complete.");
-                }, 5000);
             }
+            // CRITICAL: Inject BCC to Brkthru Consulting as requested
+            formData.append('bcc', 'brkthru.consulting@gmail.com');
+            formData.append('notification_type', 'enneagram_report_v26');
+            formData.append('project', 'Brkthru Digital V119');
 
-            // --- 2. PREMIUM PDF GENERATION ENGINE ---
-            window.generatePDF = function() {
-                const element = document.getElementById('pdfContentArea');
-                const userName = (participantData && participantData.firstName) ? (participantData.firstName + ' ' + participantData.familyName) : 'Leader';
-                
-                // Activate Rendering Mode
-                element.classList.add('pdf-rendering');
-
-                // DYNAMIC DOM MODIFICATIONS FOR PDF:
-                
-                // Hide ALL giant H1 titles 
-                const h1s = element.querySelectorAll('h1');
-                h1s.forEach(h1 => h1.classList.add('no-pdf'));
-
-                // Insert Professional Header
-                const brandedHeader = document.createElement('div');
-                brandedHeader.className = 'pdf-only pdf-header';
-                brandedHeader.innerHTML = '<strong>Full Enneagram Assessment Report</strong><br>Prepared for: ' + userName + ' | Brkthru Digital V124';
-                element.insertBefore(brandedHeader, element.firstChild);
-
-                // Fix Page Breaks
-                const typeResult = document.getElementById('typeResult');
-                if (typeResult) typeResult.classList.add('page-break-before', 'report-card');
-                
-                const diagramContainer = document.querySelector('.circular-diagram-container');
-                let diagTitle = null;
-                let originalSvgDisplay = '';
-                let tempImg = null;
-                const svg = document.getElementById('enneagramCircleSvg');
-
-                if (diagramContainer) {
-                    diagramContainer.classList.add('page-break-before');
-                    
-                    // Add Title
-                    diagTitle = document.createElement('h2');
-                    diagTitle.className = 'pdf-only text-4xl font-black text-center mb-12';
-                    diagTitle.style.color = '#4A148C';
-                    diagTitle.innerText = "Interconnected Type Map";
-                    diagramContainer.insertBefore(diagTitle, diagramContainer.firstChild);
-                    
-                    if(svg) {
-                        // CRITICAL FIX: html2canvas dropping SVGs entirely.
-                        // Solution: Serialize the dynamic SVG into a static base64 image tag just for the PDF.
-                        
-                        // First, force proper namespaces and styles so the serialized version is self-contained
-                        svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-                        
-                        // Bake the specific CSS into the SVG before serialization so it renders standalone
-                        const styleSheet = document.createElementNS("http://www.w3.org/2000/svg", "style");
-                        styleSheet.textContent = `
-                            .enneagram-outer-path { stroke: #B8860B; stroke-width: 2.5; }
-                            .enneagram-inner-line { stroke: #FFD700; stroke-width: 1.5; opacity: 0.6; }
-                            .enneagram-node-circle.other-type { fill: #FFF8DC; stroke: #000080; }
-                            .enneagram-node-circle.primary-type { fill: #FFD700; stroke: #B8860B; stroke-width: 3; }
-                            .enneagram-node-circle.wing-type { fill: #9ACD32; stroke: #B8860B; }
-                            .enneagram-node-text { font-family: sans-serif; font-size: 16px; fill: #fff; }
-                            .enneagram-node-text.other-type { fill: #000080; }
-                            .wing-indicator-text { font-size: 10px; font-weight: bold; fill: #4A148C; text-anchor: middle; font-family: sans-serif; }
-                        `;
-                        svg.insertBefore(styleSheet, svg.firstChild);
-
-                        // Serialize to string
-                        const serializer = new XMLSerializer();
-                        let source = serializer.serializeToString(svg);
-                        
-                        // Add XML declaration
-                        if(!source.match(/^<\?xml/)){
-                            source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
-                        }
-
-                        // Convert to Base64
-                        const base64EncodedSVG = btoa(unescape(encodeURIComponent(source)));
-                        
-                        // Create replacement Image
-                        tempImg = document.createElement('img');
-                        tempImg.src = 'data:image/svg+xml;base64,' + base64EncodedSVG;
-                        tempImg.style.width = '600px';
-                        tempImg.style.height = '600px';
-                        tempImg.style.display = 'block';
-                        tempImg.style.margin = '0 auto';
-                        
-                        // Swap them
-                        originalSvgDisplay = svg.style.display;
-                        svg.style.display = 'none';
-                        diagramContainer.insertBefore(tempImg, svg);
-                        
-                        // Clean up the stylesheet from the original SVG
-                        svg.removeChild(styleSheet);
-                    }
-                }
-
-                const resultsSectionItems = document.querySelectorAll('.report-card');
-                resultsSectionItems.forEach(el => el.classList.add('html2pdf__page-break-avoid'));
-
-                const opt = {
-                    margin:       [0.5, 0.5, 1.0, 0.5], 
-                    filename:     'Enneagram_Report_' + userName.replace(/\s+/g, '_') + '.pdf',
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { 
-                        scale: 2, 
-                        useCORS: true, 
-                        letterRendering: true, 
-                        scrollY: 0
-                    },
-                    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
-                    pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
-                };
-
-                // Correct Promise Chaining
-                setTimeout(() => {
-                html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
-                    const totalPages = pdf.internal.getNumberOfPages();
-                    const pageWidth = pdf.internal.pageSize.getWidth();
-                    const pageHeight = pdf.internal.pageSize.getHeight();
-                    
-                    for (let i = 1; i <= totalPages; i++) {
-                        pdf.setPage(i);
-                        
-                        pdf.setDrawColor(200);
-                        pdf.setLineWidth(0.02);
-                        pdf.line(0.5, pageHeight - 0.75, pageWidth - 0.5, pageHeight - 0.75);
-                        
-                        try {
-                            const logoDataUri = 'data:image/png;base64,' + BRKTHRU_LOGO_B64;
-                            pdf.addImage(logoDataUri, 'PNG', 0.5, pageHeight - 0.65, 1.2, 0.4);
-                        } catch(e) { console.error("Logo Draw Error", e); }
-                        
-                        pdf.setTextColor(30, 64, 175);
-                        pdf.textWithLink('brkthrucoaching.com', 1.8, pageHeight - 0.45, { url: 'https://brkthrucoaching.com' });
-                        
-                        pdf.setTextColor(100);
-                        pdf.text('Page ' + i + ' of ' + totalPages, pageWidth - 0.5, pageHeight - 0.45, { align: 'right' });
-                    }
-                }).save().then(() => {
-                    element.classList.remove('pdf-rendering');
-                    h1s.forEach(h1 => h1.classList.remove('no-pdf')); // Restore all H1s
-                    if (brandedHeader.parentNode) brandedHeader.parentNode.removeChild(brandedHeader);
-                    if (diagramContainer) {
-                        diagramContainer.classList.remove('page-break-before');
-                        if(diagTitle && diagTitle.parentNode) diagramContainer.removeChild(diagTitle);
-                        if(svg) {
-                            svg.style.display = originalSvgDisplay; // show real svg again
-                        }
-                        if(tempImg && tempImg.parentNode) {
-                            diagramContainer.removeChild(tempImg); // remove static image
-                        }
-                    }
+            try {
+                // We use no-cors to interact with Apps Script redirection silently
+                // IF successful, Apps Script triggers email.
+                await fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
                 });
-                }, 1000);
-            };// --- 3. DUAL-BACKEND SYNC WRAPPER ---
-            async function sendResultsToBackend(userData) {
-                console.log("V123: Triggering Dual-Backend Sync...");
-                const fullName = userData.firstName + ' ' + userData.familyName;
-                const summary = 'Enneagram Results: ' + JSON.stringify(userData.scores);
-
-                const pabblyPayload = {
-                    name: fullName,
-                    email: userData.email,
-                    bcc: 'brkthru.consulting@gmail.com',
-                    company: userData.company || 'N/A',
-                    position: userData.position || 'N/A',
-                    source: 'Enneagram Assessment V123 (Build-Injected)',
-                    message: summary,
-                    raw_data: JSON.stringify(userData)
-                };
-
-                submitToPabblyHidden(pabblyPayload);
-                alert("Results captured! Please download your PDF report below.");
+                console.log("Results synced successfully (BCC enabled).");
+                // Removed alert to keep flow smooth, relying on displayResults
+            } catch (e) {
+                console.error("Reporting error:", e);
+                alert("Note: Data reached the gateway, but handshake failed. Please download the PDF manualy if email doesn't arrive.");
             }
+        }
 
-            // Sync with Finish Button
-            (function() {
-                const poll = setInterval(() => {
-                    const btn = document.getElementById('finishButton');
-                    if(btn) {
-                        btn.onclick = async () => {
-                             const fs = {}; for(let i=1; i<=9; i++) fs[i] = 0;
-                             userAnswers.forEach((ans, i) => { if(ans !== undefined) questions[i].scoring[ans].forEach(t => fs[t]++); });
-                             const reportData = { ...participantData, scores: fs, timestamp: new Date().toISOString() };
-                             await sendResultsToBackend(reportData);
-                             displayResults(fs);
-                        };
-                        clearInterval(poll);
-                    }
-                }, 100);
-            })();
-        </script>
-    
+        // Override Finish Button Handler safely
+        // We wait for DOMContentLoaded or run immediately if at end of body
+        (function() {
+            const btn = document.getElementById('finishButton');
+            if(btn) {
+                btn.onclick = async () => {
+                    // Recalculate basic scores just in case (safe reuse of existing logic if possible, 
+                    // but since variables are global in start-enneagram, we can reuse logic or copy it)
+                    
+                    // RE-IMPLEMENT SCORING LOGIC HERE TO BE SAFE
+                    const fs = {}; for(let i=1; i<=9; i++) fs[i] = 0;
+                    userAnswers.forEach((ans, i) => { if(ans !== undefined) questions[i].scoring[ans].forEach(t => fs[t]++); });
+                    
+                    // Prepare Data for Backend
+                    const reportData = {
+                        ...participantData,
+                        scores: fs,
+                        timestamp: new Date().toISOString(),
+                        source: 'Brkthru Digital Assessments V119'
+                    };
+                    
+                    // Trigger Backend Sync
+                    await sendResultsToBackend(reportData);
+                    
+                    // Call Original Display Logic (defined in previous script)
+                    displayResults(fs);
+                };
+                console.log("Finish Button Logic Updated for V119");
+            } else {
+                console.error("Finish Button not found for V119 injection");
+            }
+        })();
+    </script>
+
 </body>
 </html>
