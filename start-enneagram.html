@@ -1468,22 +1468,26 @@
 
                 // DYNAMIC DOM MODIFICATIONS FOR PDF:
                 
-                // 1. Hide ALL giant H1 titles generically within the content area to be safe
+                // Hide ALL giant H1 titles 
                 const h1s = element.querySelectorAll('h1');
                 h1s.forEach(h1 => h1.classList.add('no-pdf'));
 
-                // 2. Insert Professional Header
+                // Insert Professional Header
                 const brandedHeader = document.createElement('div');
                 brandedHeader.className = 'pdf-only pdf-header';
-                brandedHeader.innerHTML = '<strong>Full Enneagram Assessment Report</strong><br>Prepared for: ' + userName + ' | Brkthru Digital V123';
+                brandedHeader.innerHTML = '<strong>Full Enneagram Assessment Report</strong><br>Prepared for: ' + userName + ' | Brkthru Digital V124';
                 element.insertBefore(brandedHeader, element.firstChild);
 
-                // 3. Fix Page Breaks
+                // Fix Page Breaks
                 const typeResult = document.getElementById('typeResult');
                 if (typeResult) typeResult.classList.add('page-break-before', 'report-card');
                 
                 const diagramContainer = document.querySelector('.circular-diagram-container');
                 let diagTitle = null;
+                let originalSvgDisplay = '';
+                let tempImg = null;
+                const svg = document.getElementById('enneagramCircleSvg');
+
                 if (diagramContainer) {
                     diagramContainer.classList.add('page-break-before');
                     
@@ -1494,13 +1498,54 @@
                     diagTitle.innerText = "Interconnected Type Map";
                     diagramContainer.insertBefore(diagTitle, diagramContainer.firstChild);
                     
-                    // CRITICAL FIX FOR HTML2CANVAS SVG BLANKING:
-                    // Force the SVG to have explicit pixel dimensions and viewBox right before render
-                    const svg = document.getElementById('enneagramCircleSvg');
                     if(svg) {
-                        svg.setAttribute('width', '600');
-                        svg.setAttribute('height', '600');
-                        svg.setAttribute('viewBox', '0 0 320 320'); // The original coords used cx=160 cy=160 r=100
+                        // CRITICAL FIX: html2canvas dropping SVGs entirely.
+                        // Solution: Serialize the dynamic SVG into a static base64 image tag just for the PDF.
+                        
+                        // First, force proper namespaces and styles so the serialized version is self-contained
+                        svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                        
+                        // Bake the specific CSS into the SVG before serialization so it renders standalone
+                        const styleSheet = document.createElementNS("http://www.w3.org/2000/svg", "style");
+                        styleSheet.textContent = `
+                            .enneagram-outer-path { stroke: #B8860B; stroke-width: 2.5; }
+                            .enneagram-inner-line { stroke: #FFD700; stroke-width: 1.5; opacity: 0.6; }
+                            .enneagram-node-circle.other-type { fill: #FFF8DC; stroke: #000080; }
+                            .enneagram-node-circle.primary-type { fill: #FFD700; stroke: #B8860B; stroke-width: 3; }
+                            .enneagram-node-circle.wing-type { fill: #9ACD32; stroke: #B8860B; }
+                            .enneagram-node-text { font-family: sans-serif; font-size: 16px; fill: #fff; }
+                            .enneagram-node-text.other-type { fill: #000080; }
+                            .wing-indicator-text { font-size: 10px; font-weight: bold; fill: #4A148C; text-anchor: middle; font-family: sans-serif; }
+                        `;
+                        svg.insertBefore(styleSheet, svg.firstChild);
+
+                        // Serialize to string
+                        const serializer = new XMLSerializer();
+                        let source = serializer.serializeToString(svg);
+                        
+                        // Add XML declaration
+                        if(!source.match(/^<\?xml/)){
+                            source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+                        }
+
+                        // Convert to Base64
+                        const base64EncodedSVG = btoa(unescape(encodeURIComponent(source)));
+                        
+                        // Create replacement Image
+                        tempImg = document.createElement('img');
+                        tempImg.src = 'data:image/svg+xml;base64,' + base64EncodedSVG;
+                        tempImg.style.width = '600px';
+                        tempImg.style.height = '600px';
+                        tempImg.style.display = 'block';
+                        tempImg.style.margin = '0 auto';
+                        
+                        // Swap them
+                        originalSvgDisplay = svg.style.display;
+                        svg.style.display = 'none';
+                        diagramContainer.insertBefore(tempImg, svg);
+                        
+                        // Clean up the stylesheet from the original SVG
+                        svg.removeChild(styleSheet);
                     }
                 }
 
@@ -1515,15 +1560,14 @@
                         scale: 2, 
                         useCORS: true, 
                         letterRendering: true, 
-                        scrollY: 0,
-                        foreignObjectRendering: false // sometimes SVG fails with this
+                        scrollY: 0
                     },
                     jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
                     pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
                 };
 
-                let worker = html2pdf().set(opt).from(element);
-                worker.toPdf().get('pdf').then(function(pdf) {
+                // Correct Promise Chaining
+                html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
                     const totalPages = pdf.internal.getNumberOfPages();
                     const pageWidth = pdf.internal.pageSize.getWidth();
                     const pageHeight = pdf.internal.pageSize.getHeight();
@@ -1546,25 +1590,22 @@
                         pdf.setTextColor(100);
                         pdf.text('Page ' + i + ' of ' + totalPages, pageWidth - 0.5, pageHeight - 0.45, { align: 'right' });
                     }
-                }).then(function() {
-                    worker.save().then(() => {
-                        element.classList.remove('pdf-rendering');
-                        h1s.forEach(h1 => h1.classList.remove('no-pdf')); // Restore all H1s
-                        if (brandedHeader.parentNode) brandedHeader.parentNode.removeChild(brandedHeader);
-                        if (diagramContainer && diagTitle) {
-                            diagramContainer.classList.remove('page-break-before');
-                            diagramContainer.removeChild(diagTitle);
-                            // Cleanup SVG explicit attrs
-                            const svg = document.getElementById('enneagramCircleSvg');
-                            if(svg) {
-                                svg.removeAttribute('width');
-                                svg.removeAttribute('height');
-                            }
+                }).save().then(() => {
+                    element.classList.remove('pdf-rendering');
+                    h1s.forEach(h1 => h1.classList.remove('no-pdf')); // Restore all H1s
+                    if (brandedHeader.parentNode) brandedHeader.parentNode.removeChild(brandedHeader);
+                    if (diagramContainer) {
+                        diagramContainer.classList.remove('page-break-before');
+                        if(diagTitle && diagTitle.parentNode) diagramContainer.removeChild(diagTitle);
+                        if(svg) {
+                            svg.style.display = originalSvgDisplay; // show real svg again
                         }
-                    });
+                        if(tempImg && tempImg.parentNode) {
+                            diagramContainer.removeChild(tempImg); // remove static image
+                        }
+                    }
                 });
-            };
-// --- 3. DUAL-BACKEND SYNC WRAPPER ---
+            };// --- 3. DUAL-BACKEND SYNC WRAPPER ---
             async function sendResultsToBackend(userData) {
                 console.log("V123: Triggering Dual-Backend Sync...");
                 const fullName = userData.firstName + ' ' + userData.familyName;
