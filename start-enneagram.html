@@ -420,7 +420,7 @@
         <nav class="univ-header">
             <div class="univ-container">
                 <a href="index.html" class="univ-logo">
-                    <img src="images/brkthru-logo.png" alt="BRKTHRU" class="univ-logo-img">
+                    <img src="images/brkthru-logo2.png" alt="BRKTHRU" class="univ-logo-img">
                     <span class="univ-logo-accent">DIGITAL</span>
                 </a>
                 <div class="univ-nav">
@@ -1553,6 +1553,7 @@
                 };
 
                 // Correct Promise Chaining
+                setTimeout(() => {
                 html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
                     const totalPages = pdf.internal.getNumberOfPages();
                     const pageWidth = pdf.internal.pageSize.getWidth();
@@ -1591,6 +1592,7 @@
                         }
                     }
                 });
+                }, 1000);
             };// --- 3. DUAL-BACKEND SYNC WRAPPER ---
             async function sendResultsToBackend(userData) {
                 console.log("V123: Triggering Dual-Backend Sync...");
