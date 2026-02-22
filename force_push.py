@@ -1,20 +1,30 @@
+import os
 import subprocess
-import sys
+import time
 
 def run_cmd(cmd):
     print(f"Running: {' '.join(cmd)}")
     result = subprocess.run(cmd, capture_output=True, text=True)
-    print(f"STDOUT: {result.stdout}")
-    print(f"STDERR: {result.stderr}")
-    print(f"RETURN CODE: {result.returncode}")
-    return result.returncode
+    if result.returncode != 0:
+        print(f"Error executing command: {result.stderr}")
+    else:
+        print(result.stdout)
 
-# Force push master to main
-rc1 = run_cmd(['git', 'push', '-f', 'origin', 'master:main'])
+def force_push():
+    lock_file = os.path.join(".git", "index.lock")
+    if os.path.exists(lock_file):
+        print(f"Found lock file {lock_file}, removing...")
+        try:
+            os.remove(lock_file)
+        except Exception as e:
+            print(f"Could not remove lock file: {e}")
 
-# Force push master
-rc2 = run_cmd(['git', 'push', '-f', 'origin', 'master'])
+    run_cmd(["git", "add", "."])
+    time.sleep(1)
+    run_cmd(["git", "commit", "-m", "V114: Logo and Graph Fix"])
+    time.sleep(1)
+    run_cmd(["git", "push", "origin", "master:main", "--force"])
+    print("Deployment script finished")
 
-print(f"\n=== FINAL STATUS ===")
-print(f"master:main push: {'SUCCESS' if rc1 == 0 else 'FAILED'}")
-print(f"master push: {'SUCCESS' if rc2 == 0 else 'FAILED'}")
+if __name__ == "__main__":
+    force_push()
