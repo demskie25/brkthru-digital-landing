@@ -574,21 +574,7 @@
         });
 
         // --- 2. PDF GENERATION LOGIC ---
-        window.generatePDF = function() {
-            const element = document.getElementById('pdfContentArea');
-            const opt = {
-                margin:       0.3,
-                filename:     'Leadership_Assessment_Report.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            // Temporarily fix height issues for PDF
-            element.style.width = '100%';
-            html2pdf().set(opt).from(element).save().then(() => {
-                // Restore if needed
-            });
-        };
+        // (Delegated to Premium Engine V124)
 
         const centersData = {
             "Head": {
