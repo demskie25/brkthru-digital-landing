@@ -1,0 +1,9 @@
+--- DEPLOY LOG ---
+Executing: git add assessments.html start-enneagram.html
+STDOUT: 
+Executing: git commit -m "FIX: Enneagram PDF generation - brkthru-logo2 and SVG loading"
+FAILED: Command failed: git commit -m "FIX: Enneagram PDF generation - brkthru-logo2 and SVG loading"
+STDERR: 
+Executing: git push origin master:main --force
+STDOUT: 
+--- DEPLOY FINISHED ---
