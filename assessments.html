@@ -1616,7 +1616,7 @@
             };
             // --- 3. DUAL-BACKEND SYNC WRAPPER ---
                                     async function sendResultsToBackend(userData) {
-                console.log("V127: Triggering Dual-Backend Sync (Fetch)...");
+                console.log("V128: Triggering Dual-Backend Sync (Fetch)...");
                 const googleUrl = 'https://script.google.com/macros/s/AKfycbxyWY3MHZSKq7jQBqYS6duo2zageOFGendaJbzYEDZn1fs4wCeFy91gt5af0aqqpEq-3A/exec';
                 const pabblyUrl = 'https://connect.pabbly.com/workflow/sendwebhookdata/IjU3NjcwNTZjMDYzNTA0MzQ1MjZiNTUzNjUxMzYi_pc';
                 
@@ -1644,7 +1644,7 @@
                     bcc: 'brkthru.consulting@gmail.com',
                     company: userData.company || 'N/A',
                     position: userData.position || 'N/A',
-                    source: 'Enneagram Assessment V127 (Dual-Sync)',
+                    source: 'Enneagram Assessment V128 (Dual-Sync)',
                     message: "ENNEAGRAM LEADERSHIP PROFILE\n---------------------------\nName: " + fullName + "\nPrimary Type: " + topTypeName + "\n\nScore Breakdown:\n" + Object.entries(scores).map(([t, s]) => "Type " + t + ": " + s).join("\n") + "\n\nThe full PDF report is available for download on the assessment page.",
                     raw_data: JSON.stringify(userData)
                 };
@@ -1654,11 +1654,11 @@
                 for (const key in pabblyPayload) {
                     googleFormData.append(key, pabblyPayload[key]);
                 }
-                googleFormData.append('notification_type', 'enneagram_report_v127');
-                googleFormData.append('project', 'Brkthru Digital V127');
+                googleFormData.append('notification_type', 'enneagram_report_v128');
+                googleFormData.append('project', 'Brkthru Digital V128');
 
                 try {
-                    console.log("V127: Dispatching Dual-Reports...");
+                    console.log("V128: Dispatching Dual-Reports...");
                     // 1. Send to Pabbly via fetch (No-CORS)
                     fetch(pabblyUrl, {
                         method: 'POST',
@@ -1675,14 +1675,14 @@
                         body: googleFormData.toString()
                     });
 
-                    console.log("V127: Dual-Sync Successful.");
+                    console.log("V128: Dual-Sync Successful.");
                     alert("Results captured! A profile summary has been sent to your email and our consulting team.");
                 } catch (e) {
-                    console.error("V127 Sync Error:", e);
+                    console.error("V128 Sync Error:", e);
                     alert("Note: Data reached the gateway, but confirmation failed. Please download your PDF manually if the email doesn't arrive.");
                 }
             } catch (e) {
-                    console.error("V127 Sync Error:", e);
+                    console.error("V128 Sync Error:", e);
                     alert("Note: Data reached the gateway, but confirmation failed. Please download your PDF manually if the email doesn't arrive.");
                 }
             }

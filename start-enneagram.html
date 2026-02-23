@@ -1600,7 +1600,7 @@
                 });
             };// --- 3. DUAL-BACKEND SYNC WRAPPER ---
             async function sendResultsToBackend(userData) {
-                console.log("V123: Triggering Dual-Backend Sync...");
+                console.log("V128: Triggering Dual-Backend Sync...");
                 const fullName = userData.firstName + ' ' + userData.familyName;
                 
                 // Enhanced Enneagram Summary Logic
@@ -1629,7 +1629,7 @@
                     bcc: 'brkthru.consulting@gmail.com',
                     company: userData.company || 'N/A',
                     position: userData.position || 'N/A',
-                    source: 'Enneagram Assessment V123 (Enhanced Reporting)',
+                    source: 'Enneagram Assessment V128 (Enhanced Reporting)',
                     message: "ENNEAGRAM LEADERSHIP PROFILE\n" +
                              "---------------------------\n" +
                              "Name: " + fullName + "\n" +
@@ -1646,7 +1646,7 @@
                 googlePayload.append('company', userData.company || 'N/A');
                 googlePayload.append('position', userData.position || 'N/A');
                 googlePayload.append('summary', summary);
-                googlePayload.append('source', 'Enneagram Assessment V123');
+                googlePayload.append('source', 'Enneagram Assessment V128');
 
                 // Dual-Backend Sync Logic
                 try {
@@ -1656,7 +1656,7 @@
                         mode: 'no-cors',
                         body: new URLSearchParams(pabblyPayload)
                     });
-                    console.log("V123: Pabbly Sync Initiated.");
+                    console.log("V128: Pabbly Sync Initiated.");
 
                     // 2. Send to Google Apps Script
                     fetch('https://script.google.com/macros/s/AKfycbxyWY3MHZSKq7jQBqYS6duo2zageOFGendaJbzYEDZn1fs4wCeFy91gt5af0aqqpEq-3A/exec', {
@@ -1664,7 +1664,7 @@
                         mode: 'no-cors',
                         body: googlePayload
                     });
-                    console.log("V123: Google Script Sync Initiated.");
+                    console.log("V128: Google Script Sync Initiated.");
 
                     alert("Results captured! A profile summary has been sent to your email and our consulting team.");
                 } catch (e) {
