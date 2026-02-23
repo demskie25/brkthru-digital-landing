@@ -1493,7 +1493,7 @@
                             
                             // Bake the specific CSS into the SVG before serialization so it renders standalone
                             const styleSheet = document.createElementNS("http://www.w3.org/2000/svg", "style");
-                            styleSheet.textContent = \`
+                            styleSheet.textContent = `
                                 .enneagram-outer-path { stroke: #B8860B; stroke-width: 3.0; fill: none; }
                                 .enneagram-inner-line { stroke: #FFD700; stroke-width: 2.0; opacity: 0.8; fill: none; }
                                 .enneagram-node-circle.other-type { fill: #FFF8DC; stroke: #000080; stroke-width: 2; }
@@ -1502,7 +1502,7 @@
                                 .enneagram-node-text { font-family: sans-serif; font-size: 16px; fill: #fff; font-weight: bold; }
                                 .enneagram-node-text.other-type { fill: #000080; }
                                 .wing-indicator-text { font-size: 10px; font-weight: bold; fill: #4A148C; text-anchor: middle; font-family: sans-serif; }
-                            \`;
+                            `;
                             svg.insertBefore(styleSheet, svg.firstChild);
 
                             // Serialize to string
@@ -1510,7 +1510,7 @@
                             let source = serializer.serializeToString(svg);
                             
                             // Add XML declaration
-                            if(!source.match(/^<\\?xml/)){
+                            if(!source.match(/^<\?xml/)){
                                 source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
                             }
 
