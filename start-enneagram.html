@@ -1479,17 +1479,14 @@
                 if (diagramContainer) {
                     diagramContainer.classList.add('page-break-before');
                     
-                    // Add Title
-                    diagTitle = document.createElement('h2');
-                    diagTitle.className = 'pdf-only text-4xl font-black text-center mb-12';
-                    diagTitle.style.color = '#4A148C';
-                    diagTitle.innerText = "Interconnected Type Map";
-                    diagramContainer.insertBefore(diagTitle, diagramContainer.firstChild);
+                    // Duplicate title logic removed.
                     
                     if(svg) {
                         svgPromise = new Promise((resolve) => {
                             // First, force proper namespaces and styles so the serialized version is self-contained
                             svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                            svg.setAttribute('width', '600');
+                            svg.setAttribute('height', '600');
                             
                             // Bake the specific CSS into the SVG before serialization so it renders standalone
                             const styleSheet = document.createElementNS("http://www.w3.org/2000/svg", "style");
