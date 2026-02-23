@@ -61,7 +61,7 @@ def final_assembly():
     
     # Update HitPay Link in Overlay
     old_overlay_btn = '<a href="/assessments" class="btn btn-primary bg-white text-black font-bold">Go to Assessments</a>'
-    new_overlay_btn = '<a href="https://hitpay.app/pay/brkthru" class="btn btn-primary bg-white text-black font-bold">Unlock Access via HitPay</a>'
+    new_overlay_btn = '<a href="enneagram-gateway.html" class="btn btn-primary bg-white text-black font-bold">Unlock Access via HitPay</a>'
     src = src.replace(old_overlay_btn, new_overlay_btn)
 
     # 4. MAIN APP CONTENT (Alpine version)

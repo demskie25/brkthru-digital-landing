@@ -61,7 +61,7 @@ src = src.replace('<div id="accessDeniedOverlay">', '<div id="accessDeniedOverla
 // Update HitPay Link in Overlay - USING ROBUST REGEX REPLACEMENT
 // Matches "Go to Assessments" button regardless of whitespace
 const overlayBtnRegex = /<a href="\/assessments" class="btn btn-primary[^>]*>Go to Assessments<\/a>/;
-const newOverlayBtn = '<a href="checkout.html?item=enneagram" class="btn btn-primary bg-white text-black font-bold">Unlock Access via HitPay</a>';
+const newOverlayBtn = '<a href="enneagram-gateway.html" class="btn btn-primary bg-white text-black font-bold">Unlock Access via HitPay</a>';
 src = src.replace(overlayBtnRegex, newOverlayBtn);
 
 // 4. MAIN APP CONTENT (Alpine version)
