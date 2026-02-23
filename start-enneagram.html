@@ -1599,7 +1599,7 @@
                     });
                 });
             };// --- 3. DUAL-BACKEND SYNC WRAPPER ---
-                        async function sendResultsToBackend(userData) {
+            async function sendResultsToBackend(userData) {
                 console.log("V123: Triggering Dual-Backend Sync...");
                 const fullName = userData.firstName + ' ' + userData.familyName;
                 
@@ -1640,8 +1640,36 @@
                     raw_data: JSON.stringify(userData)
                 };
 
-                submitToPabblyHidden(pabblyPayload);
-                alert("Results captured! A profile summary has been sent to your email and our consulting team.");
+                const googlePayload = new URLSearchParams();
+                googlePayload.append('name', fullName);
+                googlePayload.append('email', userData.email);
+                googlePayload.append('company', userData.company || 'N/A');
+                googlePayload.append('position', userData.position || 'N/A');
+                googlePayload.append('summary', summary);
+                googlePayload.append('source', 'Enneagram Assessment V123');
+
+                // Dual-Backend Sync Logic
+                try {
+                    // 1. Send to Pabbly
+                    fetch('https://connect.pabbly.com/workflow/sendwebhookdata/IjU3NjcwNTZjMDYzNTA0MzQ1MjZiNTUzNjUxMzYi_pc', {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: new URLSearchParams(pabblyPayload)
+                    });
+                    console.log("V123: Pabbly Sync Initiated.");
+
+                    // 2. Send to Google Apps Script
+                    fetch('https://script.google.com/macros/s/AKfycbxyWY3MHZSKq7jQBqYS6duo2zageOFGendaJbzYEDZn1fs4wCeFy91gt5af0aqqpEq-3A/exec', {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: googlePayload
+                    });
+                    console.log("V123: Google Script Sync Initiated.");
+
+                    alert("Results captured! A profile summary has been sent to your email and our consulting team.");
+                } catch (e) {
+                    console.error("Sync Error:", e);
+                }
             }
 
             // Sync with Finish Button
