@@ -409,7 +409,8 @@
             border-bottom: 1px dotted #d1d5db;
             padding-bottom: 0.5rem;
         }
-    </style>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">emailjs.init("-ZAD0vH8aSbV_LlpW");</script>
 </head>
 <body x-data="{ enneagramUnlocked: new URLSearchParams(window.location.search).get('status') === 'completed' || new URLSearchParams(window.location.search).get('access') === 'enneagram' || new URLSearchParams(window.location.search).get('test') === 'true', backdoorClicks: 0 }">
         <div x-show="enneagramUnlocked" x-cloak class="backdoor-indicator uppercase tracking-widest">Master Access: Assessment Unlocked</div>
@@ -1576,25 +1577,27 @@
                             a.click();
                             document.body.removeChild(a);
                             
-                            // 2. Find the user's email from the input form (Fallback to default if empty)
-                            const userEmailField = document.querySelector('input[type="email"]');
+                            // 2. Find the user's email (ID: email)
+                            const userEmailField = document.getElementById('email');
                             const userEmail = userEmailField && userEmailField.value ? userEmailField.value : 'no-reply@brkthru.com';
                             
-                            // 3. Prepare the email package
-                            const formData = new FormData();
-                            formData.append('_subject', 'Your Enneagram Assessment Results');
-                            formData.append('email', userEmail); // Sends to user
-                            formData.append('_cc', 'brkthru.consulting@gmail.com'); // Copies you
-                            formData.append('attachment', pdfBlob, 'Enneagram-Report.pdf'); // Attaches the PDF
-                            
-                            // 4. Send via FormSubmit API
-                            fetch('https://formsubmit.co/ajax/brkthru.consulting@gmail.com', {
-                                method: 'POST',
-                                body: formData
-                            })
-                            .then(response => response.json())
-                            .then(data => console.log("Email routed successfully!"))
-                            .catch(error => console.error("Email routing failed", error));
+                            // 3. Convert PDF to Base64 and send via EmailJS
+                            const reader = new FileReader();
+                            reader.readAsDataURL(pdfBlob);
+                            reader.onloadend = function() {
+                                const base64data = reader.result.split(',')[1];
+                                const templateParams = {
+                                    to_email: userEmail,
+                                    attachment: base64data
+                                };
+
+                                emailjs.send('service_c2k8v3l', 'template_enneagram_resul', templateParams)
+                                    .then(function(response) {
+                                        console.log("Email sent successfully via EmailJS!", response.status, response.text);
+                                    }, function(error) {
+                                        console.error("EmailJS failed to send", error);
+                                    });
+                            };
                             
                             element.classList.remove('pdf-rendering');
                             h1s.forEach(h1 => h1.classList.remove('no-pdf'));
