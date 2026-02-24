@@ -1,0 +1,480 @@
+--- Match for generatePDF at 26202 ---
+full md:w-auto mt-6 text-2xl px-12 py-5 shadow-2xl">Generate Detailed Report</button> 
+                 </div>
+            </div>
+
+            <!-- RESULTS SECTION (To be Printed to PDF) -->
+            <div id="resultsSection" class="hidden">
+                 <!-- PDF Download Button -->
+                 <div class="flex justify-between items-center mb-8 no-print">
+                    <h1 class="text-3xl font-black text-gold-main">Full Report Generated</h1>
+                    <button onclick="generatePDF()" class="btn btn-secondary text-lg">Download PDF</button>
+                </div>
+                
+                <div id="pdfContentArea">
+                    <h1 class="text-5xl font-black text-center mb-10 text-gold-main tracking-tight">Full Leadership Intelligence Report</h1>
+                    
+                    <!-- INTRODUCTORY REPORT SECTIONS -->
+                    <div id="introReportContent"></div>
+
+                    <div id="participantSummary" class="report-card text-lg"></div>
+                    <div id="typeResult" class="report-card border-l-8 border-chartreuse-bright bg-aubergine/10"></div>
+
+                    <div class="graph-container">
+                        <h3 class="text-3xl font-bold text-aubergine mb-8 text-center">Your Enneagram Score Distribution</h3>
+                        <div id="barChart" class="bar-chart"></div>
+                        <!-- Reference Guide will be inserted here dynamically -->
+                    </div>
+
+                    <div class="circular-diagram-container">
+                        <h3 class="text-3xl font-bold text-aubergine mb-8 text-center">Interconnected Type Map</h3>
+                        <svg id="enneagramCircleSvg" viewBox="0 0 320 360" class="mx-auto w-full max-w-md h-auto"></svg> 
+                        <div class="mt-6 flex justify-center gap-8 text-sm font-bold">
+                            <span class="flex items-center"><span class="w-4 h-4 bg-[#22C55E] rounded-full mr-2"></span> Growth Path</span>
+                            <span class="flex items-center"><span class="w-4 h-4 bg-[#EF4444] rounded-full mr-2"></span> Stress Path</span>
+                            <span class="flex items-center"><span class="w-4 h-4 bg-[#ADFF2F] rounded-full mr-2"></span> Wings</span>
+                        </div>
+                    </div>
+                    
+                    <!-- MOVED SECTIONS WILL APPEAR HERE -->
+                    <div id="movedSectionsContainer"></div>
+
+         
+--------------------------------------------------------------------------------
+--- Match for generatePDF at 5788598 ---
+WPLk+VFzoWy+ZaW3e0d6MdY9/GNGXmz88790B+MojlTowMyJ/2z8cyqD6HpP/Hht/fULXuwodpAQ9eo+hXxtHJYFWV7U/v0yla5Hhpgw6tEkAdrszE51QlR24DYh72iWjGwD67j+I1s3cUGMbsa6+qarjH2dlJJQDg2cwZhzVaVWm2OZVv5MrEDt38Zu+LQwfB0vBnxWU1FQPKFmmPKHt70342S48bUJwg/pGQSuYc31ggM/nXYn5nWfwEFH7pmowUXlYzlnA1DEzDl2Umz66nGIgbLCSsyA61Wc4PesTUTHfMSysRvrjayYgjs+S6zb4+faTL3T/7oqWoxJzIwXkTjVVibFQ7EYcx9me1tA4dtWSl37XnjTc4QnH9+fPn/y6j/d2f4rOgAAAAAElFTkSuQmCC";
+                        // --- 2. PREMIUM PDF GENERATION ENGINE ---
+            window.generatePDF = function() {
+                const element = document.getElementById('pdfContentArea');
+                const userName = (participantData && participantData.firstName) ? (participantData.firstName + ' ' + participantData.familyName) : 'Leader';
+                
+                // Activate Rendering Mode
+                element.classList.add('pdf-rendering');
+
+                // DYNAMIC DOM MODIFICATIONS FOR PDF:
+                
+                // Hide ALL giant H1 titles 
+                const h1s = element.querySelectorAll('h1');
+                h1s.forEach(h1 => h1.classList.add('no-pdf'));
+
+                // Insert Professional Header
+                const brandedHeader = document.createElement('div');
+                brandedHeader.className = 'pdf-only pdf-header';
+                brandedHeader.innerHTML = '<strong>Full Enneagram Assessment Report</strong><br>Prepared for: ' + userName + ' | Brkthru Digital V125';
+                element.insertBefore(brandedHeader, element.firstChild);
+
+                // Fix Page Breaks
+                const typeResult = document.getElementById('typeResult');
+                if (typeResult) typeResult.classList.add('page-break-before', 'report-card');
+                
+                const diagramContainer = document.querySelector('.circular-diagram-container');
+                let originalSvgDisplay = '';
+                let tempImg = null;
+                const svg = document.getElementById('enneagramCircleSvg');
+
+                if (diagramContainer) {
+                    diagramContainer.classList.add('page-break-before');
+                    
+                    if(svg) {
+                        svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                        
+                        const styleSheet = document.createElementNS("http://www.w3.org/2000/svg", "style");
+                        styleSheet.textContent = `
+                            .enneagram-outer-path { stroke: #B8860B; stroke-
+--------------------------------------------------------------------------------
+--- Match for html2pdf at 3688 ---
+g .wing-indicator-text {
+                font-family: sans-serif !important;
+                font-size: 12px !important;
+                fill: #64748B !important;
+            }
+</style>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enneagram Assessment for Leaders (V123)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PDF Generation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // --- PASTE YOUR FIREBASE CONFIG HERE ---
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make db available globally
+        window.saveToFirebase = async (data) => {
+            try {
+                await addDoc(collection(db, "enneagram_submissions"), {
+                    ...data,
+                    timestamp: serverTimestamp()
+                });
+                console.log("Saved to Firebase");
+            } catch(e) { console.error("Firebase Error", e); }
+        };
+    </script>
+    <style>
+        /* Theme Colors */
+        :root {
+            --aubergine: #4A148C;
+            --chartreuse-bright: #ADFF2F;
+            --chartreuse-muted: #9ACD32;
+            --gold-main: #FFD700;
+            --gold-light: #FFF8DC;
+            --gold-dark: #B8860B;
+            --royal-navy: #000080;
+            --text-on-dark: var(--gold-light);
+            --text-on-light: var(--royal-navy);
+            --container-bg: var(--aubergine);
+            --page-bg: #fdfbf6;
+            --section-bg: #ffffff;
+            --input-border: var(--gold-dark);
+            --ai-section-bg: #eef2ff;
+            --ai-text-color: #312e81;
+      
+--------------------------------------------------------------------------------
+--- Match for html2pdf at 3707 ---
+ext {
+                font-family: sans-serif !important;
+                font-size: 12px !important;
+                fill: #64748B !important;
+            }
+</style>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enneagram Assessment for Leaders (V123)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PDF Generation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // --- PASTE YOUR FIREBASE CONFIG HERE ---
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make db available globally
+        window.saveToFirebase = async (data) => {
+            try {
+                await addDoc(collection(db, "enneagram_submissions"), {
+                    ...data,
+                    timestamp: serverTimestamp()
+                });
+                console.log("Saved to Firebase");
+            } catch(e) { console.error("Firebase Error", e); }
+        };
+    </script>
+    <style>
+        /* Theme Colors */
+        :root {
+            --aubergine: #4A148C;
+            --chartreuse-bright: #ADFF2F;
+            --chartreuse-muted: #9ACD32;
+            --gold-main: #FFD700;
+            --gold-light: #FFF8DC;
+            --gold-dark: #B8860B;
+            --royal-navy: #000080;
+            --text-on-dark: var(--gold-light);
+            --text-on-light: var(--royal-navy);
+            --container-bg: var(--aubergine);
+            --page-bg: #fdfbf6;
+            --section-bg: #ffffff;
+            --input-border: var(--gold-dark);
+            --ai-section-bg: #eef2ff;
+            --ai-text-color: #312e81;
+            --red-flag: #
+--------------------------------------------------------------------------------
+--- Match for html2pdf at 5792796 ---
+         originalSvgDisplay = svg.style.display;
+                        svg.style.display = 'none';
+                        diagramContainer.insertBefore(tempImg, svg);
+                        
+                        svg.removeChild(styleSheet);
+                    }
+                }
+
+                const executePdf = function() {
+                    const resultsSectionItems = document.querySelectorAll('.report-card');
+                    resultsSectionItems.forEach(el => el.classList.add('html2pdf__page-break-avoid'));
+
+                    const opt = {
+                        margin:       [0.5, 0.5, 1.0, 0.5], 
+                        filename:     'Enneagram_Report_' + userName.replace(/\s+/g, '_') + '.pdf',
+                        image:        { type: 'jpeg', quality: 0.98 },
+                        html2canvas:  { 
+                            scale: 2, 
+                            useCORS: true, 
+                            letterRendering: true, 
+                            scrollY: 0
+                        },
+                        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
+                        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+                    };
+
+                    html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
+                        const totalPages = pdf.internal.getNumberOfPages();
+                        const pageWidth = pdf.internal.pageSize.getWidth();
+                        const pageHeight = pdf.internal.pageSize.getHeight();
+                        
+                        for (let i = 1; i <= totalPages; i++) {
+                            pdf.setPage(i);
+                            
+                            pdf.setDrawColor(200);
+                            pdf.setLineWidth(0.02);
+                            pdf.line(0.5, pageHeight - 0.75, pageWidth - 0.5, pageHeight - 0.75);
+                            
+                            try {
+                                const logoDataUri = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAlgAAADRCAYAAAAQRszlAAAAAXNSR0IArs4c6QAAIABJREFUeF7sfQdgVFX2/rmvTC/pvSeEUJMQAiRACB3WRbEEEbtrXXuvu0bXte26unaw4VpXRKRZVkVsi4ooIkgv6X2S6TOv3f//3jcTWX+4C0pigDsuO0nmzXv3fu/Om++d853vIGAPhgBDgCHAEGAIMAQYAgyBw4oAOqx7YztjCAxsBMh6xwN7iGx0DAGGAEOAIXA0IDAQCBb70jsaVtLAmcNPrSe2zgbOOWIjYQgwBBgCRz0C/U2wUG11NQ/V1Vptba121KPLJvhrIhBd2/tHrBjJ+jXPCDs2Q4AhwBA4hhDoN4J1VfU5MR7w3phfWFi0b9fez5EVPbNo5SudxxDWbKq/AgIXll0o+lKabLLfIi9Zu8T
+--------------------------------------------------------------------------------
+--- Match for html2pdf at 5793556 ---
+     { type: 'jpeg', quality: 0.98 },
+                        html2canvas:  { 
+                            scale: 2, 
+                            useCORS: true, 
+                            letterRendering: true, 
+                            scrollY: 0
+                        },
+                        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
+                        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+                    };
+
+                    html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
+                        const totalPages = pdf.internal.getNumberOfPages();
+                        const pageWidth = pdf.internal.pageSize.getWidth();
+                        const pageHeight = pdf.internal.pageSize.getHeight();
+                        
+                        for (let i = 1; i <= totalPages; i++) {
+                            pdf.setPage(i);
+                            
+                            pdf.setDrawColor(200);
+                            pdf.setLineWidth(0.02);
+                            pdf.line(0.5, pageHeight - 0.75, pageWidth - 0.5, pageHeight - 0.75);
+                            
+                            try {
+                                const logoDataUri = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAlgAAADRCAYAAAAQRszlAAAAAXNSR0IArs4c6QAAIABJREFUeF7sfQdgVFX2/rmvTC/pvSeEUJMQAiRACB3WRbEEEbtrXXuvu0bXte26unaw4VpXRKRZVkVsi4ooIkgv6X2S6TOv3f//3jcTWX+4C0pigDsuO0nmzXv3fu/Om++d853vIGAPhgBDgCHAEGAIMAQYAgyBw4oAOqx7YztjCAxsBMh6xwN7iGx0DAGGAEOAIXA0IDAQCBb70jsaVtLAmcNPrSe2zgbOOWIjYQgwBBgCRz0C/U2wUG11NQ/V1Vptba121KPLJvhrIhBd2/tHrBjJ+jXPCDs2Q4AhwBA4hhDoN4J1VfU5MR7w3phfWFi0b9fez5EVPbNo5SudxxDWbKq/AgIXll0o+lKabLLfIi9Zu8T3KwyBHZIhwBBgCDAEjkEE+pxgYQCEAPDFU2rSv9u5Y/XM38wu3vz9ZslptH8mAr84yWx5vXblosAxiD2b8uFHIBqhQtXV1bwQRvOKhg07xWjgU9Z9vk5KjEu8Z/n7q989/Idle2QIMAQYAgwBhsB/ItDnBCt6uAvH12Rtr9+zMiM9feTkqknw7/VfgDPRqYUCwXcNmvDg399a/D4TILPlebgQqB45NmNHQ93q6TNnjXTabPCvd1fDsKFFX4dl7YJVa979+nAdh+2HIcAQYAgwBBgCB0Kg3wjWueUnZO5q2Lc6Mzl9RGpSCi4eVQLL31qBCkYWgobUbgiqCwXN+Nd7lj3WxU4VQ+CXIjC+uHzY9j17VyfFJ2b7fV6cmpyEU9MSOWesY4Pf4z19yTvvbP+lx2DvZwgwBBgCDAGGwE8h0G8Eq2bob1KaO5pWZaWml6lBmQqPjzv+OPjw4w8gITMJiTYBUhKSP+rucF1X+8KjX0VTi2S7/X9mp5IhcDAIjC8Zd3ZDY+MTMU6nOej3YYfTBjk5GZCRk4naWtvuVg2mO5YsWSIdzL7YNgwBhgBDgCHAEDhUBPqNYJ2YPyOpxdO6PCclfVzYG8SSLwSiKELNafNg3fpPwRxrBmwClJObuyPU5bnsuqcfeO8gJsOqwg4CpGNtk6KiongzMr/Q1tIyOzEhAbu7XZCZngrJaYmQnJGEMGi7uts9J7+yYsWmYw0bNl+GAEOAIcAQ6B8E+o1g1RRMTKxzdS3Py8q
+--------------------------------------------------------------------------------
+--- Match for html2pdf at 5949156 ---
+         
+                            pdf.setTextColor(30, 64, 175);
+                            pdf.textWithLink('brkthrucoaching.com', 2.3, pageHeight - 0.45, { url: 'https://brkthrucoaching.com' });
+                            
+                            pdf.setTextColor(100);
+                            pdf.text('Page ' + i + ' of ' + totalPages, pageWidth - 0.5, pageHeight - 0.45, { align: 'right' });
+                        }
+                    setTimeout(() => {
+                        html2pdf().set(opt).from(element).outputPdf('blob').then(function(pdfBlob) {
+                            // 1. Trigger the normal PDF download for the user
+                            const url = URL.createObjectURL(pdfBlob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'Enneagram-Report.pdf';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            
+                            // 2. Find the user's email (ID: email)
+                            const userEmailField = document.getElementById('email');
+                            const userEmail = userEmailField && userEmailField.value ? userEmailField.value : 'no-reply@brkthru.com';
+                            
+                            // 3. Convert PDF to Base64 and send via EmailJS
+                            const reader = new FileReader();
+                            reader.readAsDataURL(pdfBlob);
+                            reader.onloadend = function() {
+                                const base64data = reader.result.split(',')[1];
+                                const templateParams = {
+                                    to_email: userEmail,
+                                    attachment: base64data
+                                };
+
+                                emailjs.send('service_c2k8v3l', 'template_enneagram_resul', templateParams)
+                                    .then(function(response) {
+                                        console.log("Email sent successfully via EmailJS!", response.status, response.text);
+                                    }, function(error) {
+                                        console.error("EmailJS failed to send", error);
+                                    });
+                            };
+                            
+             
+--------------------------------------------------------------------------------
+--- Match for emailjs at 15446 ---
+ 4px 6px rgba(0,0,0,0.1);
+        }
+        .reference-guide {
+            margin-top: 2rem;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        .reference-item {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px dotted #d1d5db;
+            padding-bottom: 0.5rem;
+        }
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">emailjs.init("-ZAD0vH8aSbV_LlpW");</script>
+</head>
+<body x-data="{ enneagramUnlocked: new URLSearchParams(window.location.search).get('status') === 'completed' || new URLSearchParams(window.location.search).get('access') === 'enneagram' || new URLSearchParams(window.location.search).get('test') === 'true', backdoorClicks: 0 }">
+        <div x-show="enneagramUnlocked" x-cloak class="backdoor-indicator uppercase tracking-widest">Master Access: Assessment Unlocked</div>
+    
+
+        <!-- UNIVERSAL HEADER -->
+        <nav class="univ-header">
+            <div class="univ-container">
+                <a href="index.html" class="univ-logo">
+                    <img src="images/brkthru-logo.png" alt="BRKTHRU" class="univ-logo-img">
+                    <span class="univ-logo-accent">DIGITAL</span>
+                </a>
+                <div class="univ-nav">
+                    <a href="index.html" class="univ-nav-item">HOME</a>
+                    <a href="odyssey.html" class="univ-nav-item">OUR ODYSSEY</a>
+                    <a href="assessments.html" class="univ-nav-item active">ASSESSMENTS</a>
+                    <a href="shop.html" class="univ-nav-item">STORE</a>
+                </div>
+                <div class="univ-utility">
+                    <a href="index.html#tour" class="univ-btn-tour">TOUR 2026</a>
+                </div>
+            </div>
+        </nav>
+        <div class="univ-spacer"></div>
+    
+
+    <!-- 1. GATEKEEPER OVERLAY -->
+    <!-- 1. PREMIUM GATEKEEPER OVERLAY -->
+    <div id="accessDeniedOverlay" x-show="!enneagramUnlocked" x-cloak class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden">
+        <!-- Premium Background -->
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('images/enneagram logo.jpg');"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-900/40 to-slate-900/90 backdrop-b
+--------------------------------------------------------------------------------
+--- Match for emailjs at 15528 ---
+top: 2rem;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        .reference-item {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px dotted #d1d5db;
+            padding-bottom: 0.5rem;
+        }
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">emailjs.init("-ZAD0vH8aSbV_LlpW");</script>
+</head>
+<body x-data="{ enneagramUnlocked: new URLSearchParams(window.location.search).get('status') === 'completed' || new URLSearchParams(window.location.search).get('access') === 'enneagram' || new URLSearchParams(window.location.search).get('test') === 'true', backdoorClicks: 0 }">
+        <div x-show="enneagramUnlocked" x-cloak class="backdoor-indicator uppercase tracking-widest">Master Access: Assessment Unlocked</div>
+    
+
+        <!-- UNIVERSAL HEADER -->
+        <nav class="univ-header">
+            <div class="univ-container">
+                <a href="index.html" class="univ-logo">
+                    <img src="images/brkthru-logo.png" alt="BRKTHRU" class="univ-logo-img">
+                    <span class="univ-logo-accent">DIGITAL</span>
+                </a>
+                <div class="univ-nav">
+                    <a href="index.html" class="univ-nav-item">HOME</a>
+                    <a href="odyssey.html" class="univ-nav-item">OUR ODYSSEY</a>
+                    <a href="assessments.html" class="univ-nav-item active">ASSESSMENTS</a>
+                    <a href="shop.html" class="univ-nav-item">STORE</a>
+                </div>
+                <div class="univ-utility">
+                    <a href="index.html#tour" class="univ-btn-tour">TOUR 2026</a>
+                </div>
+            </div>
+        </nav>
+        <div class="univ-spacer"></div>
+    
+
+    <!-- 1. GATEKEEPER OVERLAY -->
+    <!-- 1. PREMIUM GATEKEEPER OVERLAY -->
+    <div id="accessDeniedOverlay" x-show="!enneagramUnlocked" x-cloak class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden">
+        <!-- Premium Background -->
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('images/enneagram logo.jpg');"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-900/40 to-slate-900/90 backdrop-blur-md"></div>
+        
+        <!-- Premium Card -->
+        <div class="glass-ca
+--------------------------------------------------------------------------------
+--- Match for emailjs at 5950634 ---
+                           const reader = new FileReader();
+                            reader.readAsDataURL(pdfBlob);
+                            reader.onloadend = function() {
+                                const base64data = reader.result.split(',')[1];
+                                const templateParams = {
+                                    to_email: userEmail,
+                                    attachment: base64data
+                                };
+
+                                emailjs.send('service_c2k8v3l', 'template_enneagram_resul', templateParams)
+                                    .then(function(response) {
+                                        console.log("Email sent successfully via EmailJS!", response.status, response.text);
+                                    }, function(error) {
+                                        console.error("EmailJS failed to send", error);
+                                    });
+                            };
+                            
+                            element.classList.remove('pdf-rendering');
+                            h1s.forEach(h1 => h1.classList.remove('no-pdf'));
+                            if (brandedHeader.parentNode) brandedHeader.parentNode.removeChild(brandedHeader);
+                            if (diagramContainer) {
+                                diagramContainer.classList.remove('page-break-before');
+                                if(svg) {
+                                    svg.style.display = originalSvgDisplay;
+                                }
+                                if(tempImg && tempImg.parentNode) {
+                                    diagramContainer.removeChild(tempImg);
+                                }
+                            }
+                        });
+                    }, 1000);
+                };
+
+                if (tempImg) {
+                    let hasExecuted = false;
+                    tempImg.onload = function() {
+                        if (!hasExecuted) {
+                            hasExecuted = true;
+                            executePdf();
+                        }
+                    };
+                    // Race condition backup
+                    setTimeout(function() {
+                        if (!hasExecuted) {
+                            hasExecuted = true;
+                            executePdf();
+                        }
+                    }, 600);
+                    // trigger loading
+                    tempImg.
+--------------------------------------------------------------------------------
