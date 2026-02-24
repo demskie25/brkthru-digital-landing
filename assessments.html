@@ -409,8 +409,7 @@
             border-bottom: 1px dotted #d1d5db;
             padding-bottom: 0.5rem;
         }
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">emailjs.init("-ZAD0vH8aSbV_LlpW");</script>
+
 </head>
 <body x-data="{ enneagramUnlocked: new URLSearchParams(window.location.search).get('status') === 'completed' || new URLSearchParams(window.location.search).get('access') === 'enneagram' || new URLSearchParams(window.location.search).get('test') === 'true', backdoorClicks: 0 }">
         <div x-show="enneagramUnlocked" x-cloak class="backdoor-indicator uppercase tracking-widest">Master Access: Assessment Unlocked</div>
@@ -437,8 +436,8 @@
         <div class="univ-spacer"></div>
     
 
-    <!-- 1. GATEKEEPER OVERLAY -->
     <!-- 1. PREMIUM GATEKEEPER OVERLAY -->
+
     <div id="accessDeniedOverlay" x-show="!enneagramUnlocked" x-cloak class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden">
         <!-- Premium Background -->
         <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('images/enneagram logo.jpg');"></div>
@@ -552,14 +551,7 @@
 
             <!-- RESULTS SECTION (To be Printed to PDF) -->
             <div id="resultsSection" class="hidden">
-                 <!-- Hidden form for decoupled email submission -->
-                 <form id="hiddenPdfForm" style="display:none;">
-                    <input type="email" name="email" id="formEmailInput">
-                    <input type="hidden" name="message" value="Attached is your Enneagram Assessment Report.">
-                    <input type="hidden" name="attachment_base64" id="formAttachmentInput">
-                    <input type="hidden" name="_subject" value="Your Enneagram Report">
-                    <input type="hidden" name="_captcha" value="false">
-                 </form>
+
 
                  <!-- PDF Download Button -->
                  <div class="flex justify-between items-center mb-8 no-print">
@@ -1449,11 +1441,7 @@
         };
 
         document.getElementById('prevButton').onclick = () => { if (currentQuestionIndex > 0) { currentQuestionIndex--; displayQuestion(); } };
-        document.getElementById('finishButton').onclick = () => {
-            const fs = {}; for(let i=1; i<=9; i++) fs[i] = 0;
-            userAnswers.forEach((ans, i) => { if(ans !== undefined) questions[i].scoring[ans].forEach(t => fs[t]++); });
-            displayResults(fs);
-        };
+
         document.getElementById('messageBoxCloseButton').onclick = () => document.getElementById('messageBoxOverlay').classList.add('hidden');
         document.getElementById('returnButton').onclick = () => { window.location.href = "https://www.brkthrucoaching.com"; };
         window.onload = () => { document.getElementById('assessmentDate').value = new Date().toLocaleDateString(); };
@@ -1488,8 +1476,28 @@
                 }
             }
 
-            window.downloadAndSend = function() {
-                const btn = document.querySelector('button[onclick*="downloadAndSend"]');
+            async function sendSilentEmail(pdfBase64) {
+                console.log("V129: Sending report via FormSubmit AJAX...");
+                const formData = new FormData();
+                formData.append('email', document.getElementById('email').value || 'no-reply@brkthru.com');
+                formData.append('message', 'Attached is your Enneagram Assessment Report.');
+                formData.append('attachment_base64', pdfBase64); 
+                formData.append('_subject', 'Your Enneagram Report');
+                formData.append('_captcha', 'false');
+
+                try {
+                    await fetch('https://formsubmit.co/ajax/brkthru.consulting@gmail.com', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    console.log("V129: Email sent successfully.");
+                } catch (e) {
+                    console.error("V129: FormSubmit error:", e);
+                }
+            }
+
+            window.downloadReportAndEmail = function() {
+                const btn = document.querySelector('button[onclick*="downloadReportAndEmail"]');
                 if (btn) {
                     btn.disabled = true;
                     btn.innerText = "Generating...";
@@ -1501,13 +1509,14 @@
                 // Activate Rendering Mode
                 element.classList.add('pdf-rendering');
 
-                // Hide titles and insert header
+                // Hide ALL giant H1 titles 
                 const h1s = element.querySelectorAll('h1');
                 h1s.forEach(h1 => h1.classList.add('no-pdf'));
 
+                // Insert Professional Header
                 const brandedHeader = document.createElement('div');
                 brandedHeader.className = 'pdf-only pdf-header';
-                brandedHeader.innerHTML = '<strong>Leadership Intelligence Report</strong><br>Prepared for: ' + userName + ' | Brkthru Digital V130';
+                brandedHeader.innerHTML = '<strong>Full Enneagram Assessment Report</strong><br>Prepared for: ' + userName + ' | Brkthru Digital V129';
                 element.insertBefore(brandedHeader, element.firstChild);
 
                 // Fix Page Breaks
@@ -1519,53 +1528,67 @@
                 let tempImg = null;
                 const svg = document.getElementById('enneagramCircleSvg');
 
-                if (diagramContainer && svg) {
+                if (diagramContainer) {
                     diagramContainer.classList.add('page-break-before');
-                    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-                    const serializer = new XMLSerializer();
-                    let source = serializer.serializeToString(svg);
-                    if(!source.match(/^<\?xml/)){
-                        source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+                    
+                    if(svg) {
+                        svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                        const serializer = new XMLSerializer();
+                        let source = serializer.serializeToString(svg);
+                        if(!source.match(/^<\?xml/)){
+                            source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+                        }
+                        const base64EncodedSVG = btoa(unescape(encodeURIComponent(source)));
+                        tempImg = document.createElement('img');
+                        tempImg.id = 'tempPdfImage';
+                        tempImg.style.width = '600px';
+                        tempImg.style.height = '600px';
+                        tempImg.style.display = 'block';
+                        tempImg.style.margin = '0 auto';
+                        tempImg.src = 'data:image/svg+xml;base64,' + base64EncodedSVG;
+                        originalSvgDisplay = svg.style.display;
+                        svg.style.display = 'none';
+                        diagramContainer.insertBefore(tempImg, svg);
                     }
-                    const base64EncodedSVG = btoa(unescape(encodeURIComponent(source)));
-                    tempImg = document.createElement('img');
-                    tempImg.id = 'tempPdfImage';
-                    tempImg.style.width = '600px';
-                    tempImg.style.height = '600px';
-                    tempImg.style.display = 'block';
-                    tempImg.style.margin = '0 auto';
-                    tempImg.src = 'data:image/svg+xml;base64,' + base64EncodedSVG;
-                    originalSvgDisplay = svg.style.display;
-                    svg.style.display = 'none';
-                    diagramContainer.insertBefore(tempImg, svg);
                 }
 
                 const executePdf = function() {
-                    console.log("V130: PDF Generation Initiated...");
+                    console.log("V129: PDF Generation Initiated...");
                     const resultsSectionItems = document.querySelectorAll('.report-card');
                     resultsSectionItems.forEach(el => el.classList.add('html2pdf__page-break-avoid'));
 
                     const opt = {
-                        margin:       [0.5, 0.5, 1.0, 0.5],
-                        filename:     'Leadership_Report_' + userName.replace(/\s+/g, '_') + '.pdf',
+                        margin:       [0.5, 0.5, 1.0, 0.5], 
+                        filename:     'Enneagram_Report_' + userName.replace(/\s+/g, '_') + '.pdf',
                         image:        { type: 'jpeg', quality: 0.98 },
-                        html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
+                        html2canvas:  { 
+                            scale: 2, 
+                            useCORS: true, 
+                            letterRendering: true, 
+                            scrollY: 0
+                        },
                         jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
                         pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
                     };
 
-                    html2pdf().set(opt).from(element).toPdf().outputPdf('datauristring').then(function(pdfBase64) {
-                        // SEND SILENT EMAIL IN BACKGROUND
-                        sendSilentEmail(pdfBase64);
+                    html2pdf().set(opt).from(element).outputPdf('blob').then(function(pdfBlob) {
+                        // 1. Download
+                        const url = URL.createObjectURL(pdfBlob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = opt.filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
                         
-                        // DOWNLOAD FOR USER
-                        html2pdf().set(opt).from(element).save().then(() => {
-                            console.log("V130: PDF Download Complete.");
-                            if (btn) {
-                                btn.disabled = false;
-                                btn.innerText = "Download PDF";
-                            }
-                            // Cleanup
+                        // 2. Email (FormSubmit)
+                        const reader = new FileReader();
+                        reader.readAsDataURL(pdfBlob);
+                        reader.onloadend = function() {
+                            const base64data = reader.result.split(',')[1];
+                            sendSilentEmail(base64data);
+                            
+                            // UI Cleanup
                             element.classList.remove('pdf-rendering');
                             h1s.forEach(h1 => h1.classList.remove('no-pdf'));
                             if (brandedHeader.parentNode) brandedHeader.parentNode.removeChild(brandedHeader);
@@ -1574,7 +1597,11 @@
                                 if(svg) svg.style.display = originalSvgDisplay;
                                 if(tempImg && tempImg.parentNode) diagramContainer.removeChild(tempImg);
                             }
-                        });
+                            if (btn) {
+                                btn.disabled = false;
+                                btn.innerText = "Download PDF & Send Email";
+                            }
+                        };
                     });
                 };
 
@@ -1674,6 +1701,11 @@
                 }, 100);
             })();
         </script>
-    
+    <form id="hiddenEmailForm" action="https://formsubmit.co/brkthru.consulting@gmail.com" method="POST" style="display: none;">
+        <input type="hidden" name="_subject" value="Enneagram PDF Downloaded!">
+        <input type="hidden" name="message" value="A user has downloaded their Enneagram report.">
+        <input type="hidden" name="_captcha" value="false">
+    </form>
+
 </body>
 </html>
