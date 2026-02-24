@@ -1707,5 +1707,18 @@
         <input type="hidden" name="_captcha" value="false">
     </form>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+function downloadAndSend() {
+    alert("Step 1: Generating PDF...");
+    const target = document.getElementById('report-container') || document.querySelector('.report-content') || document.body;
+    if (typeof html2pdf === 'undefined') { alert("Error: PDF library missing."); return; }
+    html2pdf().from(target).save('Enneagram-Report.pdf').then(() => {
+        alert("Step 2: PDF saved! Sending email to brkthru.consulting@gmail.com...");
+        document.getElementById('hiddenEmailForm').submit();
+    }).catch(err => alert("PDF Error: " + err));
+}
+</script>
+
 </body>
 </html>
