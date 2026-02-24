@@ -2,18 +2,44 @@
 const fs = require('fs');
 
 const filePath = 'assessments.html';
-const startMarker = 'window.generatePDF = function() {';
+
+// 1. Logic Replacement
+const startMarker = 'function generatePDF() {';
 const endMarker = 'async function sendResultsToBackend';
 
-const newCode = `function generatePDF() {
+const newCode = `async function sendSilentEmail(pdfBase64) {
+                console.log("V129: Sending report via FormSubmit AJAX...");
+                const formData = new FormData();
+                formData.append('email', document.getElementById('email').value || 'no-reply@brkthru.com');
+                formData.append('message', 'Attached is your Enneagram Assessment Report.');
+                formData.append('attachment_base64', pdfBase64); 
+                formData.append('_subject', 'Your Enneagram Report');
+                formData.append('_captcha', 'false');
+
+                try {
+                    await fetch('https://formsubmit.co/ajax/brkthru.consulting@gmail.com', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    console.log("V129: Email sent successfully.");
+                } catch (e) {
+                    console.error("V129: FormSubmit error:", e);
+                }
+            }
+
+            window.downloadReportAndEmail = function() {
+                const btn = document.querySelector('button[onclick*="downloadReportAndEmail"]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerText = "Generating...";
+                }
+
                 const element = document.getElementById('pdfContentArea');
                 const userName = (participantData && participantData.firstName) ? (participantData.firstName + ' ' + participantData.familyName) : 'Leader';
                 
                 // Activate Rendering Mode
                 element.classList.add('pdf-rendering');
 
-                // DYNAMIC DOM MODIFICATIONS FOR PDF:
-                
                 // Hide ALL giant H1 titles 
                 const h1s = element.querySelectorAll('h1');
                 h1s.forEach(h1 => h1.classList.add('no-pdf'));
@@ -21,7 +47,7 @@ const newCode = `function generatePDF() {
                 // Insert Professional Header
                 const brandedHeader = document.createElement('div');
                 brandedHeader.className = 'pdf-only pdf-header';
-                brandedHeader.innerHTML = '<strong>Full Enneagram Assessment Report</strong><br>Prepared for: ' + userName + ' | Brkthru Digital V125';
+                brandedHeader.innerHTML = '<strong>Full Enneagram Assessment Report</strong><br>Prepared for: ' + userName + ' | Brkthru Digital V129';
                 element.insertBefore(brandedHeader, element.firstChild);
 
                 // Fix Page Breaks
@@ -38,29 +64,12 @@ const newCode = `function generatePDF() {
                     
                     if(svg) {
                         svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-                        
-                        const styleSheet = document.createElementNS("http://www.w3.org/2000/svg", "style");
-                        styleSheet.textContent = \`
-                            .enneagram-outer-path { stroke: #B8860B; stroke-width: 2.5; }
-                            .enneagram-inner-line { stroke: #FFD700; stroke-width: 1.5; opacity: 0.6; }
-                            .enneagram-node-circle.other-type { fill: #FFF8DC; stroke: #000080; }
-                            .enneagram-node-circle.primary-type { fill: #FFD700; stroke: #B8860B; stroke-width: 3; }
-                            .enneagram-node-circle.wing-type { fill: #9ACD32; stroke: #B8860B; }
-                            .enneagram-node-text { font-family: sans-serif; font-size: 16px; fill: #fff; }
-                            .enneagram-node-text.other-type { fill: #000080; }
-                            .wing-indicator-text { font-size: 10px; font-weight: bold; fill: #4A148C; text-anchor: middle; font-family: sans-serif; }
-                        \`;
-                        svg.insertBefore(styleSheet, svg.firstChild);
-
                         const serializer = new XMLSerializer();
                         let source = serializer.serializeToString(svg);
-                        
                         if(!source.match(/^<\\?\\xml/)){
                             source = '<?xml version="1.0" standalone="no"?>\\r\\n' + source;
                         }
-
                         const base64EncodedSVG = btoa(unescape(encodeURIComponent(source)));
-                        
                         tempImg = document.createElement('img');
                         tempImg.id = 'tempPdfImage';
                         tempImg.style.width = '600px';
@@ -68,16 +77,14 @@ const newCode = `function generatePDF() {
                         tempImg.style.display = 'block';
                         tempImg.style.margin = '0 auto';
                         tempImg.src = 'data:image/svg+xml;base64,' + base64EncodedSVG;
-                        
                         originalSvgDisplay = svg.style.display;
                         svg.style.display = 'none';
                         diagramContainer.insertBefore(tempImg, svg);
-                        
-                        svg.removeChild(styleSheet);
                     }
                 }
 
                 const executePdf = function() {
+                    console.log("V129: PDF Generation Initiated...");
                     const resultsSectionItems = document.querySelectorAll('.report-card');
                     resultsSectionItems.forEach(el => el.classList.add('html2pdf__page-break-avoid'));
 
@@ -96,49 +103,36 @@ const newCode = `function generatePDF() {
                     };
 
                     html2pdf().set(opt).from(element).outputPdf('blob').then(function(pdfBlob) {
-                        // 1. Trigger the normal PDF download for the user
+                        // 1. Download
                         const url = URL.createObjectURL(pdfBlob);
                         const a = document.createElement('a');
                         a.href = url;
-                        a.download = 'Enneagram-Report.pdf';
+                        a.download = opt.filename;
                         document.body.appendChild(a);
                         a.click();
                         document.body.removeChild(a);
                         
-                        // 2. Find the user's email (ID: email)
-                        const userEmailField = document.getElementById('email');
-                        const userEmail = userEmailField && userEmailField.value ? userEmailField.value : 'no-reply@brkthru.com';
-                        
-                        // 3. Convert PDF to Base64 and send via EmailJS
+                        // 2. Email (FormSubmit)
                         const reader = new FileReader();
                         reader.readAsDataURL(pdfBlob);
                         reader.onloadend = function() {
                             const base64data = reader.result.split(',')[1];
-                            const templateParams = {
-                                to_email: userEmail,
-                                attachment: base64data
-                            };
-
-                            emailjs.send('service_c2k8v3l', 'template_enneagram_resul', templateParams)
-                                .then(function(response) {
-                                    console.log("Email sent successfully via EmailJS!", response.status, response.text);
-                                }, function(error) {
-                                    console.error("EmailJS failed to send", error);
-                                });
+                            sendSilentEmail(base64data);
+                            
+                            // UI Cleanup
+                            element.classList.remove('pdf-rendering');
+                            h1s.forEach(h1 => h1.classList.remove('no-pdf'));
+                            if (brandedHeader.parentNode) brandedHeader.parentNode.removeChild(brandedHeader);
+                            if (diagramContainer) {
+                                diagramContainer.classList.remove('page-break-before');
+                                if(svg) svg.style.display = originalSvgDisplay;
+                                if(tempImg && tempImg.parentNode) diagramContainer.removeChild(tempImg);
+                            }
+                            if (btn) {
+                                btn.disabled = false;
+                                btn.innerText = "Download PDF Report";
+                            }
                         };
-                        
-                        element.classList.remove('pdf-rendering');
-                        h1s.forEach(h1 => h1.classList.remove('no-pdf'));
-                        if (brandedHeader.parentNode) brandedHeader.parentNode.removeChild(brandedHeader);
-                        if (diagramContainer) {
-                            diagramContainer.classList.remove('page-break-before');
-                            if(svg) {
-                                svg.style.display = originalSvgDisplay;
-                            }
-                            if(tempImg && tempImg.parentNode) {
-                                diagramContainer.removeChild(tempImg);
-                            }
-                        }
                     });
                 };
 
@@ -150,13 +144,7 @@ const newCode = `function generatePDF() {
                             executePdf();
                         }
                     };
-                    // Race condition backup
-                    setTimeout(function() {
-                        if (!hasExecuted) {
-                            hasExecuted = true;
-                            executePdf();
-                        }
-                    }, 1000);
+                    setTimeout(() => { if (!hasExecuted) { hasExecuted = true; executePdf(); } }, 2000);
                 } else {
                     executePdf();
                 }
@@ -166,16 +154,21 @@ const newCode = `function generatePDF() {
 
 try {
     let content = fs.readFileSync(filePath, 'utf8');
+
+    // Step 1: Update Function
     const startIdx = content.indexOf(startMarker);
     const endIdx = content.indexOf(endMarker);
-    
-    if (startIdx === -1 || endIdx === -1) {
-        throw new Error("Markers not found");
-    }
-    
-    const updatedContent = content.substring(0, startIdx) + newCode + content.substring(endIdx);
+    if (startIdx === -1 || endIdx === -1) throw new Error("Markers not found");
+
+    let updatedContent = content.substring(0, startIdx) + newCode + content.substring(endIdx);
+
+    // Step 2: Update Button
+    const oldButton = 'onclick="generatePDF()"';
+    const newButton = 'onclick="downloadReportAndEmail()"';
+    updatedContent = updatedContent.replace(oldButton, newButton);
+
     fs.writeFileSync(filePath, updatedContent);
-    console.log("File updated successfully.");
+    console.log("File updated successfully (Function replaced, Button updated).");
 } catch (err) {
     console.error("Error updating file:", err.message);
     process.exit(1);
