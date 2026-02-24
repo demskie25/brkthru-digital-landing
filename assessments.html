@@ -556,7 +556,9 @@
                  <!-- PDF Download Button -->
                  <div class="flex justify-between items-center mb-8 no-print">
                     <h1 class="text-3xl font-black text-gold-main">Full Report Generated</h1>
-<button onclick="downloadAndSend()" class="w-full py-4 rounded-xl font-bold text-gray-900 bg-gradient-to-r from-yellow-400 to-yellow-600 shadow-lg mt-6">Download PDF & Send Email</button>
+<button type="button" onclick="event.preventDefault(); downloadAndSend();" class="w-full py-4 rounded-xl font-bold text-gray-900 bg-gradient-to-r from-yellow-400 to-yellow-600 shadow-lg mt-6">
+    Download PDF & Send Email
+</button>
                 </div>
                 
                 <div id="pdfContentArea">
