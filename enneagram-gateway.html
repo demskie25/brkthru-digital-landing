@@ -73,14 +73,9 @@
         <div class="mt-6 text-center"><a href="index.html" class="text-sm text-gray-400 hover:text-white transition-colors duration-200 flex items-center justify-center gap-2"><i class="fa-solid fa-arrow-left"></i> Return to Homepage</a></div>
     </main>
     <script>
-        function unlockAssessment() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if(urlParams.get('test') === 'true' || urlParams.get('access') === 'enneagram') {
-                window.location.href = 'assessments.html?access=enneagram';
-            } else {
-                window.location.href = 'https://hitpay.app/pay/brkthru';
-            }
-        }
+function unlockAssessment() { 
+    window.location.href = '[YOUR HITPAY LINK]'; 
+}
     </script>
 </body>
 </html>
