@@ -1392,6 +1392,8 @@
             const svgNS = "http://www.w3.org/2000/svg";
             circularDiagramSvg.innerHTML = '';
             circularDiagramSvg.setAttribute('viewBox', '0 0 1000 600'); // CRITICAL FOR PDF SCALING
+            circularDiagramSvg.setAttribute('width', '1000');
+            circularDiagramSvg.setAttribute('height', '600');
             circularDiagramSvg.setAttribute('font-family', 'ui-sans-serif, system-ui, sans-serif');
             circularDiagramSvg.setAttribute('xmlns', svgNS);
             
