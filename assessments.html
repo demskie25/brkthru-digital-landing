@@ -168,6 +168,7 @@
             --gold-light: #FFF8DC;
             --gold-dark: #B8860B;
             --royal-navy: #000080;
+            --teal-accent: #008080; /* NEW PREMIUM SECONDARY ACCENT */
             --text-on-dark: var(--gold-light);
             --text-on-light: var(--royal-navy);
             --container-bg: var(--aubergine);
@@ -178,6 +179,15 @@
             --ai-text-color: #312e81;
             --red-flag: #B91C1C;
             --strategy-blue: #1E40AF;
+        }
+
+        /* Subtle Fade-in Animation for premium feel */
+        @keyframes subtleFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-ui {
+            animation: subtleFadeIn 0.6s ease-out forwards;
         }
 
         /* Access Denied Overlay */
@@ -253,6 +263,7 @@
             border-radius: 1rem;
             margin-bottom: 2rem;
             border: 1px solid var(--gold-dark);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05); /* PREMIUM BOX SHADOW */
         }
 
         /* MOBILE OPTIMIZATION - PREVENT SQUISHED QUESTIONS ON IPHONE SE */
@@ -347,15 +358,15 @@
             width: 10%;
         }
         .bar {
-            background-color: var(--royal-navy);
+            background: linear-gradient(to top, var(--royal-navy), #1e3a8a); /* 3D GRADIENT */
             width: 75%;
             border-radius: 6px 6px 0 0;
             transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.15);
         }
         .bar.primary-type-bar {
-            background-color: var(--chartreuse-muted);
-            box-shadow: 0 0 20px var(--chartreuse-bright);
+            background: linear-gradient(to top, var(--teal-accent), #2dd4bf); /* TEAL 3D GRADIENT */
+            box-shadow: 0 0 20px rgba(45, 212, 191, 0.5);
         }
         .bar-score {
             color: var(--aubergine);
@@ -442,12 +453,13 @@
             border-radius: 0.5rem;
             padding: 1.25rem;
             height: 100%;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
         .center-active {
             background-color: #eff6ff;
-            border: 2px solid var(--royal-navy);
+            border: 2px solid var(--teal-accent); /* TEAL HIGHLIGHT */
             transform: scale(1.02);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 128, 128, 0.2);
         }
         .reference-guide {
             margin-top: 2rem;
@@ -1940,18 +1952,26 @@ async function downloadAndSend() {
             const reportName = firstName === 'Guest' ? "Enneagram Report" : `Enneagram Report of ${firstName} ${familyName}`.trim();
             pdf.text(reportName, 10, 10);
             
+            // Global Header: Brkthru Logo (Top Right)
+            if (logoBase64) {
+               // Draw the logo in the top right corner of every page
+               pdf.addImage(logoBase64, 'PNG', pageWidth - 40, 5, 25, 6); 
+            }
+            
+            // Footer Style Setup
+            pdf.setFontSize(9);
+            pdf.setTextColor(150, 150, 150); // Subtle gray
+            
             // Footer bottom-left (Website)
-            pdf.text("www.brkthrucoaching.com", 10, pageHeight - 10);
+            pdf.text("www.brkthrucoaching.com", 15, pageHeight - 10);
             
             // Footer bottom-right (Page X of Y)
             const pageStr = "Page " + i + " of " + totalPages;
-            pdf.text(pageStr, pageWidth - 10, pageHeight - 10, { align: 'right' });
-
-            // Optional Logo placement lower middle/left
-            if (logoBase64) {
-               // Approximate geometry for BRKTHRU logo (25x6 mm) placed beautifully near bottom
-               pdf.addImage(logoBase64, 'PNG', 10, pageHeight - 18, 25, 6); 
-            }
+            pdf.text(pageStr, pageWidth - 15, pageHeight - 10, { align: 'right' });
+            
+            // Draw a subtle footer line
+            pdf.setDrawColor(200, 200, 200);
+            pdf.line(15, pageHeight - 15, pageWidth - 15, pageHeight - 15);
         }
 
         // Generate final synced binary blob to attach

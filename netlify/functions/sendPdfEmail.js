@@ -52,12 +52,30 @@ exports.handler = async (event, context) => {
             ]
         };
 
-        // 2. Email to the Participant
+        // 2. Email to the Participant (Beautiful HTML Template)
         const participantMailOptions = {
             from: `"BRKTHRU Coaching" <${process.env.SMTP_USER}>`,
             to: to_email,
             subject: `Your Enneagram Leadership Assessment Report`,
-            text: `Hi ${participant_name},\n\nThank you for taking the BRKTHRU Leadership Assessment. Your results have been processed securely and your Full Leadership Intelligence Report has been dynamically generated.\n\nPlease find your report attached to this email.\n\nWarmly,\nThe BRKTHRU Team\nwww.brkthrucoaching.com`,
+            html: `
+                <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333; line-height: 1.6;">
+                    <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #FFD700; padding-bottom: 20px;">
+                        <h1 style="color: #000080; margin: 0; font-size: 24px; letter-spacing: 1px;">BRKTHRU <span style="color: #FFD700;">DIGITAL</span></h1>
+                    </div>
+                    
+                    <p style="font-size: 16px;">Hi ${participant_name},</p>
+                    
+                    <p style="font-size: 16px;">Thank you for taking the BRKTHRU Leadership Assessment. Your results have been processed securely and your <strong>Full Leadership Intelligence Report</strong> has been dynamically generated.</p>
+                    
+                    <p style="font-size: 16px;">Please find your comprehensive Enneagram PDF report attached to this email.</p>
+                    
+                    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
+                        <p style="margin: 0; font-size: 14px; font-weight: bold; color: #000080;">Warmly,</p>
+                        <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">The BRKTHRU Team</p>
+                        <a href="https://www.brkthrucoaching.com" style="color: #008080; text-decoration: none; font-size: 14px; font-weight: bold;">www.brkthrucoaching.com</a>
+                    </div>
+                </div>
+            `,
             attachments: [
                 {
                     filename: `Enneagram_Report.pdf`,
