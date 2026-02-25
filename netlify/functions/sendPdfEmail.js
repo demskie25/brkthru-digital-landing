@@ -26,22 +26,8 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        const rawBody = event.isBase64Encoded ? Buffer.from(event.body, 'base64').toString('utf8') : event.body;
-        const data = JSON.parse(rawBody);
-        const { participant_name, to_email, company, position, attachment } = data;
-
-        if (!participant_name || !to_email || !attachment) {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({ error: 'Missing required fields' })
-            };
-        }
-
-        // Debug log to ensure Netlify injected the variables (this will show in Netlify Function Logs, but not the browser)
-        console.log("Initializing SMTP Transport for:", process.env.SMTP_USER ? "User exists" : "User UNDEFINED");
-
-        // Configure Nodemailer Transport natively for Gmail
-        const transporter = nodemailer.createTransport({
+        // 1. ASYNC HANDSHAKE: Initialize transport in parallel with payload parsing to save MS
+        const transportPromise = Promise.resolve(nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 465,
             secure: true,
@@ -49,7 +35,25 @@ exports.handler = async (event, context) => {
                 user: process.env.SMTP_USER,
                 pass: process.env.SMTP_PASS
             }
-        });
+        }));
+
+        const rawBody = event.isBase64Encoded ? Buffer.from(event.body, 'base64').toString('utf8') : event.body;
+        const data = JSON.parse(rawBody);
+        const { participant_name, to_email, company, position, attachment } = data;
+
+        if (!participant_name || !to_email || !attachment) {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({ error: 'Missing required fields' })
+            };
+        }
+
+        // Debug log to ensure Netlify injected the variables
+        console.log("Initializing SMTP Transport for:", process.env.SMTP_USER ? "User exists" : "User UNDEFINED");
+
+        // Wait for async handshake to finish resolving
+        const transporter = await transportPromise;
 
         const ownerEmail = process.env.SMTP_USER || 'brkthru.consulting@gmail.com';
 
@@ -106,6 +110,11 @@ exports.handler = async (event, context) => {
             transporter.sendMail(ownerMailOptions),
             transporter.sendMail(participantMailOptions)
         ]);
+        
+        // 4. MEMORY MANAGEMENT: Explicit clean-up of massive Base64 variables
+        data.attachment = null;
+        ownerMailOptions.attachments = null;
+        participantMailOptions.attachments = null;
 
         return {
             statusCode: 200,

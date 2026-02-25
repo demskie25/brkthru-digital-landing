@@ -1856,6 +1856,15 @@ async function downloadAndSend() {
     const h1s = target.querySelectorAll('h1');
     h1s.forEach(h1 => h1.classList.add('no-pdf'));
 
+    // 2. DOM SCRUBBING: Remove animations to speed up html2canvas rendering computation
+    const animatedElements = target.querySelectorAll('.fade-in-ui, .report-card, .center-card, .bar');
+    animatedElements.forEach(el => {
+        el.style.animation = 'none';
+        el.style.boxShadow = 'none';
+        el.style.transition = 'none';
+        el.classList.remove('fade-in-ui');
+    });
+
     // Get participant info for the email
     const firstName = document.getElementById('firstName')?.value || 'Guest';
     const familyName = document.getElementById('familyName')?.value || '';
@@ -1930,7 +1939,7 @@ async function downloadAndSend() {
         margin: [15, 10, 25, 10], // top, left, bottom, right in mm
         filename: `Enneagram_Report_${firstName}_${familyName}.pdf`,
         image: { type: 'jpeg', quality: 0.3 }, // NUCLEAR COMPRESSION
-        html2canvas: { scale: 1.5, useCORS: true, letterRendering: true, windowWidth: 1024, width: 1024 }, // RESOLUTION CAP
+        html2canvas: { scale: 1.2, useCORS: true, logging: false, windowWidth: 1024, width: 1024 }, // RESOLUTION CAP & LEAN RENDERING
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
@@ -2044,6 +2053,15 @@ async function downloadAndSend() {
     } finally {
         target.classList.remove('pdf-rendering');
         h1s.forEach(h1 => h1.classList.remove('no-pdf'));
+        
+        // Restore DOM Scrubbing
+        animatedElements.forEach(el => {
+            el.style.animation = '';
+            el.style.boxShadow = '';
+            el.style.transition = '';
+            el.classList.add('fade-in-ui');
+        });
+
         if (btn) {
             btn.disabled = false;
             btn.innerText = "Download PDF & Send Email";
