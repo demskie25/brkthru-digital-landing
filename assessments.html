@@ -410,12 +410,13 @@
             padding-bottom: 0.5rem;
         }
 
-        /* Prevent SVG explosions in PDF Engine */
+        /* Maintain explicit scale in PDF to prevent explosion while keeping it large and centered */
         .pdf-rendering .circular-diagram-container svg {
-            max-width: 500px !important;
-            max-height: 400px !important;
-            margin: 0 auto;
-            display: block;
+            width: 100% !important;
+            max-width: 800px !important;
+            height: auto !important;
+            margin: 0 auto !important;
+            display: block !important;
         }
         
     </style>
@@ -1823,7 +1824,9 @@ async function downloadAndSend() {
             pdf.setTextColor(100);
             
             // Header Top
-            pdf.text("Full Leadership Intelligence Report", 10, 10);
+            // Fallback dynamically if names are empty/Guest
+            const reportName = firstName === 'Guest' ? "Enneagram Report" : `Enneagram Report of ${firstName} ${familyName}`.trim();
+            pdf.text(reportName, 10, 10);
             
             // Footer bottom-left (Website)
             pdf.text("www.brkthrucoaching.com", 10, pageHeight - 10);
