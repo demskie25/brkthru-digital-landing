@@ -1916,7 +1916,7 @@ async function downloadAndSend() {
         image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
         html2canvas: { scale: 2, useCORS: true, letterRendering: true, windowWidth: 1024, width: 1024 }, // VIRTUAL DESKTOP VIEWPORT
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'] }
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     try {
