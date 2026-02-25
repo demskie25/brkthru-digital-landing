@@ -1867,14 +1867,37 @@ async function downloadAndSend() {
         el.classList.remove('fade-in-ui');
     });
 
-    // 3. LAYOUT FIX: Left-Aligned with Padding (Fixes Negative Bleed)
+    // 3. LAYOUT FIX: Dynamic Math-Based Right Shift
     const oldCssText = target.style.cssText;
-    target.style.width = '1024px';
-    target.style.maxWidth = '1024px';
-    target.style.margin = '0'; // Align left to prevent negative-space coordinate clipping
-    target.style.padding = '40px 40px 40px 80px'; // Generous 80px left padding to move all content safely to the right
+    
+    // Step A: Set base layout to measure natural browser bleed
+    const baseWidth = 1024;
+    target.style.width = baseWidth + 'px';
+    target.style.maxWidth = baseWidth + 'px';
+    target.style.margin = '0 auto'; // Let browser center it so we can measure the overflow
     target.style.boxSizing = 'border-box';
     target.style.background = 'white';
+
+    // Step B: Calculate exactly how far to the right we must move the content
+    const rect = target.getBoundingClientRect();
+    let shiftRight = 0;
+    if (rect.left < 0) {
+        // The element bleeds off the left screen edge by this exact amount
+        shiftRight = Math.abs(rect.left);
+    }
+
+    // Step C: Apply the computed shift to strictly push the content right.
+    // We add the shift to both Padding AND Width to move the content without squishing it!
+    const basePadding = 40;
+    const finalLeftPadding = basePadding + shiftRight + 40; // Add 40px visual safety buffer
+    const finalWidth = baseWidth + shiftRight + 40;
+
+    target.style.padding = `${basePadding}px ${basePadding}px ${basePadding}px ${finalLeftPadding}px`;
+    target.style.width = finalWidth + 'px';
+    target.style.maxWidth = finalWidth + 'px';
+    
+    // Lock it to the left with margin 0 so our precise padding shift takes pure effect
+    target.style.margin = '0';
 
     // Get participant info for the email
     const firstName = document.getElementById('firstName')?.value || 'Guest';
@@ -1950,7 +1973,7 @@ async function downloadAndSend() {
         margin: [15, 10, 25, 10], // top, left, bottom, right in mm
         filename: `Enneagram_Report_${firstName}_${familyName}.pdf`,
         image: { type: 'jpeg', quality: 0.2 }, // NUCLEAR COMPRESSION (SQUEEZE)
-        html2canvas: { scale: 1.0, useCORS: true, logging: false, windowWidth: 1024, scrollX: 0, scrollY: 0 }, // ABSOLUTE ANCHORING AND RESOLUTION CAP
+        html2canvas: { scale: 1.0, useCORS: true, logging: false, windowWidth: finalWidth, scrollX: 0, scrollY: 0 }, // ABSOLUTE ANCHORING AND RESOLUTION CAP
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
