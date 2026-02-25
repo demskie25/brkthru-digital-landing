@@ -1925,7 +1925,7 @@ async function downloadAndSend() {
     const opt = {
         margin: [15, 10, 25, 10], // top, left, bottom, right in mm
         filename: `Enneagram_Report_${firstName}_${familyName}.pdf`,
-        image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
+        image: { type: 'jpeg', quality: 0.4 }, // AGGRESSIVELY COMPRESSED TO AVOID NETLIFY 10 SEC TIMEOUT
         html2canvas: { scale: 2, useCORS: true, letterRendering: true, windowWidth: 1024, width: 1024 }, // VIRTUAL DESKTOP VIEWPORT
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
