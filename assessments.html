@@ -1867,12 +1867,12 @@ async function downloadAndSend() {
         el.classList.remove('fade-in-ui');
     });
 
-    // 3. LAYOUT FIX: Safe Centering to prevent visual jumping
+    // 3. LAYOUT FIX: Left-Aligned with Padding (Fixes Negative Bleed)
     const oldCssText = target.style.cssText;
     target.style.width = '1024px';
     target.style.maxWidth = '1024px';
-    target.style.margin = '0 auto';
-    target.style.padding = '40px'; 
+    target.style.margin = '0'; // Align left to prevent negative-space coordinate clipping
+    target.style.padding = '40px 40px 40px 80px'; // Generous 80px left padding to move all content safely to the right
     target.style.boxSizing = 'border-box';
     target.style.background = 'white';
 
