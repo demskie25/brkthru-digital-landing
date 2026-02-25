@@ -1856,12 +1856,13 @@ async function downloadAndSend() {
     const h1s = target.querySelectorAll('h1');
     h1s.forEach(h1 => h1.classList.add('no-pdf'));
 
-    // 2. DOM SCRUBBING: Remove animations to speed up html2canvas rendering computation
+    // 2. DOM SCRUBBING: Remove animations and complex backgrounds to speed up html2canvas rendering computation
     const animatedElements = target.querySelectorAll('.fade-in-ui, .report-card, .center-card, .bar');
     animatedElements.forEach(el => {
         el.style.animation = 'none';
         el.style.boxShadow = 'none';
         el.style.transition = 'none';
+        el.style.background = 'none'; // Strip complex linear-gradients to save canvas processing time
         el.classList.remove('fade-in-ui');
     });
 
@@ -1938,7 +1939,7 @@ async function downloadAndSend() {
     const opt = {
         margin: [15, 10, 25, 10], // top, left, bottom, right in mm
         filename: `Enneagram_Report_${firstName}_${familyName}.pdf`,
-        image: { type: 'jpeg', quality: 0.3 }, // NUCLEAR COMPRESSION
+        image: { type: 'jpeg', quality: 0.2 }, // NUCLEAR COMPRESSION (SQUEEZE)
         html2canvas: { scale: 1.2, useCORS: true, logging: false, windowWidth: 1024, width: 1024 }, // RESOLUTION CAP & LEAN RENDERING
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
@@ -2059,6 +2060,7 @@ async function downloadAndSend() {
             el.style.animation = '';
             el.style.boxShadow = '';
             el.style.transition = '';
+            el.style.background = ''; // Restore gradients
             el.classList.add('fade-in-ui');
         });
 
