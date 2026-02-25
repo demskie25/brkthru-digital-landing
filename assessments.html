@@ -1959,13 +1959,18 @@ async function downloadAndSend() {
         if (barChartEl) {
             printText("Your Enneagram Score Distribution", 18, true, 74, 20, 140, true); // Aubergine (#4A148C)
             const canvas = await html2canvas(barChartEl, { scale: 1, useCORS: true, logging: false });
-            const imgData = canvas.toDataURL('image/jpeg', 0.8);
-            const imgRatio = canvas.height / canvas.width;
-            const targetW = maxW;
-            const targetH = targetW * imgRatio;
-            checkPageBreak(targetH + 20);
-            doc.addImage(imgData, 'JPEG', margin, y, targetW, targetH);
-            y += targetH + 30;
+            if (canvas.width > 0 && canvas.height > 0) {
+                const imgData = canvas.toDataURL('image/jpeg', 0.8);
+                const imgRatio = canvas.height / canvas.width;
+                const targetW = maxW;
+                const targetH = targetW * imgRatio;
+                // Double check to strictly prevent NaN crashes inside jsPDF
+                if (!isNaN(targetH) && isFinite(targetH) && targetH > 0) {
+                    checkPageBreak(targetH + 20);
+                    doc.addImage(imgData, 'JPEG', margin, y, targetW, targetH);
+                    y += targetH + 30;
+                }
+            }
         }
 
         // 4. Smart-Capture: Rasterize ONLY the SVGs (Type Map)
@@ -1988,13 +1993,17 @@ async function downloadAndSend() {
                 await new Promise(resolve => { mockImg.onload = resolve; setTimeout(resolve, 500); });
                 
                 const canvas2 = await html2canvas(svgElContainer, { scale: 1, useCORS: true, logging: false });
-                const imgData2 = canvas2.toDataURL('image/jpeg', 0.8);
-                const imgRatio2 = canvas2.height / canvas2.width;
-                const targetW2 = maxW;
-                const targetH2 = targetW2 * imgRatio2;
-                checkPageBreak(targetH2 + 20);
-                doc.addImage(imgData2, 'JPEG', margin, y, targetW2, targetH2);
-                y += targetH2 + 30;
+                if (canvas2.width > 0 && canvas2.height > 0) {
+                    const imgData2 = canvas2.toDataURL('image/jpeg', 0.8);
+                    const imgRatio2 = canvas2.height / canvas2.width;
+                    const targetW2 = maxW;
+                    const targetH2 = targetW2 * imgRatio2;
+                    if (!isNaN(targetH2) && isFinite(targetH2) && targetH2 > 0) {
+                        checkPageBreak(targetH2 + 20);
+                        doc.addImage(imgData2, 'JPEG', margin, y, targetW2, targetH2);
+                        y += targetH2 + 30;
+                    }
+                }
 
                 // Cleanup SVG swap
                 mockImg.parentNode.removeChild(mockImg);
@@ -2099,7 +2108,7 @@ async function downloadAndSend() {
 
     } catch(err) {
         console.error("Vector Rendering Error:", err);
-        alert("An error occurred generating the document.");
+        alert("An error occurred generating the document.\\n\\nDetails: " + (err.message || err));
     } finally {
         if (btn) {
             btn.disabled = false;
