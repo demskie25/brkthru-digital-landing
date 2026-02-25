@@ -1891,7 +1891,11 @@ async function downloadAndSend() {
     const originalSvg = document.getElementById('enneagramCircleSvg');
     if (originalSvg) {
         try {
-            const svgData = new XMLSerializer().serializeToString(originalSvg);
+            let svgData = new XMLSerializer().serializeToString(originalSvg);
+            
+            // NUCLEAR COMPRESSION: Optimize SVG vector data by stripping unnecessary whitespace
+            svgData = svgData.replace(/>\s+</g, '><').replace(/\s{2,}/g, ' ');
+            
             // Ensure proper XML declaration and namespace if missing
             const b64 = btoa(unescape(encodeURIComponent(svgData)));
             
@@ -1925,8 +1929,8 @@ async function downloadAndSend() {
     const opt = {
         margin: [15, 10, 25, 10], // top, left, bottom, right in mm
         filename: `Enneagram_Report_${firstName}_${familyName}.pdf`,
-        image: { type: 'jpeg', quality: 0.4 }, // AGGRESSIVELY COMPRESSED TO AVOID NETLIFY 10 SEC TIMEOUT
-        html2canvas: { scale: 2, useCORS: true, letterRendering: true, windowWidth: 1024, width: 1024 }, // VIRTUAL DESKTOP VIEWPORT
+        image: { type: 'jpeg', quality: 0.3 }, // NUCLEAR COMPRESSION
+        html2canvas: { scale: 1.5, useCORS: true, letterRendering: true, windowWidth: 1024, width: 1024 }, // RESOLUTION CAP
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
