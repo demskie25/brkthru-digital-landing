@@ -21,9 +21,14 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // Configure Nodemailer Transport
+        // Debug log to ensure Netlify injected the variables (this will show in Netlify Function Logs, but not the browser)
+        console.log("Initializing SMTP Transport for:", process.env.SMTP_USER ? "User exists" : "User UNDEFINED");
+
+        // Configure Nodemailer Transport natively for Gmail
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
             auth: {
                 user: process.env.SMTP_USER,
                 pass: process.env.SMTP_PASS
