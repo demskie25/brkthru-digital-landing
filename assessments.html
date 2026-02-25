@@ -1843,6 +1843,15 @@ async function downloadAndSend() {
             // Insert mock image and hide the interactive SVG
             originalSvg.parentNode.insertBefore(svgImageMock, originalSvg);
             originalSvg.style.display = 'none';
+
+            // CRITICAL FIX: We must wait for the browser to physically render the Base64 image
+            // to the DOM before html2canvas takes its snapshot. Otherwise it captures a blank box.
+            await new Promise((resolve) => {
+                svgImageMock.onload = resolve;
+                svgImageMock.onerror = resolve; 
+                setTimeout(resolve, 600); // 600ms safety fallback
+            });
+
         } catch (svgErr) {
             console.warn("Failed to serialize SVG", svgErr);
         }
