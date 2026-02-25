@@ -410,13 +410,12 @@
             padding-bottom: 0.5rem;
         }
 
-        /* Set exact pixel scale in PDF since html2canvas struggles with SVG percentages */
+        /* Prevent CSS from unhiding the SVG when we swap it for the mock Image! */
         .pdf-rendering .circular-diagram-container svg {
             width: 800px !important;
             height: 480px !important;
             max-width: none !important;
             margin: 0 auto !important;
-            display: block !important;
         }
         
     </style>
@@ -1391,6 +1390,24 @@
             const svgNS = "http://www.w3.org/2000/svg";
             circularDiagramSvg.innerHTML = '';
             circularDiagramSvg.setAttribute('viewBox', '0 0 1000 600'); // CRITICAL FOR PDF SCALING
+            circularDiagramSvg.setAttribute('font-family', 'ui-sans-serif, system-ui, sans-serif');
+            circularDiagramSvg.setAttribute('xmlns', svgNS);
+            
+            const defs = document.createElementNS(svgNS, "defs");
+            const style = document.createElementNS(svgNS, "style");
+            style.textContent = `
+                .enneagram-outer-path { stroke: #d4af37; stroke-width: 2px; fill: none; opacity: 0.6; }
+                .enneagram-inner-line { stroke: #d4af37; stroke-width: 1px; opacity: 0.4; }
+                .enneagram-node-circle { stroke-width: 2px; }
+                .enneagram-node-circle.primary-type { fill: #d4af37; stroke: #d4af37; }
+                .enneagram-node-circle.wing-type { fill: #ADFF2F; stroke: #ADFF2F; }
+                .enneagram-node-circle.other-type { fill: #ffffff; stroke: #d4af37; }
+                .enneagram-node-text { font-family: ui-sans-serif, system-ui, sans-serif; }
+                .wing-indicator-text { fill: #1e293b; font-weight: bold; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 13px; }
+            `;
+            defs.appendChild(style);
+            circularDiagramSvg.appendChild(defs);
+
             const cx = 500, cy = 300, r = 180, nr = 24;
             const ags = { 9: 90, 1: 50, 2: 10, 3: 330, 4: 290, 5: 250, 6: 210, 7: 170, 8: 130 };
             const typeLabels = {
@@ -1401,7 +1418,7 @@
             const pts = {};
             const outer = document.createElementNS(svgNS, "circle");
             outer.setAttribute("cx", cx); outer.setAttribute("cy", cy); outer.setAttribute("r", r);
-            outer.setAttribute("class", "enneagram-outer-path"); outer.setAttribute("fill", "none");
+            outer.setAttribute("class", "enneagram-outer-path"); 
             circularDiagramSvg.appendChild(outer);
             for (let i = 1; i <= 9; i++) {
                 const rd = ags[i] * Math.PI / 180;
@@ -1428,7 +1445,9 @@
                 const rd = ags[i] * Math.PI / 180;
                 const g = document.createElementNS(svgNS, "g");
                 const c = document.createElementNS(svgNS, "circle");
-                c.setAttribute("cx", pts[i].x); c.setAttribute("cy", pts[i].y); c.setAttribute("r", nr);
+                c.setAttribute("cx", pts[i].x); c.setAttribute("cy", pts[i].y); 
+                c.setAttribute("r", i === p ? nr * 1.15 : nr); // Explicit scale for serialization
+                
                 let cls = "enneagram-node-circle " + (i === p ? "primary-type" : (wings.includes(i) ? "wing-type" : "other-type"));
                 c.setAttribute("class", cls);
                 g.appendChild(c);
@@ -1465,7 +1484,7 @@
                     wl.setAttribute("x", pts[i].x); wl.setAttribute("y", pts[i].y - 32);
                     wl.textContent = "Wing"; 
                     wl.setAttribute("class", "wing-indicator-text");
-                    wl.setAttribute("font-size", "12px"); // Adjust wing indicator text explicitly
+                    wl.setAttribute("text-anchor", "middle");
                     g.appendChild(wl);
                 }
                 circularDiagramSvg.appendChild(g);
