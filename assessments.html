@@ -125,8 +125,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enneagram Assessment for Leaders (V123)</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- PDF Generation Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Native Vector PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Firebase SDKs -->
@@ -1839,208 +1840,204 @@
         </script>
 <script>
 async function downloadAndSend() {
-    console.log("downloadAndSend: Initiated.");
-    const btn = document.querySelector('button[onclick*="downloadAndSend"]');
+    console.log("Vector-First PDF Architecture Initiated.");
+    const btn = document.querySelector('button[onclick*=\"downloadAndSend\"]');
     if (btn) {
         btn.disabled = true;
-        btn.innerText = "Generating PDF...";
+        btn.innerText = "Generating Vector PDF...";
     }
     
-    const target = document.getElementById('pdfContentArea');
-    if (!target) { 
-        console.error("downloadAndSend: pdfContentArea NOT FOUND");
-        return; 
+    // Fallback gracefully if jsPDF is missing
+    const jspdfObj = window.jspdf ? window.jspdf.jsPDF : window.jsPDF;
+    if (!jspdfObj) {
+        console.error("jsPDF library not found!");
+        return;
     }
     
-    // UI Enhancements for PDF focus
-    target.classList.add('pdf-rendering');
-    const h1s = target.querySelectorAll('h1');
-    h1s.forEach(h1 => h1.classList.add('no-pdf'));
+    const doc = new jspdfObj({ unit: 'pt', format: 'a4', orientation: 'portrait' });
+    const pw = 595.28;
+    const ph = 841.89;
+    const margin = 40;
+    const maxW = pw - margin * 2;
+    let y = 60;
 
-    // 2. DOM SCRUBBING: Remove animations to speed up rendering, but RETAIN bars
-    const animatedElements = target.querySelectorAll('.fade-in-ui, .report-card, .center-card');
-    animatedElements.forEach(el => {
-        el.style.animation = 'none';
-        el.style.boxShadow = 'none';
-        el.style.transition = 'none';
-        el.style.background = 'none'; 
-        el.classList.remove('fade-in-ui');
-    });
-
-    // 3. LAYOUT FIX: Dynamic Math-Based Right Shift
-    const oldCssText = target.style.cssText;
-    
-    // Step A: Set base layout to measure natural browser bleed
-    const baseWidth = 1024;
-    target.style.width = baseWidth + 'px';
-    target.style.maxWidth = baseWidth + 'px';
-    target.style.margin = '0 auto'; // Let browser center it so we can measure the overflow
-    target.style.boxSizing = 'border-box';
-    target.style.background = 'white';
-
-    // Step B: Calculate exactly how far to the right we must move the content
-    const rect = target.getBoundingClientRect();
-    let shiftRight = 0;
-    if (rect.left < 0) {
-        // The element bleeds off the left screen edge by this exact amount
-        shiftRight = Math.abs(rect.left);
-    }
-
-    // Step C: Apply the computed shift to strictly push the content right.
-    // We add the shift to both Padding AND Width to move the content without squishing it!
-    const basePadding = 40;
-    const finalLeftPadding = basePadding + shiftRight + 40; // Add 40px visual safety buffer
-    const finalWidth = baseWidth + shiftRight + 40;
-
-    target.style.padding = `${basePadding}px ${basePadding}px ${basePadding}px ${finalLeftPadding}px`;
-    target.style.width = finalWidth + 'px';
-    target.style.maxWidth = finalWidth + 'px';
-    
-    // Lock it to the left with margin 0 so our precise padding shift takes pure effect
-    target.style.margin = '0';
-
-    // Get participant info for the email
+    // Get participant info
     const firstName = document.getElementById('firstName')?.value || 'Guest';
     const familyName = document.getElementById('familyName')?.value || '';
     const email = document.getElementById('email')?.value || 'no-email';
     const company = document.getElementById('company')?.value || 'no-company';
     const position = document.getElementById('position')?.value || 'no-position';
-    
-    // Attempt to dynamically load logo to embed cleanly in jsPDF
-    let logoBase64 = null;
-    try {
-        const logoImg = new Image();
-        logoImg.crossOrigin = "Anonymous";
-        logoImg.src = 'images/brkthru-logo.png';
-        await new Promise((resolve, reject) => {
-            logoImg.onload = resolve;
-            logoImg.onerror = reject;
-        });
-        const canvas = document.createElement('canvas');
-        canvas.width = logoImg.width;
-        canvas.height = logoImg.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(logoImg, 0, 0);
-        logoBase64 = canvas.toDataURL('image/png');
-    } catch (e) {
-        console.warn("Could not load logo for PDF footer.", e);
-    }
-    
-    // --- FOOLPROOF SVG SCALING FIX START ---
-    // html2canvas struggles with SVG bounding boxes, but it handles <img> tags perfectly.
-    // We will serialize the target SVG into a high-res image exactly when the user clicks 'Download',
-    // swap it into the DOM, take the PDF snapshot, and then swap the real SVG back in.
-    let svgImageMock = null;
-    const originalSvg = document.getElementById('enneagramCircleSvg');
-    if (originalSvg) {
-        try {
-            let svgData = new XMLSerializer().serializeToString(originalSvg);
-            
-            // NUCLEAR COMPRESSION: Optimize SVG vector data by stripping unnecessary whitespace
-            svgData = svgData.replace(/>\s+</g, '><').replace(/\s{2,}/g, ' ');
-            
-            // Ensure proper XML declaration and namespace if missing
-            const b64 = btoa(unescape(encodeURIComponent(svgData)));
-            
-            svgImageMock = document.createElement('img');
-            svgImageMock.src = 'data:image/svg+xml;base64,' + b64;
-            // Force rigid dimensions to bypass all PDF scaling quirks
-            svgImageMock.style.width = '800px';
-            svgImageMock.style.height = '480px';
-            svgImageMock.style.margin = '0 auto';
-            svgImageMock.style.display = 'block';
-            svgImageMock.id = 'svgImageMock';
-            
-            // Insert mock image and hide the interactive SVG
-            originalSvg.parentNode.insertBefore(svgImageMock, originalSvg);
-            originalSvg.style.display = 'none';
+    const reportName = firstName === 'Guest' ? "Enneagram Report" : `Enneagram Report of ${firstName} ${familyName}`.trim();
 
-            // CRITICAL FIX: We must wait for the browser to physically render the Base64 image
-            // to the DOM before html2canvas takes its snapshot. Otherwise it captures a blank box.
-            await new Promise((resolve) => {
-                svgImageMock.onload = resolve;
-                svgImageMock.onerror = resolve; 
-                setTimeout(resolve, 600); // 600ms safety fallback
+    // Helper to check page break
+    function checkPageBreak(heightNeeded) {
+        if (y + heightNeeded > ph - margin) {
+            doc.addPage();
+            y = 60;
+            drawHeaderFooter(doc.internal.getNumberOfPages());
+        }
+    }
+
+    // Helper to draw Header & Footer on every page
+    function drawHeaderFooter(pageNum) {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.setTextColor(100, 100, 100);
+        doc.text(reportName, margin, 30);
+        
+        doc.setFontSize(9);
+        doc.text("www.brkthrucoaching.com", margin, ph - 25);
+        doc.text(`Page ${pageNum}`, pw - margin, ph - 25, { align: 'right' });
+        
+        doc.setDrawColor(200, 200, 200);
+        doc.line(margin, ph - 35, pw - margin, ph - 35);
+    }
+
+    drawHeaderFooter(1);
+
+    // Vector Text Engine
+    function printText(text, fontSize, isBold, r, g, b, isCentered=false) {
+        if (!text || text.trim() === '') return;
+        doc.setFont("helvetica", isBold ? "bold" : "normal");
+        doc.setFontSize(fontSize);
+        doc.setTextColor(r, g, b);
+        
+        const lines = doc.splitTextToSize(text.trim(), maxW);
+        const lineHeight = fontSize * 1.25;
+        const blockHeight = lines.length * lineHeight;
+        
+        checkPageBreak(blockHeight);
+        
+        if (isCentered) {
+            lines.forEach(line => {
+                doc.text(line, pw / 2, y, { align: 'center' });
+                y += lineHeight;
             });
-
-        } catch (svgErr) {
-            console.warn("Failed to serialize SVG", svgErr);
+        } else {
+            doc.text(lines, margin, y);
+            y += blockHeight;
         }
+        y += fontSize * 0.5; // paragraph spacing
     }
-    // --- FOOLPROOF SVG SCALING FIX END ---
-
-    const opt = {
-        margin: [15, 10, 25, 10], // top, left, bottom, right in mm
-        filename: `Enneagram_Report_${firstName}_${familyName}.pdf`,
-        image: { type: 'jpeg', quality: 0.2 }, // NUCLEAR COMPRESSION (SQUEEZE)
-        html2canvas: { scale: 1.0, useCORS: true, logging: false, windowWidth: finalWidth, scrollX: 0, scrollY: 0 }, // ABSOLUTE ANCHORING AND RESOLUTION CAP
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-    };
 
     try {
-        // Build worker pipeline
-        const worker = html2pdf().set(opt).from(target).toPdf();
-        const pdf = await worker.get('pdf');
-        
-        // Post-process the PDF with headers, footers, website links, and page numbers
-        const totalPages = pdf.internal.getNumberOfPages();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        
-        for (let i = 1; i <= totalPages; i++) {
-            pdf.setPage(i);
-            
-            pdf.setFontSize(10);
-            pdf.setTextColor(100);
-            
-            // Header Top
-            // Fallback dynamically if names are empty/Guest
-            const reportName = firstName === 'Guest' ? "Enneagram Report" : `Enneagram Report of ${firstName} ${familyName}`.trim();
-            pdf.text(reportName, 10, 10);
-            
-            // Global Header: Brkthru Logo (Top Right)
-            if (logoBase64) {
-               // Draw the logo in the top right corner of every page
-               pdf.addImage(logoBase64, 'PNG', pageWidth - 40, 5, 25, 6); 
-            }
-            
-            // Footer Style Setup
-            pdf.setFontSize(9);
-            pdf.setTextColor(150, 150, 150); // Subtle gray
-            
-            // Footer bottom-left (Website)
-            pdf.text("www.brkthrucoaching.com", 15, pageHeight - 10);
-            
-            // Footer bottom-right (Page X of Y)
-            const pageStr = "Page " + i + " of " + totalPages;
-            pdf.text(pageStr, pageWidth - 15, pageHeight - 10, { align: 'right' });
-            
-            // Draw a subtle footer line
-            pdf.setDrawColor(200, 200, 200);
-            pdf.line(15, pageHeight - 15, pageWidth - 15, pageHeight - 15);
+        // 1. Tidy up the UI before targeting charts
+        const target = document.getElementById('pdfContentArea');
+        target.classList.add('pdf-rendering');
+
+        // 2. Title
+        printText("Full Leadership Intelligence Report", 24, true, 255, 215, 0, true); // Gold main (#FFD700)
+        y += 20;
+
+        // 3. Smart-Capture: Rasterize ONLY the Bar Chart
+        const barChartEl = document.querySelector('.graph-container');
+        if (barChartEl) {
+            printText("Your Enneagram Score Distribution", 18, true, 74, 20, 140, true); // Aubergine (#4A148C)
+            const canvas = await html2canvas(barChartEl, { scale: 1, useCORS: true, logging: false });
+            const imgData = canvas.toDataURL('image/jpeg', 0.8);
+            const imgRatio = canvas.height / canvas.width;
+            const targetW = maxW;
+            const targetH = targetW * imgRatio;
+            checkPageBreak(targetH + 20);
+            doc.addImage(imgData, 'JPEG', margin, y, targetW, targetH);
+            y += targetH + 30;
         }
 
-        // Generate final synced binary blob to attach
-        const pdfBlob = pdf.output('blob');
+        // 4. Smart-Capture: Rasterize ONLY the SVGs (Type Map)
+        const svgElContainer = document.querySelector('.circular-diagram-container');
+        if (svgElContainer) {
+            const tempSvg = document.getElementById('enneagramCircleSvg');
+            if (tempSvg) {
+                printText("Interconnected Type Map", 18, true, 74, 20, 140, true); // Aubergine (#4A148C)
+                
+                // Ensure SVG is scaled safely before capture
+                const svgData = new XMLSerializer().serializeToString(tempSvg);
+                const b64 = btoa(unescape(encodeURIComponent(svgData)));
+                const mockImg = document.createElement('img');
+                mockImg.src = 'data:image/svg+xml;base64,' + b64;
+                mockImg.style.width = '100%';
+                mockImg.style.display = 'block';
+                tempSvg.parentNode.insertBefore(mockImg, tempSvg);
+                tempSvg.style.display = 'none';
 
-        // Immediately trigger local user download securely
+                await new Promise(resolve => { mockImg.onload = resolve; setTimeout(resolve, 500); });
+                
+                const canvas2 = await html2canvas(svgElContainer, { scale: 1, useCORS: true, logging: false });
+                const imgData2 = canvas2.toDataURL('image/jpeg', 0.8);
+                const imgRatio2 = canvas2.height / canvas2.width;
+                const targetW2 = maxW;
+                const targetH2 = targetW2 * imgRatio2;
+                checkPageBreak(targetH2 + 20);
+                doc.addImage(imgData2, 'JPEG', margin, y, targetW2, targetH2);
+                y += targetH2 + 30;
+
+                // Cleanup SVG swap
+                mockImg.parentNode.removeChild(mockImg);
+                tempSvg.style.display = 'block';
+            }
+        }
+
+        // 5. Parse Text Nodes - Deep Native Extraction
+        // We will recursively extract meaning and formatting from the `#pdfContentArea` safely ignoring the charts we already rendered.
+        function parseDOM(node) {
+            if (node.nodeType === 3) {
+                // Text node directly? Handled in block elements
+                return;
+            }
+            if (node.nodeType !== 1) return;
+            
+            // Skip charts as we rendered them
+            if (node.classList && (node.classList.contains('graph-container') || node.classList.contains('circular-diagram-container'))) return;
+
+            // Headers
+            if (node.tagName === 'H1') printText(node.innerText, 24, true, 74, 20, 140, true);
+            else if (node.tagName === 'H2') printText(node.innerText, 16, true, 74, 20, 140);
+            else if (node.tagName === 'H3') printText(node.innerText, 14, true, 74, 20, 140);
+            else if (node.tagName === 'H4') printText(node.innerText, 12, true, 0, 0, 128); // Royal Navy (#000080)
+            else if (node.tagName === 'P') printText(node.innerText, 11, false, 50, 50, 50);
+            else if (node.tagName === 'LI') {
+                 printText("• " + node.innerText, 11, false, 50, 50, 50);
+            }
+            else if (node.tagName === 'DIV' || node.tagName === 'UL') {
+                // Ignore empty divs, unwrap contents
+                Array.from(node.childNodes).forEach(parseDOM);
+            }
+        }
+
+        const introParams = document.getElementById('introReportContent');
+        if (introParams) parseDOM(introParams);
+        
+        const typeResultBox = document.getElementById('typeResult');
+        if (typeResultBox) parseDOM(typeResultBox);
+        
+        const movedSections = document.getElementById('movedSectionsContainer');
+        if (movedSections) parseDOM(movedSections);
+
+        const detailedStats = document.getElementById('detailedReport');
+        if (detailedStats) parseDOM(detailedStats);
+
+        // --- FINAL ASSEMBLY & DELIVERY ---
+        const pdfBlob = doc.output('blob');
         const pdfUrl = URL.createObjectURL(pdfBlob);
+        
         const a = document.createElement('a');
         a.href = pdfUrl;
-        a.download = opt.filename;
+        a.download = `Enneagram_Report_${firstName}_${familyName}.pdf`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(pdfUrl);
 
-        console.log("downloadAndSend: PDF saved natively. Generating Base64 for Netlify Serverless Backend...");
+        console.log("Vector PDF Generated Natively. Converting to Base64...");
         
-        // Use FileReader to convert Blob to Base64 for custom backend
         const reader = new FileReader();
         reader.readAsDataURL(pdfBlob);
         reader.onloadend = async function() {
             const base64data = reader.result.split(',')[1];
+            
+            // VERIFICATION CAP
+            const sizeKB = (base64data.length * 0.75) / 1024;
+            console.log(`Payload Size Verification: ${Math.round(sizeKB)} KB`);
             
             const payload = {
                 participant_name: `${firstName} ${familyName}`,
@@ -2051,7 +2048,6 @@ async function downloadAndSend() {
             };
 
             try {
-                // ABSOLUTE URL required for cross-origin hosting (e.g. brkthrucoaching.com on WordPress hitting Netlify)
                 const response = await fetch('https://brkthru-digital.netlify.app/.netlify/functions/sendPdfEmail', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -2059,59 +2055,32 @@ async function downloadAndSend() {
                 });
                 
                 if (response.ok) {
-                    console.log("Email sent successfully via Netlify Function!");
-                    // Ensure redirection returns to the origin domain rather than hardcoding Netlify
+                    console.log("Vector-Email sent successfully!");
                     const returnUrl = new URL(window.location.href);
                     returnUrl.searchParams.set('status', 'delivered');
                     window.location.href = returnUrl.toString();
                 } else {
-                    const errorText = await response.text();
-                    console.error("Netlify Function failed to execute properly:", response.status, errorText);
-                    alert("There was an issue emailing your report, but your download should have started. Please contact us if you need help.");
-                    const returnUrl = new URL(window.location.href);
-                    returnUrl.searchParams.set('status', 'delivered');
-                    window.location.href = returnUrl.toString();
+                    alert("Email dispatch failed, but native PDF downloaded.");
+                    btn.disabled = false;
+                    btn.innerText = "Download PDF & Send Email";
                 }
             } catch (error) {
-                console.error("Fetch request to Netlify Function failed", error);
-                alert("There was an issue reaching the email server. Please confirm the report downloaded locally.");
-                const returnUrl = new URL(window.location.href);
-                returnUrl.searchParams.set('status', 'delivered');
-                window.location.href = returnUrl.toString();
+                console.error("Fetch request to Netlify failed", error);
+                alert("Email dispatch failed, but native PDF downloaded.");
+                btn.disabled = false;
+                btn.innerText = "Download PDF & Send Email";
             }
         };
 
     } catch(err) {
-        console.error("downloadAndSend Error:", err);
-        alert("There was an issue emailing your report, but your download should have started. Please contact us if you need help.");
+        console.error("Vector Rendering Error:", err);
+        alert("An error occurred generating the document.");
     } finally {
-        target.classList.remove('pdf-rendering');
-        h1s.forEach(h1 => h1.classList.remove('no-pdf'));
-        
-        // Restore DOM Scrubbing
-        animatedElements.forEach(el => {
-            el.style.animation = '';
-            el.style.boxShadow = '';
-            el.style.transition = '';
-            el.style.background = ''; // Restore gradients
-            el.classList.add('fade-in-ui');
-        });
-
-        // Restore Layout Fix
-        target.style.cssText = oldCssText;
-
         if (btn) {
             btn.disabled = false;
             btn.innerText = "Download PDF & Send Email";
         }
-        
-        // Clean up SVG swap
-        const originalSvg = document.getElementById('enneagramCircleSvg');
-        const mockImg = document.getElementById('svgImageMock');
-        if (originalSvg && mockImg) {
-            mockImg.parentNode.removeChild(mockImg);
-            originalSvg.style.display = 'block';
-        }
+        document.getElementById('pdfContentArea')?.classList.remove('pdf-rendering');
     }
 }
 </script>
