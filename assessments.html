@@ -1940,7 +1940,8 @@ async function downloadAndSend() {
                     console.log("Email sent successfully via Netlify Function!");
                     window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
                 } else {
-                    console.error("Netlify Function failed to execute properly:", response.status);
+                    const errorText = await response.text();
+                    console.error("Netlify Function failed to execute properly:", response.status, errorText);
                     alert("There was an issue emailing your report, but your download should have started. Please contact us if you need help.");
                     window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
                 }

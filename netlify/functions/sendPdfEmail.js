@@ -10,7 +10,8 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        const data = JSON.parse(event.body);
+        const rawBody = event.isBase64Encoded ? Buffer.from(event.body, 'base64').toString('utf8') : event.body;
+        const data = JSON.parse(rawBody);
         const { participant_name, to_email, company, position, attachment } = data;
 
         if (!participant_name || !to_email || !attachment) {
@@ -76,7 +77,11 @@ exports.handler = async (event, context) => {
         console.error('Serverless Function Error:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to send email. Check Netlify logs.' })
+            body: JSON.stringify({ 
+                error: 'Failed to send email. Check Netlify logs.',
+                message: error.message,
+                stack: error.stack
+            })
         };
     }
 };
