@@ -1442,7 +1442,8 @@
             const maxVal = Math.max(...Object.values(fs), 1);
             for (let i = 1; i <= 9; i++) {
                 const s = fs[i] || 0;
-                const h = (s / maxVal) * 250;
+                // Prevent 0px height to avoid html2canvas gradient crash (non-finite double value)
+                const h = Math.max((s / maxVal) * 250, 1); 
                 const w = document.createElement('div');
                 w.className = 'bar-wrapper';
                 w.innerHTML = `<div class="bar-score">${s}</div><div class="bar ${pot.includes(i) ? 'primary-type-bar' : ''}" style="height: ${h}px;"></div><div class="bar-label">Type ${i}<br>${enneagramTypesData[i].shortName}</div>`;
@@ -1866,19 +1867,14 @@ async function downloadAndSend() {
         el.classList.remove('fade-in-ui');
     });
 
-    // 3. LAYOUT FIX: Absolute Coordinate Anchoring (Resolves Timeout & Clipping)
-    // We force the container to absolute 0,0 with 1024px width to prevent negative-space clipping on small screens
+    // 3. LAYOUT FIX: Safe Centering to prevent visual jumping
     const oldCssText = target.style.cssText;
     target.style.width = '1024px';
     target.style.maxWidth = '1024px';
-    target.style.margin = '0';
+    target.style.margin = '0 auto';
     target.style.padding = '40px'; 
     target.style.boxSizing = 'border-box';
     target.style.background = 'white';
-    target.style.position = 'absolute'; // Force to origin to stop negative-bleed clipping
-    target.style.left = '0px';
-    target.style.top = '0px';
-    target.style.textAlign = 'left';
 
     // Get participant info for the email
     const firstName = document.getElementById('firstName')?.value || 'Guest';
