@@ -1797,6 +1797,36 @@ async function downloadAndSend() {
     } catch (e) {
         console.warn("Could not load logo for PDF footer.", e);
     }
+    
+    // --- FOOLPROOF SVG SCALING FIX START ---
+    // html2canvas struggles with SVG bounding boxes, but it handles <img> tags perfectly.
+    // We will serialize the target SVG into a high-res image exactly when the user clicks 'Download',
+    // swap it into the DOM, take the PDF snapshot, and then swap the real SVG back in.
+    let svgImageMock = null;
+    const originalSvg = document.getElementById('enneagramCircleSvg');
+    if (originalSvg) {
+        try {
+            const svgData = new XMLSerializer().serializeToString(originalSvg);
+            // Ensure proper XML declaration and namespace if missing
+            const b64 = btoa(unescape(encodeURIComponent(svgData)));
+            
+            svgImageMock = document.createElement('img');
+            svgImageMock.src = 'data:image/svg+xml;base64,' + b64;
+            // Force rigid dimensions to bypass all PDF scaling quirks
+            svgImageMock.style.width = '800px';
+            svgImageMock.style.height = '480px';
+            svgImageMock.style.margin = '0 auto';
+            svgImageMock.style.display = 'block';
+            svgImageMock.id = 'svgImageMock';
+            
+            // Insert mock image and hide the interactive SVG
+            originalSvg.parentNode.insertBefore(svgImageMock, originalSvg);
+            originalSvg.style.display = 'none';
+        } catch (svgErr) {
+            console.warn("Failed to serialize SVG", svgErr);
+        }
+    }
+    // --- FOOLPROOF SVG SCALING FIX END ---
 
     const opt = {
         margin: [15, 10, 25, 10], // top, left, bottom, right in mm
@@ -1895,6 +1925,14 @@ async function downloadAndSend() {
         if (btn) {
             btn.disabled = false;
             btn.innerText = "Download PDF & Send Email";
+        }
+        
+        // Clean up SVG swap
+        const originalSvg = document.getElementById('enneagramCircleSvg');
+        const mockImg = document.getElementById('svgImageMock');
+        if (originalSvg && mockImg) {
+            mockImg.parentNode.removeChild(mockImg);
+            originalSvg.style.display = 'block';
         }
     }
 }
