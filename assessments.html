@@ -1869,6 +1869,26 @@ async function downloadAndSend() {
     const position = document.getElementById('position')?.value || 'no-position';
     const reportName = firstName === 'Guest' ? "Enneagram Report" : `Enneagram Report of ${firstName} ${familyName}`.trim();
 
+    // 1. Dynamic extraction of the Branding Logo before generation
+    let logoBase64 = null;
+    try {
+        const logoImg = new Image();
+        logoImg.crossOrigin = "Anonymous";
+        logoImg.src = 'images/brkthru-logo.png';
+        await new Promise((resolve, reject) => {
+            logoImg.onload = resolve;
+            logoImg.onerror = reject;
+        });
+        const canvasLogo = document.createElement('canvas');
+        canvasLogo.width = logoImg.width;
+        canvasLogo.height = logoImg.height;
+        const ctxLogo = canvasLogo.getContext('2d');
+        ctxLogo.drawImage(logoImg, 0, 0);
+        logoBase64 = canvasLogo.toDataURL('image/png');
+    } catch (e) {
+        console.warn("V2: Could not load logo for PDF header.", e);
+    }
+
     // Helper to check page break
     function checkPageBreak(heightNeeded) {
         if (y + heightNeeded > ph - margin) {
@@ -1884,6 +1904,11 @@ async function downloadAndSend() {
         doc.setFontSize(10);
         doc.setTextColor(100, 100, 100);
         doc.text(reportName, margin, 30);
+        
+        if (logoBase64) {
+            // Draw logo right-aligned in header: 100px wide, 24px tall approx
+            doc.addImage(logoBase64, 'PNG', pw - margin - 100, 15, 100, 24); 
+        }
         
         doc.setFontSize(9);
         doc.text("www.brkthrucoaching.com", margin, ph - 25);
