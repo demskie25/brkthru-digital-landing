@@ -45,6 +45,19 @@
                 page-break-inside: avoid !important;
             }
             
+            /* CRITICAL: html2canvas 1.4.1 crashes on linear-gradients inside zero-dimension sub-elements. 
+               We force solid colors and remove shadows during PDF generation. */
+            .pdf-rendering .bar {
+                background: #000080 !important; /* Solid Royal Navy */
+                box-shadow: none !important;
+                transition: none !important;
+                animation: none !important;
+            }
+            .pdf-rendering .bar.primary-type-bar {
+                background: #008080 !important; /* Solid Teal */
+                box-shadow: none !important;
+            }
+            
             /* --- AD OVERLAY STYLES --- */
             .message-box-overlay {
                 position: fixed;
