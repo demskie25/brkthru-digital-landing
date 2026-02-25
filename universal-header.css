@@ -99,6 +99,11 @@
   color: var(--univ-gold) !important;
 }
 
+/* DESKTOP EXPLICIT HIDE */
+.mobile-cta-btn {
+  display: none !important;
+}
+
 
 /* DROPDOWNS */
 .univ-dropdown-container {
@@ -324,6 +329,19 @@
   .univ-dropdown-link {
     padding: 14px 24px 14px 40px;
     font-size: 11px;
+  }
+
+  /* MOBILE EXPLICIT SHOW - HIGH VISIBILITY CTA */
+  .mobile-cta-btn {
+    display: flex !important;
+    background-color: var(--univ-gold) !important;
+    color: var(--univ-navy) !important;
+    font-weight: 900 !important;
+    font-size: 14px !important;
+    justify-content: center !important;
+    padding: 20px !important;
+    margin-bottom: 5px !important;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4) !important;
   }
 
   .univ-utility {

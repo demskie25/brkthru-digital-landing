@@ -45,6 +45,44 @@
                 page-break-inside: avoid !important;
             }
             
+            /* --- AD OVERLAY STYLES --- */
+            .message-box-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.85);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+            }
+            .message-box-content {
+                background: white;
+                padding: 2.5rem;
+                border-radius: 1.5rem;
+                max-width: 450px;
+                width: 90%;
+                text-align: center;
+                border: 3px solid var(--gold-dark);
+                box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            }
+
+            @media (max-width: 1024px) {
+                .message-box-overlay {
+                    align-items: flex-end; /* Push to bottom on mobile */
+                    background: transparent; /* Remove full screen blackout */
+                    pointer-events: none; /* Let clicks pass through empty space */
+                    padding-bottom: 24px;
+                }
+                .message-box-content {
+                    pointer-events: auto; /* Re-enable clicks on the banner */
+                    padding: 1.5rem;
+                    border-radius: 1rem;
+                    border: 2px solid var(--gold-main);
+                    width: 95%;
+                    margin: 0 auto;
+                }
+            }
+            
             /* Explicit Page Breaks */
             .page-break-before {
                 page-break-before: always !important;
@@ -215,6 +253,21 @@
             border-radius: 1rem;
             margin-bottom: 2rem;
             border: 1px solid var(--gold-dark);
+        }
+
+        /* MOBILE OPTIMIZATION - PREVENT SQUISHED QUESTIONS ON IPHONE SE */
+        @media (max-width: 640px) {
+            .assessment-container {
+                padding: 1.25rem;
+                margin: 1rem auto;
+            }
+            .question-card, .graph-container, .circular-diagram-container {
+                padding: 1.25rem;
+            }
+            .btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.95rem;
+            }
         }
         
         /* New Creative Report Card Style */
@@ -432,6 +485,7 @@
                     <span class="univ-logo-accent">DIGITAL</span>
                 </a>
                 <div class="univ-nav">
+                    <a href="assessments.html" class="univ-nav-item mobile-cta-btn">START ASSESSMENT</a>
                     <a href="index.html" class="univ-nav-item">HOME</a>
                     <a href="odyssey.html" class="univ-nav-item">OUR ODYSSEY</a>
                     <a href="assessments.html" class="univ-nav-item active">ASSESSMENTS</a>
