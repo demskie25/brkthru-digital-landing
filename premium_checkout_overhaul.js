@@ -125,16 +125,16 @@ const content = `<!DOCTYPE html>
                     </div>
                     <div class="relative z-10 flex flex-col md:flex-row gap-8 items-center">
                         <div class="shrink-0 text-center">
-                            <img src="images/brkthru-logo.png" alt="Google" class="h-6 w-auto mb-4 opacity-50 grayscale invert brightness-0">
-                            <div class="text-[0.6rem] font-bold uppercase tracking-widest text-slate-400">Used by Professionals @</div>
-                            <div class="text-sm font-black text-white px-3 py-1 bg-white/10 rounded mt-1">Googleplex</div>
+                            <img src="images/brkthru-logo.png" alt="Logo" class="h-6 w-auto mb-4 opacity-50 grayscale invert brightness-0">
+                            <div class="text-[0.6rem] font-bold uppercase tracking-widest text-slate-400">Verified Professional</div>
+                            <div class="text-sm font-black text-white px-3 py-1 bg-white/10 rounded mt-1">CEO Feedback</div>
                         </div>
                         <div class="space-y-4">
-                            <p class="text-lg italic text-slate-200">"Love del Rosario uses the World Class Coach framework as her 'virtual mentor' to manage stakeholders and lead with precision at the world's most respected tech giant."</p>
+                            <p class="text-lg italic text-slate-200">"In my desire to help others improve i always thought that they need to be fixed for their weaknesses until the enneagram showed me that my style of appreciating their unique strengths and ability to express my expectations appropriately while learning theirs was what fell short in our working relationship."</p>
                             <div class="flex items-center gap-3">
                                 <div>
-                                    <p class="font-bold text-amber-500">Love del Rosario</p>
-                                    <p class="text-xs text-slate-400 uppercase tracking-wider">Program Manager @ Google</p>
+                                    <p class="font-bold text-amber-500">Geno Hadel</p>
+                                    <p class="text-xs text-slate-400 uppercase tracking-wider">CEO</p>
                                 </div>
                             </div>
                         </div>
@@ -221,10 +221,10 @@ const content = `<!DOCTYPE html>
                 link: 'https://hitpay.link/9zlbvf' 
             },
             'enneagram': {
-                name: 'Meta-Programs Assessment',
+                name: 'Enneagram Assessment',
                 price: 'PHP 299.00',
                 img: 'images/maps.jpg', 
-                link: 'https://hitpay.app/pay/brkthru'
+                link: 'https://hit-pay.com/brkthru-ventures/product/enneagram-assessment'
             }
         };
         window.onload = () => {

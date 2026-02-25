@@ -225,10 +225,10 @@ const checkoutContent = `<!DOCTYPE html>
                 link: 'https://hitpay.link/9zlbvf' 
             },
             'enneagram': {
-                name: 'Meta-Programs Assessment',
+                name: 'Enneagram Assessment',
                 price: 'PHP 299.00',
                 img: 'images/maps.jpg', 
-                link: 'https://hitpay.app/pay/brkthru'
+                link: 'https://hit-pay.com/brkthru-ventures/product/enneagram-assessment'
             }
         };
         window.onload = () => {
@@ -342,7 +342,7 @@ try {
 
     // 3. GATEKEEPER OVERLAY (Alpine version)
     src = src.replace('<div id="accessDeniedOverlay">', '<div id="accessDeniedOverlay" x-show="!enneagramUnlocked" x-cloak>');
-    src = src.replace(/<a href="\/assessments"[^>]*>Go to Assessments<\/a>/, '<a href="checkout.html?item=enneagram" class="btn btn-primary bg-white text-black font-bold">Unlock Access via HitPay</a>');
+    src = src.replace(/<a href="\/assessments"[^>]*>Go to Assessments<\/a>/, '<a href="https://hit-pay.com/brkthru-ventures/product/enneagram-assessment" class="btn btn-primary bg-white text-black font-bold">Unlock Access via HitPay</a>');
     
     // 4. MAIN APP CONTENT (Alpine version)
     src = src.replace('<div id="appContent" class="hidden">', '<div id="appContent" x-show="enneagramUnlocked" x-cloak>');

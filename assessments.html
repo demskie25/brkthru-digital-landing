@@ -409,7 +409,7 @@
             border-bottom: 1px dotted #d1d5db;
             padding-bottom: 0.5rem;
         }
-
+    </style>
 </head>
 <body x-data="{ enneagramUnlocked: new URLSearchParams(window.location.search).get('status') === 'completed' || new URLSearchParams(window.location.search).get('access') === 'enneagram' || new URLSearchParams(window.location.search).get('test') === 'true', backdoorClicks: 0 }">
         <div x-show="enneagramUnlocked" x-cloak class="backdoor-indicator uppercase tracking-widest">Master Access: Assessment Unlocked</div>
@@ -459,22 +459,27 @@
                     You are one transaction away from revealing the cognitive machinery that drives your leadership style.
                 </p>
             </div>
-            <div class="bg-slate-50 rounded-2xl p-6 mb-10 border border-slate-100 flex items-center justify-between">
-                <div>
-                    <p class="text-[0.6rem] font-black text-slate-400 uppercase tracking-widest mb-1">One-Time License</p>
-                    <div class="flex items-baseline gap-1">
-                        <span class="text-slate-900 font-black text-3xl">₱299</span>
-                        <span class="text-slate-400 font-bold text-sm">.00</span>
+            <div class="bg-slate-50 rounded-2xl p-6 mb-10 border border-slate-100 flex items-center justify-between shadow-sm relative overflow-hidden">
+                <div class="absolute -top-1 -right-1 opacity-5"><svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.995 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.982z"/></svg></div>
+                <div class="relative z-10 w-full">
+                    <p class="text-[0.7rem] italic text-slate-600 leading-relaxed mb-3">"In my desire to help others improve i always thought that they need to be fixed for their weaknesses until the enneagram showed me that my style of appreciating their unique strengths... was what fell short in our working relationship."</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-[0.6rem] font-black text-slate-900 uppercase tracking-widest mb-1">One-Time License</p>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-slate-900 font-black text-3xl">₱299</span>
+                                <span class="text-slate-400 font-bold text-sm">.00</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[0.65rem] font-bold text-blue-700">Geno Hadel</p>
+                            <p class="text-[0.5rem] font-black text-slate-400 uppercase tracking-widest">CEO Testimony</p>
+                        </div>
                     </div>
-                </div>
-                <div class="text-right">
-                    <span class="text-[0.6rem] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded uppercase">Lifetime</span>
                 </div>
             </div>
             <div class="space-y-6">
-                <a href="https://hitpay.app/pay/brkthru" class="block w-full py-5 rounded-2xl text-white font-black text-lg uppercase tracking-wider text-center bg-blue-700 shadow-xl hover:bg-blue-800 transition-all">
-                    Unlock Access Now
-                </a>
+                <a href="https://hitpay.shop/brkthru-ventures/product/enneagram-assessment">Unlock Access Now</a>
                 <div class="flex items-center justify-center gap-3 grayscale opacity-40">
                     <img src="images/brkthru-logo.png" alt="BRKTHRU" class="h-4 opacity-50">
                     <span class="text-[0.6rem] font-black uppercase tracking-widest text-slate-400">Secure Gateway</span>
@@ -1683,6 +1688,8 @@
 
                     console.log("V128: Dual-Sync Successful.");
                     console.log("V128: Final results synchronized.");
+                } catch (e) {
+                    console.error("V128: Dual-Sync Error:", e);
                 }
             }
 
@@ -1703,24 +1710,83 @@
                 }, 100);
             })();
         </script>
-    <form id="hiddenEmailForm" action="https://formsubmit.co/brkthru.consulting@gmail.com" method="POST" style="display: none;">
-        <input type="hidden" name="_subject" value="Enneagram PDF Downloaded!">
-        <input type="hidden" name="message" value="A user has downloaded their Enneagram report.">
-        <input type="hidden" name="_captcha" value="false">
-    </form>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
 function downloadAndSend() {
-    alert("Step 1: Generating PDF...");
-    const target = document.getElementById('report-container') || document.querySelector('.report-content') || document.body;
-    if (typeof html2pdf === 'undefined') { alert("Error: PDF library missing."); return; }
-    html2pdf().from(target).save('Enneagram-Report.pdf').then(() => {
-        alert("Step 2: PDF saved! Sending email to brkthru.consulting@gmail.com...");
-        document.getElementById('hiddenEmailForm').submit();
-    }).catch(err => alert("PDF Error: " + err));
+    console.log("downloadAndSend: Initiated.");
+    const btn = document.querySelector('button[onclick*="downloadAndSend"]');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerText = "Generating PDF...";
+    }
+    
+    const target = document.getElementById('pdfContentArea');
+    if (!target) { 
+        console.error("downloadAndSend: pdfContentArea NOT FOUND");
+        return; 
+    }
+    
+    // UI Enhancements for PDF focus
+    target.classList.add('pdf-rendering');
+    const h1s = target.querySelectorAll('h1');
+    h1s.forEach(h1 => h1.classList.add('no-pdf'));
+
+    // Get participant info for the email
+    const firstName = document.getElementById('firstName')?.value || 'Guest';
+    const familyName = document.getElementById('familyName')?.value || '';
+    const email = document.getElementById('email')?.value || 'no-email';
+    const company = document.getElementById('company')?.value || 'no-company';
+    const position = document.getElementById('position')?.value || 'no-position';
+    
+    // Populate hidden form
+    document.getElementById('form-name').value = `${firstName} ${familyName}`;
+    document.getElementById('form-email').value = email;
+    document.getElementById('form-message').value = `Participant: ${firstName} ${familyName}\nEmail: ${email}\nCompany: ${company}\nPosition: ${position}\nAssessment completed successfully.`;
+    
+    const opt = {
+        margin: [10, 10, 20, 10],
+        filename: `Enneagram_Report_${firstName}_${familyName}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+
+    html2pdf().set(opt).from(target).save().then(() => {
+        console.log("downloadAndSend: PDF saved. Sending email...");
+        const form = document.getElementById('hiddenEmailForm');
+        
+        // Cleanup UI
+        target.classList.remove('pdf-rendering');
+        h1s.forEach(h1 => h1.classList.remove('no-pdf'));
+        if (btn) {
+            btn.disabled = false;
+            btn.innerText = "Download PDF & Send Email";
+        }
+
+        if (form) {
+            form.submit();
+        }
+    }).catch(err => {
+        console.error("downloadAndSend: PDF Error:", err);
+        target.classList.remove('pdf-rendering');
+        h1s.forEach(h1 => h1.classList.remove('no-pdf'));
+        if (btn) {
+            btn.disabled = false;
+            btn.innerText = "Download PDF & Send Email";
+        }
+    });
 }
 </script>
+
+    <!-- Hidden Form for Email Delivery -->
+    <form id="hiddenEmailForm" action="https://formsubmit.co/brkthru.consulting@gmail.com" method="POST" style="display:none;">
+        <input type="hidden" name="_subject" value="New Assessment Result - BRKTHRU DIGITAL">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://brkthru-digital.netlify.app/assessments.html?status=delivered">
+        <input type="text" name="name" id="form-name">
+        <input type="email" name="email" id="form-email">
+        <textarea name="message" id="form-message"></textarea>
+    </form>
 
 </body>
 </html>

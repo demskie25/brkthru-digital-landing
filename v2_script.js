@@ -53,7 +53,7 @@ document.addEventListener("click", (e) => {
 
   if (e.target.id === "modal-confirm") {
     // Redirect logic (using existing HitPay generic portal or specific logic if needed)
-    window.location.href = "https://hitpay.app/pay/brkthru";
+    window.location.href = "https://hit-pay.com/pay/brkthru";
   }
 });
 
