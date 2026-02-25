@@ -1866,18 +1866,16 @@ async function downloadAndSend() {
         el.classList.remove('fade-in-ui');
     });
 
-    // 3. LAYOUT FIX: Nuclear Positioning - Move element to absolute 0,0 of viewport to prevent html2canvas clipping
+    // 3. LAYOUT FIX: Reverted to stable margin-reset. 
+    // We force the target to 1024px and remove auto-margins to ensure the capture window aligns to (0,0).
     const oldCssText = target.style.cssText;
-    target.style.position = 'fixed';
-    target.style.top = '0';
-    target.style.left = '0';
     target.style.width = '1024px';
     target.style.maxWidth = '1024px';
     target.style.margin = '0';
-    target.style.padding = '40px'; 
-    target.style.zIndex = '10000000';
+    target.style.padding = '40px';
+    target.style.boxSizing = 'border-box';
     target.style.background = 'white';
-    window.scrollTo(0, 0); // Reset scroll to avoid offset capture errors
+    target.style.position = 'relative'; // Stable position context
 
     // Get participant info for the email
     const firstName = document.getElementById('firstName')?.value || 'Guest';
@@ -1953,7 +1951,7 @@ async function downloadAndSend() {
         margin: [15, 10, 25, 10], // top, left, bottom, right in mm
         filename: `Enneagram_Report_${firstName}_${familyName}.pdf`,
         image: { type: 'jpeg', quality: 0.2 }, // NUCLEAR COMPRESSION (SQUEEZE)
-        html2canvas: { scale: 1.2, useCORS: true, logging: false, windowWidth: 1024, scrollX: 0, scrollY: 0 }, // FIXED POS CAPTURE
+        html2canvas: { scale: 1.2, useCORS: true, logging: false, windowWidth: 1024 }, // STABLE VIRTUAL VIEWPORT
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
