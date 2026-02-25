@@ -1,10 +1,26 @@
 const nodemailer = require('nodemailer');
 
 exports.handler = async (event, context) => {
+    const headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'OPTIONS, POST'
+    };
+
+    // Handle CORS preflight request
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers,
+            body: ''
+        };
+    }
+
     // Only accept POST requests
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
+            headers,
             body: JSON.stringify({ error: 'Method Not Allowed' })
         };
     }
@@ -93,6 +109,7 @@ exports.handler = async (event, context) => {
 
         return {
             statusCode: 200,
+            headers,
             body: JSON.stringify({ message: 'Emails sent successfully!' })
         };
 
@@ -100,6 +117,7 @@ exports.handler = async (event, context) => {
         console.error('Serverless Function Error:', error);
         return {
             statusCode: 500,
+            headers,
             body: JSON.stringify({ 
                 error: 'Failed to send email. Check Netlify logs.',
                 message: error.message,
