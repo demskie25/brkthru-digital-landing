@@ -91,10 +91,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">emailjs.init("-ZAD0vH8aSbV_LlpW");</script>
-    
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -1917,29 +1913,42 @@ async function downloadAndSend() {
         document.body.removeChild(a);
         URL.revokeObjectURL(pdfUrl);
 
-        console.log("downloadAndSend: PDF saved natively. Generating Base64 for EmailJS...");
+        console.log("downloadAndSend: PDF saved natively. Generating Base64 for Netlify Serverless Backend...");
         
-        // Use FileReader to convert Blob to Base64 for EmailJS
+        // Use FileReader to convert Blob to Base64 for custom backend
         const reader = new FileReader();
         reader.readAsDataURL(pdfBlob);
-        reader.onloadend = function() {
+        reader.onloadend = async function() {
             const base64data = reader.result.split(',')[1];
-            const templateParams = {
-                to_email: email, 
-                attachment: base64data,
+            
+            const payload = {
                 participant_name: `${firstName} ${familyName}`,
-                message: `Participant: ${firstName} ${familyName}\nEmail: ${email}\nCompany: ${company}\nPosition: ${position}\nAssessment completed successfully.\n\nEnclosure: Full Assessment PDF attached.`
+                to_email: email,
+                company: company,
+                position: position,
+                attachment: base64data
             };
 
-            emailjs.send('service_c2k8v3l', 'template_enneagram_resul', templateParams)
-                .then(function(response) {
-                    console.log("Email sent successfully via EmailJS!", response.status, response.text);
+            try {
+                const response = await fetch('/.netlify/functions/sendPdfEmail', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    console.log("Email sent successfully via Netlify Function!");
                     window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
-                }, function(error) {
-                    console.error("EmailJS failed to send", error);
+                } else {
+                    console.error("Netlify Function failed to execute properly:", response.status);
                     alert("There was an issue emailing your report, but your download should have started. Please contact us if you need help.");
                     window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
-                });
+                }
+            } catch (error) {
+                console.error("Fetch request to Netlify Function failed", error);
+                alert("There was an issue reaching the email server. Please confirm the report downloaded locally.");
+                window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
+            }
         };
 
     } catch(err) {
