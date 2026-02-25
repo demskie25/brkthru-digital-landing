@@ -410,11 +410,11 @@
             padding-bottom: 0.5rem;
         }
 
-        /* Maintain explicit scale in PDF to prevent explosion while keeping it large and centered */
+        /* Set exact pixel scale in PDF since html2canvas struggles with SVG percentages */
         .pdf-rendering .circular-diagram-container svg {
-            width: 100% !important;
-            max-width: 800px !important;
-            height: auto !important;
+            width: 800px !important;
+            height: 480px !important;
+            max-width: none !important;
             margin: 0 auto !important;
             display: block !important;
         }
