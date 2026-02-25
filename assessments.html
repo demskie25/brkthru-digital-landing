@@ -1210,8 +1210,7 @@
             document.getElementById('barChart').insertAdjacentHTML('afterend', allTypesHTML);
 
             const growthStressWingsHTML = `
-                <div id="movedSectionsContainer">
-                     <div class="report-card">
+                     <div class="report-card pb-break-inside-avoid">
                         <div class="context-box">
                             <p class="font-bold">Why you need to know this:</p>
                             <p>The Enneagram is not a static box; it's a map for growth. Knowing where you go in stress helps you catch it early. Knowing your growth path gives you a specific developmental goal.</p>
@@ -1248,7 +1247,6 @@
                             <p class="text-lg">${info.wing2Explanation}</p>
                         </div>
                     </div>
-                </div>
             `;
             document.getElementById('movedSectionsContainer').innerHTML = growthStressWingsHTML;
 
@@ -1853,7 +1851,7 @@ async function downloadAndSend() {
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, letterRendering: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        pagebreak: { mode: ['css', 'legacy'] }
     };
 
     try {
