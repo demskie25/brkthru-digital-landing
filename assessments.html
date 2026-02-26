@@ -2198,15 +2198,42 @@
                 pagebreak: { mode: ['css', 'legacy'] } // Honors the .page-break-before class natively
             };
 
+            let cloneContainer = null;
             try {
-                // Force white background to prevent transparent/blank pdf renders
-                resultsContainer.style.backgroundColor = '#ffffff';
+                // 1. CLONE & ISOLATE: Create Unbounded Temporary Container
+                cloneContainer = document.createElement('div');
+                cloneContainer.id = 'pdf-clone-container';
+                cloneContainer.style.position = 'absolute';
+                cloneContainer.style.left = '-9999px';
+                cloneContainer.style.top = '0';
+                cloneContainer.style.width = '1024px';
+                cloneContainer.style.height = 'auto';
+                cloneContainer.style.backgroundColor = '#ffffff';
+                cloneContainer.style.display = 'block';
+                cloneContainer.style.visibility = 'visible';
+                cloneContainer.style.overflow = 'visible';
+                cloneContainer.style.zIndex = '-9999';
+
+                // Deep Clone Results
+                const clone = resultsContainer.cloneNode(true);
+                clone.id = 'pdf-results-clone';
+                cloneContainer.appendChild(clone);
+                document.body.appendChild(cloneContainer);
+
+                // 2. DISABLE ANIMATIONS / FORCE OPACITY IN CLONE
+                const elementsToForce = cloneContainer.querySelectorAll('.chart-container, svg, canvas, .enneagram-node-circle, .bar-fill, .type-circle');
+                elementsToForce.forEach(el => {
+                    el.style.setProperty('opacity', '1', 'important');
+                    el.style.setProperty('transform', 'none', 'important');
+                    el.style.setProperty('transition', 'none', 'important');
+                    el.style.setProperty('animation', 'none', 'important');
+                });
 
                 // Add 2000ms delay to guarantee DOM, fonts, and charts are fully painted before snapshot
                 await new Promise(resolve => setTimeout(resolve, 2000));
 
-                // We target the live, visible results container that is now isolated via CSS
-                const worker = html2pdf().set(opt).from(resultsContainer);
+                // 3. TARGET THE ISOLATED CLONE
+                const worker = html2pdf().set(opt).from(cloneContainer);
                 const pdfBlob = await worker.outputPdf('blob');
 
                 // Download locally
@@ -2266,7 +2293,12 @@
             } finally {
                 // 4. RESTORE STATE
                 document.body.classList.remove('pdf-rendering');
-                resultsContainer.style.backgroundColor = '';
+
+                // Cleanup Duplicate Container
+                if (cloneContainer && cloneContainer.parentNode) {
+                    cloneContainer.parentNode.removeChild(cloneContainer);
+                }
+
                 if (headerHtml && headerHtml.parentNode) headerHtml.parentNode.removeChild(headerHtml);
 
                 [graphSection, mapSection, movedSection, detailedSection].forEach(el => {
