@@ -692,23 +692,55 @@
 
         /* Print Fallback Styles */
         @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0.5in;
+            }
+
             body {
                 background: white;
             }
 
+            /* Hide Clutter */
             .univ-header,
             footer,
             .mobile-cta-btn,
-            button {
+            button,
+            .backdoor-indicator {
                 display: none !important;
             }
 
+            /* Show Results */
             #results-section {
                 display: block !important;
                 visibility: visible !important;
                 width: 100% !important;
                 opacity: 1 !important;
                 position: relative !important;
+            }
+
+            /* Force Page Breaks on Sections */
+            #results-section h2,
+            #results-section h3 {
+                page-break-before: always !important;
+                break-before: page !important;
+                padding-top: 20px;
+            }
+
+            /* Exception: don't break the very first headings to keep the start clean */
+            #introReportContent h3,
+            #participantSummary h3 {
+                page-break-before: auto !important;
+                break-before: auto !important;
+                padding-top: 0;
+            }
+
+            /* Prevent Chart and Map Slicing */
+            .chart-container,
+            .circular-diagram-container,
+            .enneagram-map {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
             }
         }
     </style>
