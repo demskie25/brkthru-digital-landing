@@ -2176,10 +2176,10 @@
             }
 
             const opt = {
-                margin: [15, 10, 25, 10], // top, left, bottom, right in mm
+                margin: [0.5, 0.5, 0.5, 0.5], // top, left, bottom, right
                 filename: `Enneagram_Report_V2_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
-                html2canvas: { scale: 2, useCORS: true, letterRendering: true, windowWidth: 1024, width: 1024 }, // VIRTUAL DESKTOP VIEWPORT
+                html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollX: 0, scrollY: 0, windowWidth: 1024, width: 1024 }, // VIRTUAL DESKTOP VIEWPORT
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
                 pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
