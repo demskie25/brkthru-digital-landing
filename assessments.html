@@ -2198,6 +2198,12 @@
             };
 
             try {
+                // Force white background to prevent transparent/blank pdf renders
+                resultsContainer.style.backgroundColor = '#ffffff';
+
+                // Add 1000ms delay to guarantee DOM, fonts, and charts are fully painted before snapshot
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
                 // We target the live, visible results container that is now isolated via CSS
                 const worker = html2pdf().set(opt).from(resultsContainer);
                 const pdfBlob = await worker.outputPdf('blob');
@@ -2259,6 +2265,7 @@
             } finally {
                 // 4. RESTORE STATE
                 document.body.classList.remove('pdf-rendering');
+                resultsContainer.style.backgroundColor = '';
                 if (headerHtml && headerHtml.parentNode) headerHtml.parentNode.removeChild(headerHtml);
 
                 [graphSection, mapSection, movedSection, detailedSection].forEach(el => {
