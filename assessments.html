@@ -2189,6 +2189,7 @@
                 html2canvas: {
                     scale: 2,
                     useCORS: true,
+                    allowTaint: true,
                     logging: false,
                     width: 1024,
                     windowWidth: 1024
@@ -2201,8 +2202,8 @@
                 // Force white background to prevent transparent/blank pdf renders
                 resultsContainer.style.backgroundColor = '#ffffff';
 
-                // Add 1000ms delay to guarantee DOM, fonts, and charts are fully painted before snapshot
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                // Add 2000ms delay to guarantee DOM, fonts, and charts are fully painted before snapshot
+                await new Promise(resolve => setTimeout(resolve, 2000));
 
                 // We target the live, visible results container that is now isolated via CSS
                 const worker = html2pdf().set(opt).from(resultsContainer);
