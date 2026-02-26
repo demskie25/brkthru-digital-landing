@@ -689,6 +689,28 @@
             max-width: none !important;
             margin: 0 auto !important;
         }
+
+        /* Print Fallback Styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .univ-header,
+            footer,
+            .mobile-cta-btn,
+            button {
+                display: none !important;
+            }
+
+            #results-section {
+                display: block !important;
+                visibility: visible !important;
+                width: 100% !important;
+                opacity: 1 !important;
+                position: relative !important;
+            }
+        }
     </style>
 </head>
 
@@ -2229,12 +2251,21 @@
                     el.style.setProperty('animation', 'none', 'important');
                 });
 
+                // Force Repaint
+                window.dispatchEvent(new Event('resize'));
+
                 // Add 2000ms delay to guarantee DOM, fonts, and charts are fully painted before snapshot
                 await new Promise(resolve => setTimeout(resolve, 2000));
 
                 // 3. TARGET THE ISOLATED CLONE
                 const worker = html2pdf().set(opt).from(cloneContainer);
                 const pdfBlob = await worker.outputPdf('blob');
+
+                // Evaluate size to determine if it's a blank PDF (typically very small, e.g. < 50KB)
+                const pdfKB = pdfBlob.size / 1024;
+                if (pdfKB < 50) {
+                    throw new Error(`Generated PDF seems suspiciously small (${Math.round(pdfKB)}KB), possibly blank.`);
+                }
 
                 // Download locally
                 const pdfUrl = URL.createObjectURL(pdfBlob);
@@ -2288,8 +2319,13 @@
                 };
 
             } catch (err) {
-                console.error("Visible-Isolation Rendering Error:", err);
-                alert("An error occurred generating the document.\\n\\nDetails: " + (err.message || err));
+                console.error("Visible-Isolation Rendering Error/Fallback Initiated:", err);
+
+                // FALLBACK: User's Browser actively stripped intrinsics and killed JS snapshotting. Use window.print().
+                alert("Security extension detected: PDF automated snapshot blocked. Falling back to Native Browser Print.\\n\\nPlease select 'Save as PDF' as your Printer Destination.");
+                window.dispatchEvent(new Event('resize'));
+                window.print();
+
             } finally {
                 // 4. RESTORE STATE
                 document.body.classList.remove('pdf-rendering');
