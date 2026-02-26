@@ -2199,13 +2199,213 @@
     </script>
     <script>
         async function downloadAndSend() {
-            // Bypass html2pdf entirely per emergency protocol
-            console.log("Security lockdown active: Bypassing html2pdf library and using native window.print()");
+            console.log("downloadAndSend: Initiated.");
+            const btn = document.querySelector('button[onclick*="downloadAndSend"]');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerText = "Generating PDF...";
+            }
 
-            // Slight delay to ensure UI settles before print dialogue blocks thread
-            setTimeout(() => {
-                window.print();
-            }, 300);
+            const target = document.getElementById('resultsSection');
+            if (!target) {
+                console.error("downloadAndSend: resultsSection NOT FOUND");
+                return;
+            }
+
+            // UI Enhancements for PDF focus
+            target.classList.add('pdf-rendering');
+            const h1s = target.querySelectorAll('h1');
+            h1s.forEach(h1 => h1.classList.add('no-pdf'));
+
+            // Get participant info for the email
+            const firstName = document.getElementById('firstName')?.value || 'Guest';
+            const familyName = document.getElementById('familyName')?.value || '';
+            const email = document.getElementById('email')?.value || 'no-email';
+            const company = document.getElementById('company')?.value || 'no-company';
+            const position = document.getElementById('position')?.value || 'no-position';
+
+            // Attempt to dynamically load logo to embed cleanly in jsPDF
+            let logoBase64 = null;
+            try {
+                const logoImg = new Image();
+                logoImg.crossOrigin = "Anonymous";
+                logoImg.src = 'images/brkthru-logo.png';
+                await new Promise((resolve, reject) => {
+                    logoImg.onload = resolve;
+                    logoImg.onerror = reject;
+                });
+                const canvas = document.createElement('canvas');
+                canvas.width = logoImg.width;
+                canvas.height = logoImg.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(logoImg, 0, 0);
+                logoBase64 = canvas.toDataURL('image/png');
+            } catch (e) {
+                console.warn("Could not load logo for PDF footer.", e);
+            }
+
+            // --- FOOLPROOF SVG SCALING FIX START ---
+            // html2canvas struggles with SVG bounding boxes, but it handles <img> tags perfectly.
+            // We will serialize the target SVG into a high-res image exactly when the user clicks 'Download',
+            // swap it into the DOM, take the PDF snapshot, and then swap the real SVG back in.
+            let svgImageMock = null;
+            const originalSvg = document.getElementById('enneagramCircleSvg');
+            if (originalSvg) {
+                try {
+                    const svgData = new XMLSerializer().serializeToString(originalSvg);
+                    // Ensure proper XML declaration and namespace if missing
+                    const b64 = btoa(unescape(encodeURIComponent(svgData)));
+
+                    svgImageMock = document.createElement('img');
+                    svgImageMock.src = 'data:image/svg+xml;base64,' + b64;
+                    // Force rigid dimensions to bypass all PDF scaling quirks
+                    svgImageMock.style.width = '800px';
+                    svgImageMock.style.height = '480px';
+                    svgImageMock.style.margin = '0 auto';
+                    svgImageMock.style.display = 'block';
+                    svgImageMock.id = 'svgImageMock';
+
+                    // Insert mock image and hide the interactive SVG
+                    originalSvg.parentNode.insertBefore(svgImageMock, originalSvg);
+                    originalSvg.style.display = 'none';
+
+                    // CRITICAL FIX: We must wait for the browser to physically render the Base64 image
+                    // to the DOM before html2canvas takes its snapshot. Otherwise it captures a blank box.
+                    await new Promise((resolve) => {
+                        svgImageMock.onload = resolve;
+                        svgImageMock.onerror = resolve;
+                        setTimeout(resolve, 600); // 600ms safety fallback
+                    });
+
+                } catch (svgErr) {
+                    console.warn("Failed to serialize SVG", svgErr);
+                }
+            }
+            // --- FOOLPROOF SVG SCALING FIX END ---
+
+            const opt = {
+                margin: [15, 10, 25, 10], // top, left, bottom, right in mm
+                filename: `Enneagram_Report_${firstName}_${familyName}.pdf`,
+                image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
+                html2canvas: { scale: 2, useCORS: true, letterRendering: true, windowWidth: 1024, width: 1024 }, // VIRTUAL DESKTOP VIEWPORT
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            try {
+                // Build worker pipeline
+                const worker = html2pdf().set(opt).from(target).toPdf();
+                const pdf = await worker.get('pdf');
+
+                // Post-process the PDF with headers, footers, website links, and page numbers
+                const totalPages = pdf.internal.getNumberOfPages();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                const pageWidth = pdf.internal.pageSize.getWidth();
+
+                for (let i = 1; i <= totalPages; i++) {
+                    pdf.setPage(i);
+
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(100);
+
+                    // Header Top
+                    // Fallback dynamically if names are empty/Guest
+                    const reportName = firstName === 'Guest' ? "Enneagram Report" : `Enneagram Report of ${firstName} ${familyName}`.trim();
+                    pdf.text(reportName, 10, 10);
+
+                    // Global Header: Brkthru Logo (Top Right)
+                    if (logoBase64) {
+                        // Draw the logo in the top right corner of every page
+                        pdf.addImage(logoBase64, 'PNG', pageWidth - 40, 5, 25, 6);
+                    }
+
+                    // Footer Style Setup
+                    pdf.setFontSize(9);
+                    pdf.setTextColor(150, 150, 150); // Subtle gray
+
+                    // Footer bottom-left (Website)
+                    pdf.text("www.brkthrucoaching.com", 15, pageHeight - 10);
+
+                    // Footer bottom-right (Page X of Y)
+                    const pageStr = "Page " + i + " of " + totalPages;
+                    pdf.text(pageStr, pageWidth - 15, pageHeight - 10, { align: 'right' });
+
+                    // Draw a subtle footer line
+                    pdf.setDrawColor(200, 200, 200);
+                    pdf.line(15, pageHeight - 15, pageWidth - 15, pageHeight - 15);
+                }
+
+                // Generate final synced binary blob to attach
+                const pdfBlob = pdf.output('blob');
+
+                // Immediately trigger local user download securely
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+                const a = document.createElement('a');
+                a.href = pdfUrl;
+                a.download = opt.filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(pdfUrl);
+
+                console.log("downloadAndSend: PDF saved natively. Generating Base64 for Netlify Serverless Backend...");
+
+                // Use FileReader to convert Blob to Base64 for custom backend
+                const reader = new FileReader();
+                reader.readAsDataURL(pdfBlob);
+                reader.onloadend = async function () {
+                    const base64data = reader.result.split(',')[1];
+
+                    const payload = {
+                        participant_name: `${firstName} ${familyName}`,
+                        to_email: email,
+                        company: company,
+                        position: position,
+                        attachment: base64data
+                    };
+
+                    try {
+                        const response = await fetch('/.netlify/functions/sendPdfEmail', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (response.ok) {
+                            console.log("Email sent successfully via Netlify Function!");
+                            window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
+                        } else {
+                            const errorText = await response.text();
+                            console.error("Netlify Function failed to execute properly:", response.status, errorText);
+                            alert("There was an issue emailing your report, but your download should have started. Please contact us if you need help.");
+                            window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
+                        }
+                    } catch (error) {
+                        console.error("Fetch request to Netlify Function failed", error);
+                        alert("There was an issue reaching the email server. Please confirm the report downloaded locally.");
+                        window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
+                    }
+                };
+
+            } catch (err) {
+                console.error("downloadAndSend Error:", err);
+                alert("There was an issue emailing your report, but your download should have started. Please contact us if you need help.");
+            } finally {
+                target.classList.remove('pdf-rendering');
+                h1s.forEach(h1 => h1.classList.remove('no-pdf'));
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerText = "Download PDF & Send Email";
+                }
+
+                // Clean up SVG swap
+                const originalSvg = document.getElementById('enneagramCircleSvg');
+                const mockImg = document.getElementById('svgImageMock');
+                if (originalSvg && mockImg) {
+                    mockImg.parentNode.removeChild(mockImg);
+                    originalSvg.style.display = 'block';
+                }
+            }
         }
     </script>
 
