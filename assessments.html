@@ -698,15 +698,26 @@
                 margin: 0.5in;
             }
 
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
             body {
                 background: white;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
 
             /* Hide Clutter */
+            #intro-section,
+            #userInfoSection,
+            #questionnaireSection,
             .univ-header,
             footer,
             .mobile-cta-btn,
             button,
+            .no-print,
             .backdoor-indicator {
                 display: none !important;
             }
@@ -2188,208 +2199,13 @@
     </script>
     <script>
         async function downloadAndSend() {
-            console.log("Vector-First PDF Architecture: Visible-Isolation Engine Initiated.");
-            const btn = document.querySelector('button[onclick*=\"downloadAndSend\"]');
-            if (btn) {
-                btn.disabled = true;
-                btn.innerText = "Generating PDF...";
-            }
+            // Bypass html2pdf entirely per emergency protocol
+            console.log("Security lockdown active: Bypassing html2pdf library and using native window.print()");
 
-            // Fallback gracefully if html2pdf is missing
-            if (typeof window.html2pdf === 'undefined') {
-                console.error("html2pdf library not found!");
-                alert("We had an issue loading the PDF engine. Please refresh the page.");
-                if (btn) { btn.disabled = false; btn.innerText = "Download PDF & Send Email"; }
-                return;
-            }
-
-            const firstName = document.getElementById('firstName')?.value || 'Guest';
-            const familyName = document.getElementById('familyName')?.value || '';
-            const email = document.getElementById('email')?.value || 'no-email';
-            const company = document.getElementById('company')?.value || 'no-company';
-            const position = document.getElementById('position')?.value || 'no-position';
-            const reportName = firstName === 'Guest' ? "Enneagram_Report" : `Enneagram_Report_${firstName}_${familyName}`.trim();
-
-            // 1. VISIBLE ISOLATION - Engage Strict CSS Mode
-            // We apply .pdf-rendering to the BODY which kicks in the 1024px strict width and hides unneeded UI.
-            document.body.classList.add('pdf-rendering');
-
-            // Inject the Header Logo temporarily into the top of the Results Section
-            const resultsContainer = document.getElementById('resultsSection');
-            const headerHtml = document.createElement('div');
-            headerHtml.id = 'temp-pdf-header';
-            headerHtml.style.display = 'flex';
-            headerHtml.style.justifyContent = 'space-between';
-            headerHtml.style.alignItems = 'center';
-            headerHtml.style.marginBottom = '30px';
-            headerHtml.style.borderBottom = '2px solid #FFD700';
-            headerHtml.style.paddingBottom = '10px';
-            headerHtml.innerHTML = `
-        <h1 style="color:#4A148C; font-size:28pt; font-weight:900; margin:0;">Full Leadership Intelligence Report</h1>
-        <img src="images/brkthru-logo.png" style="width:150px; height:auto;" crossorigin="anonymous">
-    `;
-            resultsContainer.insertBefore(headerHtml, resultsContainer.firstChild);
-
-            // Ensure Page Breaks are properly spaced for print
-            const introSection = document.getElementById('introReportContent');
-            const typeSection = document.getElementById('typeResult');
-            const graphSection = document.querySelector('.graph-container');
-            const mapSection = document.querySelector('.circular-diagram-container');
-            const movedSection = document.getElementById('movedSectionsContainer');
-            const detailedSection = document.getElementById('detailedReport');
-
-            // Force Page Breaks on Key Containers via temporary classes
-            const forcePageBreak = (el) => {
-                if (el) el.classList.add('page-break-before');
-            };
-            forcePageBreak(graphSection);
-            forcePageBreak(mapSection);
-            forcePageBreak(movedSection);
-            forcePageBreak(detailedSection);
-
-            // 2. Configure HTML2PDF Explicitly honoring layout specs
-            const opt = {
-                margin: [40, 40], // px equivalent on A4 scale
-                filename: reportName + '.pdf',
-                image: { type: 'jpeg', quality: 0.90 }, // Standard compression
-                html2canvas: {
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true,
-                    logging: false,
-                    width: 1024,
-                    windowWidth: 1024
-                },
-                jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' },
-                pagebreak: { mode: ['css', 'legacy'] } // Honors the .page-break-before class natively
-            };
-
-            let cloneContainer = null;
-            try {
-                // 1. CLONE & ISOLATE: Create Unbounded Temporary Container
-                cloneContainer = document.createElement('div');
-                cloneContainer.id = 'pdf-clone-container';
-                cloneContainer.style.position = 'absolute';
-                cloneContainer.style.left = '-9999px';
-                cloneContainer.style.top = '0';
-                cloneContainer.style.width = '1024px';
-                cloneContainer.style.height = 'auto';
-                cloneContainer.style.backgroundColor = '#ffffff';
-                cloneContainer.style.display = 'block';
-                cloneContainer.style.visibility = 'visible';
-                cloneContainer.style.overflow = 'visible';
-                cloneContainer.style.zIndex = '-9999';
-
-                // Deep Clone Results
-                const clone = resultsContainer.cloneNode(true);
-                clone.id = 'pdf-results-clone';
-                cloneContainer.appendChild(clone);
-                document.body.appendChild(cloneContainer);
-
-                // 2. DISABLE ANIMATIONS / FORCE OPACITY IN CLONE
-                const elementsToForce = cloneContainer.querySelectorAll('.chart-container, svg, canvas, .enneagram-node-circle, .bar-fill, .type-circle');
-                elementsToForce.forEach(el => {
-                    el.style.setProperty('opacity', '1', 'important');
-                    el.style.setProperty('transform', 'none', 'important');
-                    el.style.setProperty('transition', 'none', 'important');
-                    el.style.setProperty('animation', 'none', 'important');
-                });
-
-                // Force Repaint
-                window.dispatchEvent(new Event('resize'));
-
-                // Add 2000ms delay to guarantee DOM, fonts, and charts are fully painted before snapshot
-                await new Promise(resolve => setTimeout(resolve, 2000));
-
-                // 3. TARGET THE ISOLATED CLONE
-                const worker = html2pdf().set(opt).from(cloneContainer);
-                const pdfBlob = await worker.outputPdf('blob');
-
-                // Evaluate size to determine if it's a blank PDF (typically very small, e.g. < 50KB)
-                const pdfKB = pdfBlob.size / 1024;
-                if (pdfKB < 50) {
-                    throw new Error(`Generated PDF seems suspiciously small (${Math.round(pdfKB)}KB), possibly blank.`);
-                }
-
-                // Download locally
-                const pdfUrl = URL.createObjectURL(pdfBlob);
-                const a = document.createElement('a');
-                a.href = pdfUrl;
-                a.download = opt.filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(pdfUrl);
-
-                console.log("PDF Layout Rendered Natively via Visible-Isolation. Converting to Base64...");
-
-                // 3. Send Email Payload
-                const reader = new FileReader();
-                reader.readAsDataURL(pdfBlob);
-                reader.onloadend = async function () {
-                    const base64data = reader.result.split(',')[1];
-
-                    // VERIFICATION CAP
-                    const sizeKB = (base64data.length * 0.75) / 1024;
-                    console.log(`Payload Size Verification: ${Math.round(sizeKB)} KB`);
-
-                    const payload = {
-                        participant_name: `${firstName} ${familyName}`,
-                        to_email: email,
-                        company: company,
-                        position: position,
-                        attachment: base64data
-                    };
-
-                    try {
-                        const response = await fetch('https://brkthru-digital.netlify.app/.netlify/functions/sendPdfEmail', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-
-                        if (!response.ok) {
-                            const errText = await response.text();
-                            throw new Error(errText || response.statusText);
-                        }
-
-                        console.log("Visible-Isolation Email sent successfully!");
-                        alert("Your PDF has been successfully generated and sent to " + email);
-
-                    } catch (emailErr) {
-                        console.error("Visible-Isolation Email Dispatch Error:", emailErr);
-                        alert("The PDF was downloaded successfully, but the automatic backup email failed to send. Please check your Downloads folder.");
-                    }
-                };
-
-            } catch (err) {
-                console.error("Visible-Isolation Rendering Error/Fallback Initiated:", err);
-
-                // FALLBACK: User's Browser actively stripped intrinsics and killed JS snapshotting. Use window.print().
-                alert("Security extension detected: PDF automated snapshot blocked. Falling back to Native Browser Print.\\n\\nPlease select 'Save as PDF' as your Printer Destination.");
-                window.dispatchEvent(new Event('resize'));
+            // Slight delay to ensure UI settles before print dialogue blocks thread
+            setTimeout(() => {
                 window.print();
-
-            } finally {
-                // 4. RESTORE STATE
-                document.body.classList.remove('pdf-rendering');
-
-                // Cleanup Duplicate Container
-                if (cloneContainer && cloneContainer.parentNode) {
-                    cloneContainer.parentNode.removeChild(cloneContainer);
-                }
-
-                if (headerHtml && headerHtml.parentNode) headerHtml.parentNode.removeChild(headerHtml);
-
-                [graphSection, mapSection, movedSection, detailedSection].forEach(el => {
-                    if (el) el.classList.remove('page-break-before');
-                });
-
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerText = "Download PDF & Send Email";
-                }
-            }
+            }, 300);
         }
     </script>
 
