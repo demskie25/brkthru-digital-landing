@@ -178,7 +178,8 @@
             display: none !important;
         }
 
-        body.pdf-rendering #results-section {
+        body.pdf-rendering #resultsSection,
+        body.pdf-rendering #pdf-clone-container {
             display: block !important;
             width: 1024px !important;
             padding: 40px !important;
@@ -711,7 +712,8 @@
             }
 
             /* Show Results */
-            #results-section {
+            #resultsSection,
+            #pdf-results-clone {
                 display: block !important;
                 visibility: visible !important;
                 width: 100% !important;
@@ -720,11 +722,21 @@
             }
 
             /* Force Page Breaks on Sections */
-            #results-section h2,
-            #results-section h3 {
+            #resultsSection h2,
+            #resultsSection h3,
+            #pdf-results-clone h2,
+            #pdf-results-clone h3 {
                 page-break-before: always !important;
                 break-before: page !important;
                 padding-top: 20px;
+            }
+
+            /* Prevent charts/maps from splitting across pages */
+            .chart-container,
+            .enneagram-map,
+            .circular-diagram-container {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
             }
 
             /* Exception: don't break the very first headings to keep the start clean */
@@ -2203,7 +2215,7 @@
             document.body.classList.add('pdf-rendering');
 
             // Inject the Header Logo temporarily into the top of the Results Section
-            const resultsContainer = document.getElementById('results-section');
+            const resultsContainer = document.getElementById('resultsSection');
             const headerHtml = document.createElement('div');
             headerHtml.id = 'temp-pdf-header';
             headerHtml.style.display = 'flex';
