@@ -2148,6 +2148,13 @@
             const h1s = target.querySelectorAll('h1');
             h1s.forEach(h1 => h1.classList.add('no-pdf'));
 
+            // Dynamic CSS for page breaks
+            const avoidElements = target.querySelectorAll('h2, h3, .bg-white, img, .chart-container, .shadow-md, .rounded-lg, p');
+            avoidElements.forEach(el => {
+                el.dataset.prevPageBreakInside = el.style.pageBreakInside || '';
+                el.style.pageBreakInside = 'avoid';
+            });
+
             // Get participant info for the email
             const firstName = document.getElementById('firstName')?.value || 'Guest';
             const familyName = document.getElementById('familyName')?.value || '';
@@ -2176,12 +2183,12 @@
             }
 
             const opt = {
-                margin: [0.5, 0.5, 0.5, 0.5], // top, left, bottom, right
-                filename: `Enneagram_Report_V2_${firstName}_${familyName}.pdf`,
+                margin: [1, 0.5, 1, 0.5], // top, right, bottom, left in inches
+                filename: `Enneagram_Report_V4_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollX: 0, scrollY: 0, windowWidth: 1024, width: 1024 }, // VIRTUAL DESKTOP VIEWPORT
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                pagebreak: { mode: ['css', 'legacy'], avoid: ['h2', 'h3', '.bg-white', 'img', '.chart-container', '.shadow-md', '.rounded-lg', 'p'] }
             };
 
             try {
@@ -2285,6 +2292,15 @@
             } finally {
                 target.classList.remove('pdf-rendering');
                 h1s.forEach(h1 => h1.classList.remove('no-pdf'));
+
+                // Revert dynamic CSS
+                const avoidElements = target.querySelectorAll('h2, h3, .bg-white, img, .chart-container, .shadow-md, .rounded-lg, p');
+                avoidElements.forEach(el => {
+                    if (el.dataset.prevPageBreakInside !== undefined) {
+                        el.style.pageBreakInside = el.dataset.prevPageBreakInside;
+                    }
+                });
+
                 if (btn) {
                     btn.disabled = false;
                     btn.innerText = "Download PDF & Send Email";
