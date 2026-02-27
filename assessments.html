@@ -2182,16 +2182,15 @@
                 console.warn("Could not load logo for PDF footer.", e);
             }
 
-            // Gentle Alignment Fix: Remove centering margins so html2canvas starts from the true left
-            target.style.marginLeft = '0';
-            target.style.marginRight = '0';
-            target.style.maxWidth = '100%';
+            // The Simple Nudge: Push content softly into the camera frame
+            target.style.paddingLeft = '40px';
+            target.style.paddingRight = '40px';
 
             const opt = {
-                margin: [0.75, 0.5, 0.75, 0.5], // top, right, bottom, left in inches
-                filename: `Enneagram_Report_V7_${firstName}_${familyName}.pdf`,
+                margin: [1, 0.5, 0.75, 0.5], // top, right, bottom, left in inches
+                filename: `Enneagram_Report_V8_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
-                html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollX: 0, scrollY: 0, windowWidth: 1024, width: 1024 }, // VIRTUAL DESKTOP VIEWPORT
+                html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollX: 0, scrollY: 0, windowWidth: target.scrollWidth + 80, width: 1024 }, // VIRTUAL DESKTOP VIEWPORT
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
                 pagebreak: { mode: ['css', 'legacy'], avoid: ['h2', 'h3', '.bg-white', 'img', '.chart-container', '.shadow-md', '.rounded-lg', 'p', 'li'] }
             };
@@ -2296,9 +2295,8 @@
                 alert("There was an issue emailing your report, but your download should have started. Please contact us if you need help.");
             } finally {
                 // Restore original CSS layout
-                target.style.marginLeft = '';
-                target.style.marginRight = '';
-                target.style.maxWidth = '';
+                target.style.paddingLeft = '';
+                target.style.paddingRight = '';
 
                 target.classList.remove('pdf-rendering');
                 h1s.forEach(h1 => h1.classList.remove('no-pdf'));
