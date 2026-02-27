@@ -2183,22 +2183,21 @@
             }
 
             // The Decisive Strike: Neutralize CSS wars and map the camera to exact hardware coordinates
-            const rect = target.getBoundingClientRect();
+
+            target.style.width = '800px';
+            target.style.maxWidth = 'none';
+            target.style.padding = '40px';
 
             const opt = {
-                margin: [1.75, 0.5, 0.5, 0.5], // top, right, bottom, left in inches
-                filename: `Enneagram_Report_V9_${firstName}_${familyName}.pdf`,
+                margin: [1.5, 0.5, 0.5, 0.5], // top, right, bottom, left in inches
+                filename: `Enneagram_Report_V13_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
                     useCORS: true,
                     letterRendering: true,
-                    x: rect.left,
-                    y: rect.top,
-                    scrollX: 0,
-                    scrollY: 0,
-                    windowWidth: 1024,
-                    width: 1024
+                    windowWidth: 800,
+                    width: 800
                 }, // VIRTUAL DESKTOP VIEWPORT
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
                 pagebreak: { mode: ['css', 'legacy'], avoid: ['h2', 'h3', '.bg-white', 'img', '.chart-container', '.shadow-md', '.rounded-lg', 'p', 'li'] }
@@ -2305,6 +2304,10 @@
             } finally {
                 target.classList.remove('pdf-rendering');
                 h1s.forEach(h1 => h1.classList.remove('no-pdf'));
+
+                target.style.width = '';
+                target.style.maxWidth = '';
+                target.style.padding = '';
 
                 // Revert dynamic CSS
                 const avoidElements = target.querySelectorAll('h2, h3, .bg-white, img, .chart-container, .shadow-md, .rounded-lg, p, li');
