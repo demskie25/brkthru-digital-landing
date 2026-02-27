@@ -2188,11 +2188,26 @@
             target.style.minWidth = '750px';
             target.style.maxWidth = '750px';
             target.style.padding = '20px';
-            target.style.marginTop = '100px';
+            target.style.marginTop = '150px';
+            target.style.marginBottom = '80px';
+
+            // Chart Label Shrink: Prevent text collision during compression
+            const styleId = 'pdf-chart-label-override';
+            let styleEl = document.getElementById(styleId);
+            if (!styleEl) {
+                styleEl = document.createElement('style');
+                styleEl.id = styleId;
+                styleEl.innerHTML = `
+                    .chart-label, .chart-container text {
+                        font-size: 10px !important;
+                    }
+                `;
+                document.head.appendChild(styleEl);
+            }
 
             const opt = {
                 margin: [2.5, 0.25, 0.5, 0.25], // top, right, bottom, left in inches
-                filename: `Enneagram_Report_V14_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V15_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
@@ -2315,6 +2330,13 @@
                 target.style.maxWidth = '';
                 target.style.padding = '';
                 target.style.marginTop = '';
+                target.style.marginBottom = '';
+
+                // Remove temporary chart styles
+                const tempStyle = document.getElementById('pdf-chart-label-override');
+                if (tempStyle) {
+                    tempStyle.remove();
+                }
 
                 // Revert dynamic CSS
                 const avoidElements = target.querySelectorAll('h2, h3, .bg-white, img, .chart-container, .shadow-md, .rounded-lg, p, li');
