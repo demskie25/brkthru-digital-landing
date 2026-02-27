@@ -2188,9 +2188,29 @@
             target.style.minWidth = '750px';
             target.style.maxWidth = '750px';
             target.style.padding = '20px';
+            target.style.paddingTop = '100px';
             target.style.marginTop = '200px';
             target.style.marginBottom = '120px';
             target.style.overflow = 'hidden';
+
+            // SECTION MAGNETIC LOCK: Wrap all major report sections
+            const h2sForWrap = Array.from(target.querySelectorAll('h2'));
+            h2sForWrap.forEach(h2 => {
+                let current = h2;
+                const toWrap = [];
+                // Gather elements until the next H2
+                while (current) {
+                    toWrap.push(current);
+                    current = current.nextElementSibling;
+                    if (!current || current.tagName.toLowerCase() === 'h2') break;
+                }
+                const wrapper = document.createElement('div');
+                wrapper.className = 'pdf-section-block';
+                // Insert wrapper before h2
+                h2.parentNode.insertBefore(wrapper, h2);
+                // Append all selected elements into wrapper
+                toWrap.forEach(el => wrapper.appendChild(el));
+            });
 
             // Chart Label Shrink: Prevent text collision during compression
             const styleId = 'pdf-chart-label-override';
@@ -2201,7 +2221,14 @@
                 styleEl.innerHTML = `
                     .chart-label, .chart-container text {
                         font-size: 8px !important;
-                        letter-spacing: -0.5px !important;
+                        transform: rotate(-45deg) translateX(-10px) !important;
+                        transform-origin: top right !important;
+                        white-space: nowrap !important;
+                    }
+                    .pdf-section-block {
+                        page-break-inside: avoid !important;
+                        break-inside: avoid !important;
+                        margin-bottom: 40px !important;
                     }
                     h2, h3 { 
                         break-after: avoid; 
@@ -2212,8 +2239,8 @@
             }
 
             const opt = {
-                margin: [2.5, 0.25, 0.5, 0.25], // top, right, bottom, left in inches
-                filename: `Enneagram_Report_V16_${firstName}_${familyName}.pdf`,
+                margin: [2.5, 0.25, 1.0, 0.25], // top, right, bottom, left in inches
+                filename: `Enneagram_Report_V18_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
@@ -2335,9 +2362,19 @@
                 target.style.minWidth = '';
                 target.style.maxWidth = '';
                 target.style.padding = '';
+                target.style.paddingTop = '';
                 target.style.marginTop = '';
                 target.style.marginBottom = '';
                 target.style.overflow = '';
+
+                // Restore HTML strictly by unwrapping the section blocks
+                const strWrappers = target.querySelectorAll('.pdf-section-block');
+                strWrappers.forEach(wrap => {
+                    while (wrap.firstChild) {
+                        wrap.parentNode.insertBefore(wrap.firstChild, wrap);
+                    }
+                    wrap.parentNode.removeChild(wrap);
+                });
 
                 // Remove temporary chart styles
                 const tempStyle = document.getElementById('pdf-chart-label-override');
