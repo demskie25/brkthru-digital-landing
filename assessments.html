@@ -2184,20 +2184,25 @@
 
             // The Decisive Strike: Neutralize CSS wars and map the camera to exact hardware coordinates
 
-            target.style.width = '800px';
-            target.style.maxWidth = 'none';
-            target.style.padding = '40px';
+            target.style.width = '750px';
+            target.style.minWidth = '750px';
+            target.style.maxWidth = '750px';
+            target.style.padding = '20px';
+            target.style.marginTop = '100px';
 
             const opt = {
-                margin: [1.5, 0.5, 0.5, 0.5], // top, right, bottom, left in inches
-                filename: `Enneagram_Report_V13_${firstName}_${familyName}.pdf`,
+                margin: [2.5, 0.25, 0.5, 0.25], // top, right, bottom, left in inches
+                filename: `Enneagram_Report_V14_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
                     useCORS: true,
                     letterRendering: true,
-                    windowWidth: 800,
-                    width: 800
+                    x: 0,
+                    y: 0,
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: 750
                 }, // VIRTUAL DESKTOP VIEWPORT
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
                 pagebreak: { mode: ['css', 'legacy'], avoid: ['h2', 'h3', '.bg-white', 'img', '.chart-container', '.shadow-md', '.rounded-lg', 'p', 'li'] }
@@ -2306,8 +2311,10 @@
                 h1s.forEach(h1 => h1.classList.remove('no-pdf'));
 
                 target.style.width = '';
+                target.style.minWidth = '';
                 target.style.maxWidth = '';
                 target.style.padding = '';
+                target.style.marginTop = '';
 
                 // Revert dynamic CSS
                 const avoidElements = target.querySelectorAll('h2, h3, .bg-white, img, .chart-container, .shadow-md, .rounded-lg, p, li');
