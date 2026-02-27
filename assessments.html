@@ -2182,13 +2182,14 @@
                 console.warn("Could not load logo for PDF footer.", e);
             }
 
-            // Camera Viewfinder Trick: Force A4 width for the snapshot
-            const originalStyle = target.style.cssText;
-            target.style.cssText = 'position: absolute !important; left: 0 !important; top: 0 !important; width: 800px !important; max-width: 800px !important; margin: 0 !important; padding: 40px !important; background: white !important; z-index: 9999 !important;';
+            // Gentle Alignment Fix: Remove centering margins so html2canvas starts from the true left
+            target.style.marginLeft = '0';
+            target.style.marginRight = '0';
+            target.style.maxWidth = '100%';
 
             const opt = {
                 margin: [0.75, 0.5, 0.75, 0.5], // top, right, bottom, left in inches
-                filename: `Enneagram_Report_V6_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V7_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollX: 0, scrollY: 0, windowWidth: 1024, width: 1024 }, // VIRTUAL DESKTOP VIEWPORT
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
@@ -2295,7 +2296,9 @@
                 alert("There was an issue emailing your report, but your download should have started. Please contact us if you need help.");
             } finally {
                 // Restore original CSS layout
-                target.style.cssText = originalStyle;
+                target.style.marginLeft = '';
+                target.style.marginRight = '';
+                target.style.maxWidth = '';
 
                 target.classList.remove('pdf-rendering');
                 h1s.forEach(h1 => h1.classList.remove('no-pdf'));
