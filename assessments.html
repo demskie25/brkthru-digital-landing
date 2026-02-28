@@ -2285,11 +2285,11 @@
                 }
             });
 
-            document.head.insertAdjacentHTML('beforeend', '<style id="pdf-padding-purge"> .html2pdf__page-break + * { margin-top: 0 !important; padding-top: 0 !important; } .pdf-section-block { margin-top: 0 !important; } h2, h3 { margin-top: 0 !important; } </style>');
+            document.head.insertAdjacentHTML('beforeend', '<style id="pdf-padding-purge"> .html2pdf__page-break + * { margin-top: 0 !important; padding-top: 0 !important; } .pdf-section-block, .flex-col, .space-y-8, .space-y-6, .space-y-4 { display: block !important; gap: 0 !important; } [class*="space-y-"] > * + * { margin-top: 10px !important; } </style>');
 
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V40_PaddingPurge_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V41_FlexboxKiller_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
