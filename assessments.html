@@ -2192,10 +2192,35 @@
             blueprintWrap.style.padding = '0';
             blueprintWrap.style.background = 'white';
 
-            target.parentNode.insertBefore(blueprintWrap, target);
-            blueprintWrap.appendChild(target);
+            // THE TABLE GASKET (V23)
+            const tableWrap = document.createElement('table');
+            tableWrap.id = 'pdf-table-wrap';
+            tableWrap.style.width = '100%';
+            tableWrap.style.borderCollapse = 'collapse';
 
-            // (Physical buffers removed in favor of strict absolute engine margins)
+            const thead = document.createElement('thead');
+            thead.style.display = 'table-header-group';
+            thead.style.height = '150px';
+            thead.innerHTML = '<tr><td></td></tr>';
+            tableWrap.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            tbody.id = 'pdf-table-body';
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+            tableWrap.appendChild(tbody);
+
+            const tfoot = document.createElement('tfoot');
+            tfoot.style.display = 'table-footer-group';
+            tfoot.style.height = '100px';
+            tfoot.innerHTML = '<tr><td></td></tr>';
+            tableWrap.appendChild(tfoot);
+
+            target.parentNode.insertBefore(blueprintWrap, target);
+            td.appendChild(target);
+            blueprintWrap.appendChild(tableWrap);
 
             // 4. JAVASCRIPT CHART FORCE
             document.querySelectorAll(".chart-container text, .chart-label").forEach(el => {
@@ -2244,8 +2269,8 @@
             }
 
             const opt = {
-                margin: [1.5, 0.5, 1.2, 0.5], // Google Docs Paradigm: Strict absolute engine margins
-                filename: `Enneagram_Report_V21_${firstName}_${familyName}.pdf`,
+                margin: [0, 0, 0, 0], // The Table Gasket (V23)
+                filename: `Enneagram_Report_V23_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
@@ -2280,28 +2305,27 @@
                     // Header Top
                     // Fallback dynamically if names are empty/Guest
                     const reportName = firstName === 'Guest' ? "Enneagram Report" : `Enneagram Report of ${firstName} ${familyName}`.trim();
-                    pdf.text(reportName, 15, 15);
+                    pdf.text(reportName, 15, 10); // Safely inside 150px thead
 
                     // Global Header: Brkthru Logo (Top Right)
                     if (logoBase64) {
-                        // Draw the logo in the top right corner of every page safely in 1.5 inch (38mm) top void
-                        pdf.addImage(logoBase64, 'PNG', pageWidth - 40, 10, 25, 6);
+                        pdf.addImage(logoBase64, 'PNG', pageWidth - 40, 5, 25, 6); // Safely inside 150px thead
                     }
 
                     // Footer Style Setup
                     pdf.setFontSize(9);
                     pdf.setTextColor(150, 150, 150); // Subtle gray
 
-                    // Footer bottom-left (Website) safely in 1.2 inch (30mm) bottom void
-                    pdf.text("www.brkthrucoaching.com", 15, pageHeight - 15);
+                    // Footer bottom-left (Website) safely inside 100px tfoot
+                    pdf.text("www.brkthrucoaching.com", 15, pageHeight - 10);
 
                     // Footer bottom-right (Page X of Y)
                     const pageStr = "Page " + i + " of " + totalPages;
-                    pdf.text(pageStr, pageWidth - 15, pageHeight - 15, { align: 'right' });
+                    pdf.text(pageStr, pageWidth - 15, pageHeight - 10, { align: 'right' });
 
                     // Draw a subtle footer line
                     pdf.setDrawColor(200, 200, 200);
-                    pdf.line(15, pageHeight - 20, pageWidth - 15, pageHeight - 20);
+                    pdf.line(15, pageHeight - 15, pageWidth - 15, pageHeight - 15);
                 }
 
                 // Generate final synced binary blob to attach
