@@ -2248,27 +2248,46 @@
                 document.head.appendChild(styleEl);
             }
 
-            // THE FORCED PAGE BREAK (V36 UniversalTop)
+            // THE FORCED PAGE BREAK (V38 TextMatch)
             // Injecting html2pdf hard breaks directly into the DOM before capture
             const breakTargets = [
                 document.querySelector('.graph-container'), // Bar chart
                 document.querySelector('.reference-guide'), // The 9 types legend
-                document.querySelector('.circular-diagram-container'), // interconnected-map
-                ...Array.from(document.querySelectorAll('.pdf-section-block')) // All major content blocks
+                document.querySelector('.circular-diagram-container') // interconnected-map
             ].filter(Boolean); // Remove any null elements
 
-            breakTargets.forEach((el, index) => {
-                // Skip the very first major section to prevent a blank Page 1
-                if (index === 0 && el.classList.contains('pdf-section-block')) return;
-
+            breakTargets.forEach(el => {
                 const brk = document.createElement('div');
                 brk.className = 'html2pdf__page-break';
                 el.parentNode.insertBefore(brk, el);
             });
 
+            // TEXT-MATCHING LOOP FOR SECTIONS
+            const targetHeadings = [
+                "Primary Type:",
+                "Growth & Stress Mastery",
+                "Your Wings & Balance",
+                "Core Drivers",
+                "Your Center of Intelligence",
+                "Blind Spots & Hidden Fears",
+                "Work Strengths & Struggles",
+                "Leadership Strategy & Deep Dive",
+                "Work & Relationship Implications",
+                "How You Can Relate Better to Others"
+            ];
+
+            document.querySelectorAll('h2, h3, h4, .text-xl, .text-2xl').forEach(heading => {
+                if (targetHeadings.some(target => heading.innerText.includes(target))) {
+                    const wrapper = heading.closest('.pdf-section-block') || heading.closest('.bg-white') || heading.parentElement;
+                    if (wrapper && !wrapper.previousElementSibling?.classList.contains('html2pdf__page-break')) {
+                        wrapper.insertAdjacentHTML('beforebegin', '<div class="html2pdf__page-break"></div>');
+                    }
+                }
+            });
+
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V36_UniversalTop_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V38_TextMatch_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
