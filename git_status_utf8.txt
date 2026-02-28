@@ -5,26 +5,14 @@ Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
 	modified:   assessments.html
-	modified:   git_log.txt
 	modified:   git_status.txt
-	modified:   log.txt
-	modified:   out.txt
 
 Untracked files:
   (use "git add <file>..." to include in what will be committed)
-	assessments.html.bak
-	b2b2d0a_assessments.html
-	download_function.txt
-	download_function_utf8.txt
-	git_out.txt
-	git_push_output.txt
-	log_master.txt
-	ls_remote.txt
-	old_assessments.html
-	old_ver.html
-	old_ver_pure.html
-	push.txt
-	push_final.txt
-	remote_out.txt
+	git_commit_v43.txt
+	git_push_v43.txt
+	git_push_v43_utf8.txt
+	git_push_v44.txt
+	git_push_v44_utf8.txt
 
 no changes added to commit (use "git add" and/or "git commit -a")

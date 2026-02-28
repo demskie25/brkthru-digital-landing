@@ -1,0 +1,7 @@
+﻿git : Everything up-to-date
+At line:1 char:1
++ git push origin HEAD > git_push_v44.txt 2>&1 ; Get-Content git_push_v ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Everything up-to-date:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
