@@ -1039,7 +1039,7 @@
                         <!-- Reference Guide will be inserted here dynamically -->
                     </div>
 
-                    <div class="circular-diagram-container">
+                    <div class="circular-diagram-container avoid-slice">
                         <h3 class="text-3xl font-bold text-aubergine mb-8 text-center">Interconnected Type Map</h3>
                         <svg id="enneagramCircleSvg" viewBox="0 0 1000 600" class="mx-auto w-full max-w-3xl h-auto"
                             style="overflow: visible;"></svg>
@@ -1636,7 +1636,7 @@
             const { w1, w2, lean } = calculateWingsAndLean(primary, fs);
 
             const introHTML = `
-                <div class="report-card intro-section-card">
+                <div class="report-card avoid-slice intro-section-card">
                     <h3>Understanding Your Enneagram Results</h3>
                     
                     <div class="mb-6">
@@ -1678,17 +1678,17 @@
             displayBarChart(fs, [primary]);
             displayCircularDiagram(primary);
 
-            let allTypesHTML = `<div class="report-card reference-guide">
+            let allTypesHTML = `<div class="chart-container avoid-slice report-card reference-guide">
                 <h3 class="text-2xl font-bold text-aubergine mb-4">Reference: The 9 Leadership Styles</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
             for (let i = 1; i <= 9; i++) {
                 allTypesHTML += `<div class="reference-item"><strong>Type ${i} (${enneagramTypesData[i].shortName}):</strong> ${enneagramTypesData[i].briefDescription}</div>`;
             }
-            allTypesHTML += `</div></div>`;
-            document.getElementById('barChart').insertAdjacentHTML('afterend', allTypesHTML);
+            allTypesHTML += `</div></div></div>`;
+            document.getElementById('barChart').parentElement.insertAdjacentHTML('afterend', allTypesHTML);
 
             const growthStressWingsHTML = `
-                     <div class="report-card pb-break-inside-avoid">
+                     <div class="report-card avoid-slice pb-break-inside-avoid">
                         <div class="context-box">
                             <p class="font-bold">Why you need to know this:</p>
                             <p>The Enneagram is not a static box; it's a map for growth. Knowing where you go in stress helps you catch it early. Knowing your growth path gives you a specific developmental goal.</p>
@@ -1708,7 +1708,7 @@
                         </div>
                     </div>
 
-                    <div class="report-card">
+                    <div class="report-card avoid-slice">
                         <div class="context-box">
                             <p class="font-bold">Why you need to know this:</p>
                             <p>Your "Wings" are the adjacent types that flavor your personality. Expanding into both wings gives you balance—like a bird needs two wings to fly straight.</p>
@@ -1729,7 +1729,7 @@
             document.getElementById('movedSectionsContainer').innerHTML = growthStressWingsHTML;
 
             document.getElementById('detailedReport').innerHTML = `
-                <div class="report-card">
+                <div class="report-card avoid-slice">
                     <div class="context-box">
                         <p class="font-bold">Why you need to know this:</p>
                         <p>Your core drivers explain the subconscious "why" behind every decision you make. Understanding this stops you from running on autopilot.</p>
@@ -1741,7 +1741,7 @@
                     <p><strong class="text-royal-navy">Basic Weakness (Vice):</strong> <span class="text-red-flag">${info.basicWeaknessVice}</span></p>
                 </div>
                 
-                <div class="report-card">
+                <div class="report-card avoid-slice">
                     <h3 class="text-2xl font-bold text-aubergine mb-6">Your Center of Intelligence</h3>
                     <div class="mb-6">
                         <p>The 9 types are grouped into three Centers. Your type determines your dominant Center:</p>
@@ -1768,7 +1768,7 @@
                     </div>
                 </div>
 
-                <div class="report-card">
+                <div class="report-card avoid-slice">
                     <div class="context-box">
                         <p class="font-bold">Why you need to know this:</p>
                         <p>We cannot fix what we cannot see. Your blind spots are the primary cause of friction in your leadership and relationships.</p>
@@ -1784,7 +1784,7 @@
                     </ul>
                 </div>
 
-                <div class="report-card">
+                <div class="report-card avoid-slice">
                     <div class="context-box">
                         <p class="font-bold">Why you need to know this:</p>
                         <p>Aligning your role with your natural strengths creates flow. Ignoring your natural struggles creates burnout.</p>
@@ -1802,7 +1802,7 @@
                     </div>
                 </div>
                 
-                <div class="report-card">
+                <div class="report-card avoid-slice">
                     <h3 class="text-2xl font-bold text-aubergine mb-6">Leadership Strategy & Deep Dive</h3>
                     <p class="text-lg leading-relaxed mb-6">${info.leadershipStyle}</p>
                     <div class="deep-dive-section">
@@ -1811,7 +1811,7 @@
                     </div>
                 </div>
 
-                <div class="report-card">
+                <div class="report-card avoid-slice">
                     <h3 class="text-2xl font-bold text-aubergine mb-6">Work & Relationship Implications</h3>
                     <div class="space-y-6">
                         <div>
@@ -1825,7 +1825,7 @@
                     </div>
                 </div>
 
-                <div class="report-card">
+                <div class="report-card avoid-slice">
                      <h3 class="text-2xl font-bold text-aubergine mb-6">How You Can Relate Better to Others</h3>
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         ${Object.entries(info.relatingTo).map(([key, val]) => `
@@ -2248,9 +2248,25 @@
                 document.head.appendChild(styleEl);
             }
 
+            // THE FORCED PAGE BREAK (V35 LiveSync)
+            // Injecting html2pdf hard breaks directly into the DOM before capture
+            const breakTargets = [
+                document.querySelector('.graph-container'), // Bar chart
+                document.querySelector('.reference-guide'), // The 9 types legend
+                document.querySelector('.circular-diagram-container') // interconnected-map
+            ];
+
+            breakTargets.forEach(el => {
+                if (el) {
+                    const brk = document.createElement('div');
+                    brk.className = 'html2pdf__page-break';
+                    el.parentNode.insertBefore(brk, el);
+                }
+            });
+
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V30_AntiSlice_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V35_TerminalSync_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
@@ -2397,6 +2413,9 @@
                 if (tempStyle) {
                     tempStyle.remove();
                 }
+
+                // THE FORCED PAGE BREAK (V34) CLEANUP
+                document.querySelectorAll('.html2pdf__page-break').forEach(el => el.remove());
 
                 // Revert dynamic CSS
                 const avoidElements = target.querySelectorAll('h2, h3, .bg-white, img, .chart-container, .shadow-md, .rounded-lg, p, li');
