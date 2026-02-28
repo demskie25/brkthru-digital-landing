@@ -2195,19 +2195,7 @@
             target.parentNode.insertBefore(blueprintWrap, target);
             blueprintWrap.appendChild(target);
 
-            // 2. Physical Header Buffer
-            const headerBuffer = document.createElement('div');
-            headerBuffer.id = 'pdf-header-buffer';
-            headerBuffer.style.height = '180px';
-            headerBuffer.style.width = '100%';
-            blueprintWrap.insertBefore(headerBuffer, target);
-
-            // 3. Physical Footer Buffer
-            const footerBuffer = document.createElement('div');
-            footerBuffer.id = 'pdf-footer-buffer';
-            footerBuffer.style.height = '120px';
-            footerBuffer.style.width = '100%';
-            blueprintWrap.appendChild(footerBuffer);
+            // (Physical buffers removed in favor of strict absolute engine margins)
 
             // 4. JAVASCRIPT CHART FORCE
             document.querySelectorAll(".chart-container text, .chart-label").forEach(el => {
@@ -2254,8 +2242,8 @@
             }
 
             const opt = {
-                margin: [0, 0, 0, 0], // ENGINE LOCK: spacing handled by physical buffers
-                filename: `Enneagram_Report_V19_${firstName}_${familyName}.pdf`,
+                margin: [1.5, 0.5, 1.2, 0.5], // Google Docs Paradigm: Strict absolute engine margins
+                filename: `Enneagram_Report_V20_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
@@ -2376,11 +2364,6 @@
                 // Restore Sacred Ground Architecture
                 const wrap = document.getElementById('pdf-blueprint-wrap');
                 if (wrap) {
-                    const headerBuf = document.getElementById('pdf-header-buffer');
-                    if (headerBuf) headerBuf.remove();
-                    const footerBuf = document.getElementById('pdf-footer-buffer');
-                    if (footerBuf) footerBuf.remove();
-
                     wrap.parentNode.insertBefore(target, wrap);
                     wrap.remove();
                 }
