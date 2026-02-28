@@ -2285,9 +2285,11 @@
                 }
             });
 
+            document.head.insertAdjacentHTML('beforeend', '<style id="pdf-padding-purge"> .html2pdf__page-break + * { margin-top: 0 !important; padding-top: 0 !important; } .pdf-section-block { margin-top: 0 !important; } h2, h3 { margin-top: 0 !important; } </style>');
+
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V38_TextMatch_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V40_PaddingPurge_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
@@ -2435,8 +2437,9 @@
                     tempStyle.remove();
                 }
 
-                // THE FORCED PAGE BREAK (V34) CLEANUP
+                // THE FORCED PAGE BREAK CLEANUP
                 document.querySelectorAll('.html2pdf__page-break').forEach(el => el.remove());
+                document.getElementById('pdf-padding-purge')?.remove();
 
                 // Revert dynamic CSS
                 const avoidElements = target.querySelectorAll('h2, h3, .bg-white, img, .chart-container, .shadow-md, .rounded-lg, p, li');
