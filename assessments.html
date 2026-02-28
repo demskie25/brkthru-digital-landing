@@ -2231,9 +2231,18 @@
                         break-inside: avoid !important;
                         margin-bottom: 40px !important;
                     }
+                    .chart-container, img, tr { 
+                        page-break-inside: avoid !important; 
+                        break-inside: avoid !important; 
+                    }
                     h2, h3 { 
                         break-after: avoid; 
                         page-break-after: avoid; 
+                    }
+                    .pdf-section-block, h2, h3 { 
+                        page-break-before: auto !important; 
+                        break-before: auto !important; 
+                        margin-top: 15px !important; 
                     }
                 `;
                 document.head.appendChild(styleEl);
@@ -2241,7 +2250,7 @@
 
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V29_Restored_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V30_AntiSlice_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
@@ -2253,7 +2262,8 @@
                     scrollY: 0,
                     windowWidth: 750
                 }, // VIRTUAL DESKTOP VIEWPORT
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak: { mode: ['css', 'legacy'] }
             };
 
             try {
