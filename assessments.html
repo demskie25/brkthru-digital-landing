@@ -2281,15 +2281,18 @@
                     const wrapper = heading.closest('.pdf-section-block') || heading.closest('.bg-white') || heading.parentElement;
                     if (wrapper && !wrapper.previousElementSibling?.classList.contains('html2pdf__page-break')) {
                         wrapper.insertAdjacentHTML('beforebegin', '<div class="html2pdf__page-break"></div>');
+                        if (wrapper.parentElement) {
+                            wrapper.parentElement.classList.add('pdf-parent-override');
+                        }
                     }
                 }
             });
 
-            document.head.insertAdjacentHTML('beforeend', '<style id="pdf-padding-purge"> .html2pdf__page-break + * { margin-top: 0 !important; padding-top: 0 !important; } .pdf-section-block, .flex-col, .space-y-8, .space-y-6, .space-y-4 { display: block !important; gap: 0 !important; } [class*="space-y-"] > * + * { margin-top: 10px !important; } </style>');
+            document.head.insertAdjacentHTML('beforeend', '<style id="pdf-padding-purge"> .html2pdf__page-break { display: block !important; height: 0 !important; margin: 0 !important; clear: both !important; } .pdf-parent-override { display: block !important; gap: 0 !important; } .pdf-parent-override > * { margin-top: 0 !important; transform: none !important; } </style>');
 
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V41_FlexboxKiller_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V42_TopSnap_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
@@ -2439,6 +2442,7 @@
 
                 // THE FORCED PAGE BREAK CLEANUP
                 document.querySelectorAll('.html2pdf__page-break').forEach(el => el.remove());
+                document.querySelectorAll('.pdf-parent-override').forEach(el => el.classList.remove('pdf-parent-override'));
                 document.getElementById('pdf-padding-purge')?.remove();
 
                 // Revert dynamic CSS
