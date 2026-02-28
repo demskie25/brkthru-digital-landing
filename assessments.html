@@ -2228,9 +2228,11 @@
                 styleEl = document.createElement('style');
                 styleEl.id = styleId;
                 styleEl.innerHTML = `
-                    .pdf-section-block {
+                    .pdf-section-block, .pdf-section, h2, h3, p, li {
                         page-break-inside: avoid !important;
                         break-inside: avoid !important;
+                    }
+                    .pdf-section-block {
                         margin-bottom: 40px !important;
                     }
                     h2, h3 { 
@@ -2243,7 +2245,7 @@
 
             const opt = {
                 margin: [1.5, 0.5, 1.2, 0.5], // Google Docs Paradigm: Strict absolute engine margins
-                filename: `Enneagram_Report_V20_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V21_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
@@ -2278,28 +2280,28 @@
                     // Header Top
                     // Fallback dynamically if names are empty/Guest
                     const reportName = firstName === 'Guest' ? "Enneagram Report" : `Enneagram Report of ${firstName} ${familyName}`.trim();
-                    pdf.text(reportName, 10, 10);
+                    pdf.text(reportName, 15, 15);
 
                     // Global Header: Brkthru Logo (Top Right)
                     if (logoBase64) {
-                        // Draw the logo in the top right corner of every page
-                        pdf.addImage(logoBase64, 'PNG', pageWidth - 40, 5, 25, 6);
+                        // Draw the logo in the top right corner of every page safely in 1.5 inch (38mm) top void
+                        pdf.addImage(logoBase64, 'PNG', pageWidth - 40, 10, 25, 6);
                     }
 
                     // Footer Style Setup
                     pdf.setFontSize(9);
                     pdf.setTextColor(150, 150, 150); // Subtle gray
 
-                    // Footer bottom-left (Website)
-                    pdf.text("www.brkthrucoaching.com", 15, pageHeight - 10);
+                    // Footer bottom-left (Website) safely in 1.2 inch (30mm) bottom void
+                    pdf.text("www.brkthrucoaching.com", 15, pageHeight - 15);
 
                     // Footer bottom-right (Page X of Y)
                     const pageStr = "Page " + i + " of " + totalPages;
-                    pdf.text(pageStr, pageWidth - 15, pageHeight - 10, { align: 'right' });
+                    pdf.text(pageStr, pageWidth - 15, pageHeight - 15, { align: 'right' });
 
                     // Draw a subtle footer line
                     pdf.setDrawColor(200, 200, 200);
-                    pdf.line(15, pageHeight - 15, pageWidth - 15, pageHeight - 15);
+                    pdf.line(15, pageHeight - 20, pageWidth - 15, pageHeight - 20);
                 }
 
                 // Generate final synced binary blob to attach
