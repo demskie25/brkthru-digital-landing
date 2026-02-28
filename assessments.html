@@ -2248,51 +2248,14 @@
                 document.head.appendChild(styleEl);
             }
 
-            // THE FORCED PAGE BREAK (V38 TextMatch)
-            // Injecting html2pdf hard breaks directly into the DOM before capture
-            const breakTargets = [
-                document.querySelector('.graph-container'), // Bar chart
-                document.querySelector('.reference-guide'), // The 9 types legend
-                document.querySelector('.circular-diagram-container') // interconnected-map
-            ].filter(Boolean); // Remove any null elements
-
-            breakTargets.forEach(el => {
-                const brk = document.createElement('div');
-                brk.className = 'html2pdf__page-break';
-                el.parentNode.insertBefore(brk, el);
-            });
-
-            // TEXT-MATCHING LOOP FOR SECTIONS
-            const targetHeadings = [
-                "Primary Type:",
-                "Growth & Stress Mastery",
-                "Your Wings & Balance",
-                "Core Drivers",
-                "Your Center of Intelligence",
-                "Blind Spots & Hidden Fears",
-                "Work Strengths & Struggles",
-                "Leadership Strategy & Deep Dive",
-                "Work & Relationship Implications",
-                "How You Can Relate Better to Others"
-            ];
-
-            document.querySelectorAll('h2, h3, h4, .text-xl, .text-2xl').forEach(heading => {
-                if (targetHeadings.some(target => heading.innerText.includes(target))) {
-                    const wrapper = heading.closest('.pdf-section-block') || heading.closest('.bg-white') || heading.parentElement;
-                    if (wrapper && !wrapper.previousElementSibling?.classList.contains('html2pdf__page-break')) {
-                        wrapper.insertAdjacentHTML('beforebegin', '<div class="html2pdf__page-break"></div>');
-                        if (wrapper.parentElement) {
-                            wrapper.parentElement.classList.add('pdf-parent-override');
-                        }
-                    }
-                }
-            });
-
-            document.head.insertAdjacentHTML('beforeend', '<style id="pdf-padding-purge"> .html2pdf__page-break { display: block !important; height: 0 !important; margin: 0 !important; clear: both !important; } .pdf-parent-override { display: block !important; gap: 0 !important; } .pdf-parent-override > * { margin-top: 0 !important; transform: none !important; } </style>');
+            // PAGELESS PDF ARCHITECTURE (V43)
+            // Calculate dynamic mm dimensions based on the live DOM wrapper
+            const wMm = target.offsetWidth * 0.264583;
+            const hMm = target.offsetHeight * 0.264583;
 
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V42_TopSnap_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V43_Pageless_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
@@ -2304,8 +2267,7 @@
                     scrollY: 0,
                     windowWidth: 750
                 }, // VIRTUAL DESKTOP VIEWPORT
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak: { mode: ['css', 'legacy'] }
+                jsPDF: { unit: 'mm', format: [wMm, hMm + 20], orientation: 'portrait' }
             };
 
             try {
@@ -2440,10 +2402,7 @@
                     tempStyle.remove();
                 }
 
-                // THE FORCED PAGE BREAK CLEANUP
-                document.querySelectorAll('.html2pdf__page-break').forEach(el => el.remove());
-                document.querySelectorAll('.pdf-parent-override').forEach(el => el.classList.remove('pdf-parent-override'));
-                document.getElementById('pdf-padding-purge')?.remove();
+
 
                 // Revert dynamic CSS
                 const avoidElements = target.querySelectorAll('h2, h3, .bg-white, img, .chart-container, .shadow-md, .rounded-lg, p, li');

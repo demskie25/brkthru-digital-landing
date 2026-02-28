@@ -1,0 +1,9 @@
+﻿git : To https://github.com/demskie25/brkthru-digital-landing.git
+At line:1 char:1
++ git push origin HEAD > git_push_v42.txt 2>&1 ; Get-Content git_push_v ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (To https://gith...tal-landing. 
+   git:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   2955868..8dd5d53  HEAD -> main
