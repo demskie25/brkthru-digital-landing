@@ -39,9 +39,9 @@ exports.handler = async (event, context) => {
 
         const rawBody = event.isBase64Encoded ? Buffer.from(event.body, 'base64').toString('utf8') : event.body;
         const data = JSON.parse(rawBody);
-        const { participant_name, to_email, company, position, attachment } = data;
+        const { participant_name, to_email, company, position, summary } = data;
 
-        if (!participant_name || !to_email || !attachment) {
+        if (!participant_name || !to_email || !summary) {
             return {
                 statusCode: 400,
                 headers,
@@ -62,14 +62,7 @@ exports.handler = async (event, context) => {
             from: `"Brkthru Assessment System" <${process.env.SMTP_USER}>`,
             to: ownerEmail,
             subject: `New Assessment Result - ${participant_name}`,
-            text: `Participant: ${participant_name}\nEmail: ${to_email}\nCompany: ${company || 'N/A'}\nPosition: ${position || 'N/A'}\n\nAssessment completed successfully.\nEnclosure: Full Assessment PDF attached.`,
-            attachments: [
-                {
-                    filename: `Enneagram_Report_${participant_name.replace(/\s+/g, '_')}.pdf`,
-                    content: attachment,
-                    encoding: 'base64'
-                }
-            ]
+            text: `Participant: ${participant_name}\nEmail: ${to_email}\nCompany: ${company || 'N/A'}\nPosition: ${position || 'N/A'}\n\nAssessment completed successfully.\n\nSummary Report:\n${summary}`
         };
 
         // 2. Email to the Participant (Beautiful HTML Template)
@@ -85,9 +78,14 @@ exports.handler = async (event, context) => {
                     
                     <p style="font-size: 16px;">Hi ${participant_name},</p>
                     
-                    <p style="font-size: 16px;">Thank you for taking the BRKTHRU Leadership Assessment. Your results have been processed securely and your <strong>Full Leadership Intelligence Report</strong> has been dynamically generated.</p>
+                    <p style="font-size: 16px;">Thank you for taking the BRKTHRU Leadership Assessment. Your results have been processed securely and your <strong>Summary Report</strong> has been dynamically generated.</p>
                     
-                    <p style="font-size: 16px;">Please find your comprehensive Enneagram PDF report attached to this email.</p>
+                    <div style="background-color: #f8f9fa; border-left: 4px solid #000080; padding: 15px; margin: 20px 0;">
+                        <h3 style="margin-top: 0; color: #000080;">Your Summary Report:</h3>
+                        <pre style="font-family: inherit; font-size: 15px; white-space: pre-wrap;">${summary}</pre>
+                    </div>
+
+                    <p style="font-size: 16px; font-weight: bold; color: #d9534f;">To download your full 15-page visual report, please use the Print/Save button on your results page.</p>
                     
                     <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
                         <p style="margin: 0; font-size: 14px; font-weight: bold; color: #000080;">Warmly,</p>
@@ -95,14 +93,7 @@ exports.handler = async (event, context) => {
                         <a href="https://www.brkthrucoaching.com" style="color: #008080; text-decoration: none; font-size: 14px; font-weight: bold;">www.brkthrucoaching.com</a>
                     </div>
                 </div>
-            `,
-            attachments: [
-                {
-                    filename: `Enneagram_Report.pdf`,
-                    content: attachment,
-                    encoding: 'base64'
-                }
-            ]
+            `
         };
 
         // Dispatch both emails in parallel
@@ -110,11 +101,9 @@ exports.handler = async (event, context) => {
             transporter.sendMail(ownerMailOptions),
             transporter.sendMail(participantMailOptions)
         ]);
-        
-        // 4. MEMORY MANAGEMENT: Explicit clean-up of massive Base64 variables
-        data.attachment = null;
-        ownerMailOptions.attachments = null;
-        participantMailOptions.attachments = null;
+
+        // 4. MEMORY MANAGEMENT
+        data.summary = null;
 
         return {
             statusCode: 200,
@@ -127,7 +116,7 @@ exports.handler = async (event, context) => {
         return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ 
+            body: JSON.stringify({
                 error: 'Failed to send email. Check Netlify logs.',
                 message: error.message,
                 stack: error.stack

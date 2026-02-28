@@ -2226,23 +2226,12 @@
                 styleEl = document.createElement('style');
                 styleEl.id = styleId;
                 styleEl.innerHTML = `
-                    .pdf-section-block {
-                        page-break-inside: avoid !important;
-                        break-inside: avoid !important;
-                        margin-bottom: 40px !important;
-                    }
-                    .chart-container, img, tr { 
-                        page-break-inside: avoid !important; 
-                        break-inside: avoid !important; 
-                    }
-                    h2, h3 { 
-                        break-after: avoid; 
-                        page-break-after: avoid; 
-                    }
-                    .pdf-section-block, h2, h3 { 
-                        page-break-before: auto !important; 
-                        break-before: auto !important; 
-                        margin-top: 15px !important; 
+                    @media print {
+                        .pdf-section-block, .graph-container, .reference-guide, .circular-diagram-container {
+                            page-break-before: always !important;
+                            break-before: always !important;
+                            clear: both;
+                        }
                     }
                 `;
                 document.head.appendChild(styleEl);
@@ -2320,103 +2309,42 @@
             };
 
             try {
-                // Build worker pipeline
-                const worker = html2pdf().set(opt).from(target).toPdf();
-                const pdf = await worker.get('pdf');
+                // Email Fallback (Summary Report)
+                const summary = `Participant: ${firstName} ${familyName}
+Company: ${company}
+Position: ${position}
 
-                // Post-process the PDF with headers, footers, website links, and page numbers
-                const totalPages = pdf.internal.getNumberOfPages();
-                const pageHeight = pdf.internal.pageSize.getHeight();
-                const pageWidth = pdf.internal.pageSize.getWidth();
+Thank you for completing the Enneagram Leadership Assessment. 
+To download your full 15-page visual report, please use the Print/Save button on your results page.`;
 
-                for (let i = 1; i <= totalPages; i++) {
-                    pdf.setPage(i);
-
-                    pdf.setFontSize(10);
-                    pdf.setTextColor(100);
-
-                    // Header Top
-                    // Fallback dynamically if names are empty/Guest
-                    const reportName = firstName === 'Guest' ? "Enneagram Report" : `Enneagram Report of ${firstName} ${familyName}`.trim();
-                    pdf.text(reportName, 15, 15); // Safely inside 30mm top void
-
-                    // Global Header: Brkthru Logo (Top Right)
-                    if (logoBase64) {
-                        pdf.addImage(logoBase64, 'PNG', pageWidth - 40, 10, 25, 6); // Safely inside 30mm top void
-                    }
-
-                    // Footer Style Setup
-                    pdf.setFontSize(9);
-                    pdf.setTextColor(150, 150, 150); // Subtle gray
-
-                    // Footer bottom-left (Website) safely inside 30mm bottom void
-                    pdf.text("www.brkthrucoaching.com", 15, pageHeight - 15);
-
-                    // Footer bottom-right (Page X of Y)
-                    const pageStr = "Page " + i + " of " + totalPages;
-                    pdf.text(pageStr, pageWidth - 15, pageHeight - 15, { align: 'right' });
-
-                    // Draw a subtle footer line
-                    pdf.setDrawColor(200, 200, 200);
-                    pdf.line(15, pageHeight - 20, pageWidth - 15, pageHeight - 20);
-                }
-
-                // Generate final synced binary blob to attach
-                const pdfBlob = pdf.output('blob');
-
-                // Immediately trigger local user download securely
-                const pdfUrl = URL.createObjectURL(pdfBlob);
-                const a = document.createElement('a');
-                a.href = pdfUrl;
-                a.download = opt.filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(pdfUrl);
-
-                console.log("downloadAndSend: PDF saved natively. Generating Base64 for Netlify Serverless Backend...");
-
-                if (btn) {
-                    btn.disabled = true;
-                    btn.innerText = "Generating Premium Report...";
-                }
-
-                // Use FileReader to convert Blob to Base64 for custom backend
-                const reader = new FileReader();
-                reader.readAsDataURL(pdfBlob);
-                reader.onloadend = async function () {
-                    const base64data = reader.result.split(',')[1];
-
-                    const payload = {
-                        participant_name: `${firstName} ${familyName}`,
-                        to_email: email,
-                        company: company,
-                        position: position,
-                        attachment: base64data
-                    };
-
-                    try {
-                        const response = await fetch('/.netlify/functions/sendPdfEmail', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-
-                        if (response.ok) {
-                            console.log("Email sent successfully via Netlify Function!");
-                            window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
-                        } else {
-                            const errorText = await response.text();
-                            console.error("Netlify Function failed to execute properly:", response.status, errorText);
-                            alert("There was an issue emailing your report, but your download should have started. Please contact us if you need help.");
-                            window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
-                        }
-                    } catch (error) {
-                        console.error("Fetch request to Netlify Function failed", error);
-                        alert("There was an issue reaching the email server. Please confirm the report downloaded locally.");
-                        window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
-                    }
+                const payload = {
+                    participant_name: `${firstName} ${familyName}`,
+                    to_email: email,
+                    company: company,
+                    position: position,
+                    summary: summary
                 };
+
+                // Dispatch Email Hook Async
+                fetch('/.netlify/functions/sendPdfEmail', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).then(async res => {
+                    if (res.ok) {
+                        console.log("Email fallback sent successfully.");
+                    } else {
+                        const err = await res.text();
+                        console.error("Netlify Function Error:", err);
+                    }
+                }).catch(err => console.error("Netlify Fetch Failed:", err));
+
+                // 2. IMPLEMENT WINDOW.PRINT
+                // Trigger Native Print Dialog natively (Blocks DOM until resolved)
+                window.print();
+
+                // Redirect gracefully
+                window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
 
             } catch (err) {
                 console.error("downloadAndSend Error:", err);
