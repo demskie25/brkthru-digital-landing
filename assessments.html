@@ -2162,14 +2162,27 @@
             const company = document.getElementById('company')?.value || 'no-company';
             const position = document.getElementById('position')?.value || 'no-position';
 
-            // GATHER ENNEAGRAM SCORES FOR CLOUD TRANSMISSION
-            const scores = {};
-            for (let i = 1; i <= 9; i++) {
-                const el = document.getElementById(`scoreType${i}`);
-                scores[`Type_${i}`] = el ? parseInt(el.innerText) || 0 : 0;
+            // Attempt to dynamically load logo to embed cleanly in jsPDF
+            let logoBase64 = null;
+            try {
+                const logoImg = new Image();
+                logoImg.crossOrigin = "Anonymous";
+                logoImg.src = 'images/brkthru-logo.png?v=2.0';
+                await new Promise((resolve, reject) => {
+                    logoImg.onload = resolve;
+                    logoImg.onerror = reject;
+                });
+                const canvas = document.createElement('canvas');
+                canvas.width = logoImg.width;
+                canvas.height = logoImg.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(logoImg, 0, 0);
+                logoBase64 = canvas.toDataURL('image/png');
+            } catch (e) {
+                console.warn("Could not load logo for PDF footer.", e);
             }
 
-            // The Sacred Ground Reset: Use physical HTML geometry for Native Print
+            // The Sacred Ground Reset: Use physical HTML geometry to enforce PDF borders
             const blueprintWrap = document.createElement('div');
             blueprintWrap.id = 'pdf-blueprint-wrap';
             blueprintWrap.style.width = '700px';
@@ -2180,31 +2193,7 @@
             target.parentNode.insertBefore(blueprintWrap, target);
             blueprintWrap.appendChild(target);
 
-            // Native Print Header (Brkthru logo and title)
-            const printHeader = document.createElement('div');
-            printHeader.id = 'pdf-native-header';
-            printHeader.style.display = 'flex';
-            printHeader.style.justifyContent = 'space-between';
-            printHeader.style.alignItems = 'center';
-            printHeader.style.marginBottom = '20px';
-            printHeader.style.paddingBottom = '10px';
-            printHeader.style.borderBottom = '1px solid #eee';
-
-            const reportName = firstName === 'Guest' ? "Enneagram Report" : `Enneagram Report of ${firstName} ${familyName}`.trim();
-            const titleEl = document.createElement('h2');
-            titleEl.innerText = reportName;
-            titleEl.style.fontSize = '18px';
-            titleEl.style.margin = '0';
-            titleEl.style.color = '#64748b';
-
-            const logoEl = document.createElement('img');
-            logoEl.src = 'images/brkthru-logo.png?v=2.0';
-            logoEl.style.height = '30px';
-            logoEl.className = 'logo';
-
-            printHeader.appendChild(titleEl);
-            printHeader.appendChild(logoEl);
-            blueprintWrap.insertBefore(printHeader, target);
+            // (Physical buffers removed in favor of strict absolute engine margins)
 
             // 4. JAVASCRIPT CHART FORCE
             document.querySelectorAll(".chart-container text, .chart-label").forEach(el => {
@@ -2237,83 +2226,134 @@
                 styleEl = document.createElement('style');
                 styleEl.id = styleId;
                 styleEl.innerHTML = `
-                    .pdf-section-block, .pdf-section, h2, h3, p, li {
+                    .pdf-section-block {
                         page-break-inside: avoid !important;
                         break-inside: avoid !important;
-                    }
-                    .pdf-section-block {
                         margin-bottom: 40px !important;
                     }
                     h2, h3 { 
                         break-after: avoid; 
                         page-break-after: avoid; 
                     }
-                    @media print {
-                        @page { margin: 1.0in; }
-                        body * { visibility: hidden; }
-                        #pdf-blueprint-wrap, #pdf-blueprint-wrap * { visibility: visible; }
-                        #pdf-blueprint-wrap { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
-                        * { 
-                            -webkit-print-color-adjust: exact !important; 
-                            print-color-adjust: exact !important; 
-                            text-rendering: geometricPrecision !important; 
-                            -webkit-font-smoothing: antialiased !important; 
-                            color: #1e293b !important; 
-                        }
-                        img.logo { display: block !important; visibility: visible !important; opacity: 1 !important; }
-                        .chart-container canvas, canvas { image-rendering: high-quality !important; }
-                        h2, h3, .chart-container, .pdf-section-block { page-break-inside: avoid !important; break-inside: avoid !important; }
-                    }
                 `;
                 document.head.appendChild(styleEl);
             }
 
-            try {
-                // CLOUD RENDER PREPARATION (V28)
-                const WEBHOOK_URL = 'PLACEHOLDER'; // Backend endpoint to catch JSON and generate PDF server-side
+            const opt = {
+                margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
+                filename: `Enneagram_Report_V29_Restored_${firstName}_${familyName}.pdf`,
+                image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    letterRendering: true,
+                    x: 0,
+                    y: 0,
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: 750
+                }, // VIRTUAL DESKTOP VIEWPORT
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
 
-                // Update UI state
+            try {
+                // Build worker pipeline
+                const worker = html2pdf().set(opt).from(target).toPdf();
+                const pdf = await worker.get('pdf');
+
+                // Post-process the PDF with headers, footers, website links, and page numbers
+                const totalPages = pdf.internal.getNumberOfPages();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                const pageWidth = pdf.internal.pageSize.getWidth();
+
+                for (let i = 1; i <= totalPages; i++) {
+                    pdf.setPage(i);
+
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(100);
+
+                    // Header Top
+                    // Fallback dynamically if names are empty/Guest
+                    const reportName = firstName === 'Guest' ? "Enneagram Report" : `Enneagram Report of ${firstName} ${familyName}`.trim();
+                    pdf.text(reportName, 15, 15); // Safely inside 30mm top void
+
+                    // Global Header: Brkthru Logo (Top Right)
+                    if (logoBase64) {
+                        pdf.addImage(logoBase64, 'PNG', pageWidth - 40, 10, 25, 6); // Safely inside 30mm top void
+                    }
+
+                    // Footer Style Setup
+                    pdf.setFontSize(9);
+                    pdf.setTextColor(150, 150, 150); // Subtle gray
+
+                    // Footer bottom-left (Website) safely inside 30mm bottom void
+                    pdf.text("www.brkthrucoaching.com", 15, pageHeight - 15);
+
+                    // Footer bottom-right (Page X of Y)
+                    const pageStr = "Page " + i + " of " + totalPages;
+                    pdf.text(pageStr, pageWidth - 15, pageHeight - 15, { align: 'right' });
+
+                    // Draw a subtle footer line
+                    pdf.setDrawColor(200, 200, 200);
+                    pdf.line(15, pageHeight - 20, pageWidth - 15, pageHeight - 20);
+                }
+
+                // Generate final synced binary blob to attach
+                const pdfBlob = pdf.output('blob');
+
+                // Immediately trigger local user download securely
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+                const a = document.createElement('a');
+                a.href = pdfUrl;
+                a.download = opt.filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(pdfUrl);
+
+                console.log("downloadAndSend: PDF saved natively. Generating Base64 for Netlify Serverless Backend...");
+
                 if (btn) {
                     btn.disabled = true;
                     btn.innerText = "Generating Premium Report...";
                 }
 
-                const payload = {
-                    version: "V28_CloudPrep",
-                    participant_name: `${firstName} ${familyName}`.trim(),
-                    first_name: firstName,
-                    last_name: familyName,
-                    to_email: email,
-                    company: company,
-                    position: position,
-                    scores: scores
+                // Use FileReader to convert Blob to Base64 for custom backend
+                const reader = new FileReader();
+                reader.readAsDataURL(pdfBlob);
+                reader.onloadend = async function () {
+                    const base64data = reader.result.split(',')[1];
+
+                    const payload = {
+                        participant_name: `${firstName} ${familyName}`,
+                        to_email: email,
+                        company: company,
+                        position: position,
+                        attachment: base64data
+                    };
+
+                    try {
+                        const response = await fetch('/.netlify/functions/sendPdfEmail', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (response.ok) {
+                            console.log("Email sent successfully via Netlify Function!");
+                            window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
+                        } else {
+                            const errorText = await response.text();
+                            console.error("Netlify Function failed to execute properly:", response.status, errorText);
+                            alert("There was an issue emailing your report, but your download should have started. Please contact us if you need help.");
+                            window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
+                        }
+                    } catch (error) {
+                        console.error("Fetch request to Netlify Function failed", error);
+                        alert("There was an issue reaching the email server. Please confirm the report downloaded locally.");
+                        window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
+                    }
                 };
-
-                console.log("Transmitting payload to Cloud Render Pipeline:", payload);
-
-                /* 
-                // EMERGENCY FALLBACK: NATIVE PRINT
-                const originalTitle = document.title;
-                document.title = `Enneagram_Report_V26_HighRes_${firstName}_${familyName}`;
-                window.print();
-                document.title = originalTitle;
-                // Note: Netlify serverless PDF relay is detached as requested. 
-                window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
-                */
-
-                // Simulated Fetch (Replace with actual fetch when webhook is ready)
-                // const response = await fetch(WEBHOOK_URL, {
-                //     method: 'POST',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify(payload)
-                // });
-                // if(!response.ok) throw new Error("Webhook rejected transmission");
-
-                // Simulate success for frontend UI
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                console.log("Transmission Successful. Expecting email delivery.");
-                alert("Success! Your premium report is being generated in the cloud and will be emailed to " + email);
-                window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
 
             } catch (err) {
                 console.error("downloadAndSend Error:", err);
