@@ -2193,6 +2193,7 @@
             const logoEl = document.createElement('img');
             logoEl.src = 'images/brkthru-logo.png?v=2.0';
             logoEl.style.height = '30px';
+            logoEl.className = 'logo';
 
             printHeader.appendChild(titleEl);
             printHeader.appendChild(logoEl);
@@ -2245,7 +2246,15 @@
                         body * { visibility: hidden; }
                         #pdf-blueprint-wrap, #pdf-blueprint-wrap * { visibility: visible; }
                         #pdf-blueprint-wrap { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
-                        * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                        * { 
+                            -webkit-print-color-adjust: exact !important; 
+                            print-color-adjust: exact !important; 
+                            text-rendering: geometricPrecision !important; 
+                            -webkit-font-smoothing: antialiased !important; 
+                            color: #1e293b !important; 
+                        }
+                        img.logo { display: block !important; visibility: visible !important; opacity: 1 !important; }
+                        .chart-container canvas, canvas { image-rendering: high-quality !important; }
                         h2, h3, .chart-container, .pdf-section-block { page-break-inside: avoid !important; break-inside: avoid !important; }
                     }
                 `;
@@ -2255,7 +2264,7 @@
             try {
                 // Trigger Native Browser Print Engine
                 const originalTitle = document.title;
-                document.title = `Enneagram_Report_V24_Native_${firstName}_${familyName}`;
+                document.title = `Enneagram_Report_V26_HighRes_${firstName}_${familyName}`;
                 window.print();
                 document.title = originalTitle;
 
