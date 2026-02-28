@@ -2182,16 +2182,37 @@
                 console.warn("Could not load logo for PDF footer.", e);
             }
 
-            // The Decisive Strike: Neutralize CSS wars and map the camera to exact hardware coordinates
+            // The Sacred Ground Reset: Use physical HTML geometry to enforce PDF borders
 
-            target.style.width = '750px';
-            target.style.minWidth = '750px';
-            target.style.maxWidth = '750px';
-            target.style.padding = '20px';
-            target.style.paddingTop = '100px';
-            target.style.marginTop = '200px';
-            target.style.marginBottom = '120px';
-            target.style.overflow = 'hidden';
+            // 1. Wrap target in a 700px mold
+            const blueprintWrap = document.createElement('div');
+            blueprintWrap.id = 'pdf-blueprint-wrap';
+            blueprintWrap.style.width = '700px';
+            blueprintWrap.style.margin = '0 auto';
+            blueprintWrap.style.padding = '0';
+            blueprintWrap.style.background = 'white';
+
+            target.parentNode.insertBefore(blueprintWrap, target);
+            blueprintWrap.appendChild(target);
+
+            // 2. Physical Header Buffer
+            const headerBuffer = document.createElement('div');
+            headerBuffer.id = 'pdf-header-buffer';
+            headerBuffer.style.height = '180px';
+            headerBuffer.style.width = '100%';
+            blueprintWrap.insertBefore(headerBuffer, target);
+
+            // 3. Physical Footer Buffer
+            const footerBuffer = document.createElement('div');
+            footerBuffer.id = 'pdf-footer-buffer';
+            footerBuffer.style.height = '120px';
+            footerBuffer.style.width = '100%';
+            blueprintWrap.appendChild(footerBuffer);
+
+            // 4. JAVASCRIPT CHART FORCE
+            document.querySelectorAll(".chart-container text, .chart-label").forEach(el => {
+                el.setAttribute("style", "font-size: 7px !important; transform: rotate(-45deg) translate(-10px, -5px) !important;");
+            });
 
             // SECTION MAGNETIC LOCK: Wrap all major report sections
             const h2sForWrap = Array.from(target.querySelectorAll('h2'));
@@ -2212,19 +2233,13 @@
                 toWrap.forEach(el => wrapper.appendChild(el));
             });
 
-            // Chart Label Shrink: Prevent text collision during compression
-            const styleId = 'pdf-chart-label-override';
+            // Section Block CSS
+            const styleId = 'pdf-section-block-style';
             let styleEl = document.getElementById(styleId);
             if (!styleEl) {
                 styleEl = document.createElement('style');
                 styleEl.id = styleId;
                 styleEl.innerHTML = `
-                    .chart-label, .chart-container text {
-                        font-size: 8px !important;
-                        transform: rotate(-45deg) translateX(-10px) !important;
-                        transform-origin: top right !important;
-                        white-space: nowrap !important;
-                    }
                     .pdf-section-block {
                         page-break-inside: avoid !important;
                         break-inside: avoid !important;
@@ -2239,8 +2254,8 @@
             }
 
             const opt = {
-                margin: [2.5, 0.25, 1.0, 0.25], // top, right, bottom, left in inches
-                filename: `Enneagram_Report_V18_${firstName}_${familyName}.pdf`,
+                margin: [0, 0, 0, 0], // ENGINE LOCK: spacing handled by physical buffers
+                filename: `Enneagram_Report_V19_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
@@ -2358,14 +2373,21 @@
                 target.classList.remove('pdf-rendering');
                 h1s.forEach(h1 => h1.classList.remove('no-pdf'));
 
-                target.style.width = '';
-                target.style.minWidth = '';
-                target.style.maxWidth = '';
-                target.style.padding = '';
-                target.style.paddingTop = '';
-                target.style.marginTop = '';
-                target.style.marginBottom = '';
-                target.style.overflow = '';
+                // Restore Sacred Ground Architecture
+                const wrap = document.getElementById('pdf-blueprint-wrap');
+                if (wrap) {
+                    const headerBuf = document.getElementById('pdf-header-buffer');
+                    if (headerBuf) headerBuf.remove();
+                    const footerBuf = document.getElementById('pdf-footer-buffer');
+                    if (footerBuf) footerBuf.remove();
+
+                    wrap.parentNode.insertBefore(target, wrap);
+                    wrap.remove();
+                }
+
+                document.querySelectorAll(".chart-container text, .chart-label").forEach(el => {
+                    el.removeAttribute("style");
+                });
 
                 // Restore HTML strictly by unwrapping the section blocks
                 const strWrappers = target.querySelectorAll('.pdf-section-block');
@@ -2376,8 +2398,8 @@
                     wrap.parentNode.removeChild(wrap);
                 });
 
-                // Remove temporary chart styles
-                const tempStyle = document.getElementById('pdf-chart-label-override');
+                // Remove section block styles
+                const tempStyle = document.getElementById('pdf-section-block-style');
                 if (tempStyle) {
                     tempStyle.remove();
                 }
