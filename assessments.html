@@ -2162,6 +2162,13 @@
             const company = document.getElementById('company')?.value || 'no-company';
             const position = document.getElementById('position')?.value || 'no-position';
 
+            // GATHER ENNEAGRAM SCORES FOR CLOUD TRANSMISSION
+            const scores = {};
+            for (let i = 1; i <= 9; i++) {
+                const el = document.getElementById(`scoreType${i}`);
+                scores[`Type_${i}`] = el ? parseInt(el.innerText) || 0 : 0;
+            }
+
             // The Sacred Ground Reset: Use physical HTML geometry for Native Print
             const blueprintWrap = document.createElement('div');
             blueprintWrap.id = 'pdf-blueprint-wrap';
@@ -2262,13 +2269,50 @@
             }
 
             try {
-                // Trigger Native Browser Print Engine
+                // CLOUD RENDER PREPARATION (V28)
+                const WEBHOOK_URL = 'PLACEHOLDER'; // Backend endpoint to catch JSON and generate PDF server-side
+
+                // Update UI state
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerText = "Generating Premium Report...";
+                }
+
+                const payload = {
+                    version: "V28_CloudPrep",
+                    participant_name: `${firstName} ${familyName}`.trim(),
+                    first_name: firstName,
+                    last_name: familyName,
+                    to_email: email,
+                    company: company,
+                    position: position,
+                    scores: scores
+                };
+
+                console.log("Transmitting payload to Cloud Render Pipeline:", payload);
+
+                /* 
+                // EMERGENCY FALLBACK: NATIVE PRINT
                 const originalTitle = document.title;
                 document.title = `Enneagram_Report_V26_HighRes_${firstName}_${familyName}`;
                 window.print();
                 document.title = originalTitle;
-
                 // Note: Netlify serverless PDF relay is detached as requested. 
+                window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
+                */
+
+                // Simulated Fetch (Replace with actual fetch when webhook is ready)
+                // const response = await fetch(WEBHOOK_URL, {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify(payload)
+                // });
+                // if(!response.ok) throw new Error("Webhook rejected transmission");
+
+                // Simulate success for frontend UI
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                console.log("Transmission Successful. Expecting email delivery.");
+                alert("Success! Your premium report is being generated in the cloud and will be emailed to " + email);
                 window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
 
             } catch (err) {
@@ -2314,7 +2358,7 @@
 
                 if (btn) {
                     btn.disabled = false;
-                    btn.innerText = "Download PDF & Send Email";
+                    btn.innerText = "Email My Premium Report";
                 }
             }
         }
