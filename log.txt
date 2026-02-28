@@ -1,1 +1,30 @@
-Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+﻿975034e Emergency PDF Bypass: Use window.print() and strict print CSS
+a34eb30 Fix blank PDF issue: Correct ID mismatches and make clone visible
+8e352a8 Fix: Finalize @media print styles for strict A4 pagination, heading page-breaks, and hidden web UI clutter
+82f362c Fix: Add native 'window.print()' fallback with '@media print' styles to bypass SES intrinsics stripping
+6974e51 Fix: Deep-clone PDF results container to bypass CSS overflow clipping and strip layout animations
+bd197c1 Fix: Strict html2pdf configuration to resolve blank PDF page captures
+559be80 Fix: Add white background and 1000ms render delay to resolve blank PDF captures
+dd1f6c1 Fix: Revert PDF engine to html2pdf and add CSS page breaks
+9b7308f Patch: Revert to html2pdf.js utilizing isolated off-screen 1024px render tree to resolve jsPDF layout bleeding, ghost repetitions, and utf-8 strategy string issues
+00fa817 Patch: Resolves html2canvas createPattern zero-width crash by dynamically scrubbing linear-gradients on charts during PDF generation
+de24ab7 Patch: NaN crash fix in Vector PDF scale calculation
+8e71547 Compliance fix: Rasterize branding logo into jsPDF native header
+1a3b541 Architectural Shift: Retire html2pdf for Native Vector PDF format matching exact brand hex codes with sub 250KB footprint
+0141c24 Fix: Natively compute negative screen bleed and dynamically shift content via padding to guarantee X >= 0 origin
+d019785 Fix: Hard left align and explicit padding to stop negative-bleed left edge clipping
+3b1bc8e Fix: html2canvas crash by preventing 0px bar height and revert absolute position
+b718c99 Fix: Revert 1024px capture with absolute origin 0,0 anchor and 1.0 scale to bypass Netlify limits
+3ba9559 Fix: Restore chart bars and fix right-edge clipping with 1200px viewport
+e273c0b Fix: Add 80px left padding and coordinate buffering to prevent PDF clipping
+b293d4c Fix: Revert fixed positioning and implement stable margin-reset for PDF generation
+b5c3c01 Fix: Nuclear Positioning for PDF Generation to prevent left-edge clipping
+b1bd3f9 Fix: Hardcode pdfContentArea width temporarily to prevent html2canvas clipping text on wide screens
+42529e5 Fix: Render Squeeze Configuration (Scale 1.2, Quality 0.2) and Background Clutter Stripping
+e1047ea Fix: Optimize PDF execution speed and serverless memory management
+e0510ec Fix: Execute Nuclear Compression for PDF Base64 Payload
+5260801 Fix: Aggressive 0.4 JPEG Compression to Prevent Base64 10s Timeout limit
+ba466ee Fix: Add CORS Headers and Absolute URL for Cross-Origin Hosting
+b2b2d0a Enhance: Premium UI Visuals, PDF Branding, and HTML Emails
+3b5583c Fix: Implement avoid-all inline pagebreak logic to fix Mobile PDF gaps
+af46d98 Fix: Implement Desktop Virtual Viewport for Mobile PDF Generation

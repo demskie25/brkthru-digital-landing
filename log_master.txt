@@ -1,0 +1,5 @@
+commit ef97c550f3a54028c99b44dd0dd67a0737da68ca
+Author: Michael Hall~ <brkthru.consulting@gmail.com>
+Date:   Fri Feb 27 06:33:57 2026 +0800
+
+    Restore 300kb html2pdf logic, purge SVG cloning, inject v2.0 cache busters

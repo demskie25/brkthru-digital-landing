@@ -1,5 +1,17 @@
-commit 44e3f20e14b04a82f779f94808b8c12872b0d75e
+commit 68c4a16f7888aba096c0969bac9ae75080f5ccdd
 Author: Michael Hall~ <brkthru.consulting@gmail.com>
-Date:   Wed Feb 25 08:41:58 2026 +0800
+Date:   Fri Feb 27 15:50:01 2026 +0800
 
-    Fix Enneagram assessment unlock button
+    fix(pdf): implement Virtual Blueprint protocol with rigid 800px width and upgrade to V13
+
+commit 58bb00d0b23cf2f66b024c742d4aa06245bc0056
+Author: Michael Hall~ <brkthru.consulting@gmail.com>
+Date:   Fri Feb 27 12:15:18 2026 +0800
+
+    Implement exact camera coordinate mapping and massive top margin to fix PDF layout
+
+commit cd412fdd7d8474fa53f9819f3d4bf940297dec2e
+Author: Michael Hall~ <brkthru.consulting@gmail.com>
+Date:   Fri Feb 27 12:09:49 2026 +0800
+
+    Implement simple padding nudge for proper alignment and windowWidth fix

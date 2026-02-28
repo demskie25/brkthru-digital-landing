@@ -1,0 +1,5 @@
+commit 953694a604a1183b58e0df1321c25c1dcea0065c
+Author: Michael Hall~ <brkthru.consulting@gmail.com>
+Date:   Thu Feb 26 23:30:18 2026 +0800
+
+    Revert PDF logic to b2b2d0a (300kb compression) with resultsSection ID
