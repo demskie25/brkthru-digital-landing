@@ -2183,38 +2183,7 @@
                 console.warn("Could not load logo for PDF footer.", e);
             }
 
-            // The Sacred Ground Reset: Use physical HTML geometry to enforce PDF borders
-            const blueprintWrap = document.createElement('div');
-            blueprintWrap.id = 'pdf-blueprint-wrap';
-            blueprintWrap.style.width = '700px';
-            blueprintWrap.style.margin = '0 auto';
-            blueprintWrap.style.padding = '0';
-            blueprintWrap.style.background = 'white';
-
-            target.parentNode.insertBefore(blueprintWrap, target);
-            blueprintWrap.appendChild(target);
-
-            // (Physical buffers removed in favor of strict absolute engine margins)
-
-            // 4. JAVASCRIPT CHART FORCE
-            document.querySelectorAll(".chart-container text, .chart-label").forEach(el => {
-                el.setAttribute("style", "font-size: 7px !important; transform: rotate(-45deg) translate(-10px, -5px) !important;");
-            });
-
-            // STRICT TASK 2: CLEAN THE SCRIPT
-            // Deleted all lines that tried to move elements, calculate heights, or perform smart merges
-
-            // STRICT TASK 3: RIGID BREAKS
-            const forceBreaks = ['#pdf-page-2-consolidated', '.chart-container', '.circular-diagram-container', '#relate-section'];
-            forceBreaks.forEach(selector => {
-                const el = document.querySelector(selector);
-                if (el && el.parentNode) {
-                    const brk = document.createElement('div');
-                    brk.className = 'html2pdf__page-break';
-                    el.parentNode.insertBefore(brk, el);
-                }
-            });
-
+            // STRICT TASK 4: PRINT CSS STABILIZATION
             const styleId = 'pdf-section-block-style';
             let styleEl = document.getElementById(styleId);
             if (!styleEl) {
@@ -2222,29 +2191,11 @@
                 styleEl.id = styleId;
                 styleEl.innerHTML = `
                     @media print {
-                        .html2pdf__page-break { page-break-before: always !important; break-before: always !important; clear: both; }
+                        .pdf-section-block, .chart-container { page-break-before: always; }
                     }
                 `;
                 document.head.appendChild(styleEl);
             }
-
-            const opt = {
-                margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V52_NakedStructure_${firstName}_${familyName}.pdf`,
-                image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
-                html2canvas: {
-                    scale: 2,
-                    useCORS: true,
-                    letterRendering: true,
-                    x: 0,
-                    y: 0,
-                    scrollX: 0,
-                    scrollY: 0,
-                    windowWidth: 750
-                }, // VIRTUAL DESKTOP VIEWPORT
-                jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' },
-                pagebreak: { mode: 'css', avoid: '.pdf-section-block' }
-            };
 
             try {
                 // Email Fallback (Summary Report)
@@ -2277,12 +2228,11 @@ To download your full 15-page visual report, please use the Print/Save button on
                     }
                 }).catch(err => console.error("Netlify Fetch Failed:", err));
 
-                // STRICT TASK 4: RENDER STABILITY
-                setTimeout(() => {
-                    html2pdf().set(opt).from(target).save().then(() => {
-                        window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
-                    });
-                }, 1200);
+                // STRICT TASK 3: IMPLEMENT WINDOW.PRINT
+                window.print();
+
+                // Redirect gracefully
+                window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
 
             } catch (err) {
                 console.error("downloadAndSend Error:", err);
@@ -2291,26 +2241,6 @@ To download your full 15-page visual report, please use the Print/Save button on
                 target.classList.remove('pdf-rendering');
                 h1s.forEach(h1 => h1.classList.remove('no-pdf'));
 
-                // Restore Sacred Ground Architecture
-                const wrap = document.getElementById('pdf-blueprint-wrap');
-                if (wrap) {
-                    wrap.parentNode.insertBefore(target, wrap);
-                    wrap.remove();
-                }
-
-                document.querySelectorAll(".chart-container text, .chart-label").forEach(el => {
-                    el.removeAttribute("style");
-                });
-
-                // Restore HTML strictly by unwrapping the section blocks
-                const strWrappers = target.querySelectorAll('.pdf-section-block');
-                strWrappers.forEach(wrap => {
-                    while (wrap.firstChild) {
-                        wrap.parentNode.insertBefore(wrap.firstChild, wrap);
-                    }
-                    wrap.parentNode.removeChild(wrap);
-                });
-
                 // Remove section block styles
                 const tempStyle = document.getElementById('pdf-section-block-style');
                 if (tempStyle) {
@@ -2318,20 +2248,6 @@ To download your full 15-page visual report, please use the Print/Save button on
                 }
                 // Restore Target Style
                 target.setAttribute('style', originalTargetStyle);
-
-                // RELATE BETTER COMPRESSION CLEANUP
-                if (typeof relateSection !== 'undefined' && relateSection) {
-                    relateSection.style.transform = '';
-                    relateSection.style.transformOrigin = '';
-                }
-
-                // Restore overflow
-                document.querySelectorAll('.pdf-section-block, .bg-white, .flex-col, .grid').forEach(el => {
-                    el.style.overflow = '';
-                });
-
-                // THE FORCED PAGE BREAK CLEANUP
-                document.querySelectorAll('.html2pdf__page-break').forEach(el => el.remove());
                 // Revert dynamic CSS
                 const avoidElements = target.querySelectorAll('h2, h3, .bg-white, img, .chart-container, .shadow-md, .rounded-lg, p, li');
                 avoidElements.forEach(el => {
