@@ -1029,17 +1029,20 @@
                     <!-- INTRODUCTORY REPORT SECTIONS -->
                     <div id="introReportContent"></div>
 
-                    <div id="participantSummary" class="report-card text-lg"></div>
-                    <div id="typeResult" class="report-card border-l-8 border-chartreuse-bright bg-aubergine/10"></div>
+                    <div id="page-2-anchor" style="display: block !important; gap: 0 !important;">
+                        <div id="participantSummary" class="report-card text-lg"></div>
+                        <div id="typeResult" class="report-card border-l-8 border-chartreuse-bright bg-aubergine/10">
+                        </div>
+                    </div>
 
-                    <div class="graph-container">
+                    <div id="score-chart" class="graph-container">
                         <h3 class="text-3xl font-bold text-aubergine mb-8 text-center">Your Enneagram Score Distribution
                         </h3>
                         <div id="barChart" class="bar-chart"></div>
                         <!-- Reference Guide will be inserted here dynamically -->
                     </div>
 
-                    <div class="circular-diagram-container avoid-slice">
+                    <div id="type-map" class="circular-diagram-container avoid-slice">
                         <h3 class="text-3xl font-bold text-aubergine mb-8 text-center">Interconnected Type Map</h3>
                         <svg id="enneagramCircleSvg" viewBox="0 0 1000 600" class="mx-auto w-full max-w-3xl h-auto"
                             style="overflow: visible;"></svg>
@@ -1678,7 +1681,7 @@
             displayBarChart(fs, [primary]);
             displayCircularDiagram(primary);
 
-            let allTypesHTML = `<div class="chart-container avoid-slice report-card reference-guide">
+            let allTypesHTML = `<div id="styles-ref" class="chart-container avoid-slice report-card reference-guide">
                 <h3 class="text-2xl font-bold text-aubergine mb-4">Reference: The 9 Leadership Styles</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
             for (let i = 1; i <= 9; i++) {
@@ -1688,7 +1691,7 @@
             document.getElementById('barChart').parentElement.insertAdjacentHTML('afterend', allTypesHTML);
 
             const growthStressWingsHTML = `
-                     <div class="report-card avoid-slice pb-break-inside-avoid">
+                     <div id="growth-mastery" class="report-card avoid-slice pb-break-inside-avoid">
                         <div class="context-box">
                             <p class="font-bold">Why you need to know this:</p>
                             <p>The Enneagram is not a static box; it's a map for growth. Knowing where you go in stress helps you catch it early. Knowing your growth path gives you a specific developmental goal.</p>
@@ -1708,7 +1711,7 @@
                         </div>
                     </div>
 
-                    <div class="report-card avoid-slice">
+                    <div id="wings-balance" class="report-card avoid-slice">
                         <div class="context-box">
                             <p class="font-bold">Why you need to know this:</p>
                             <p>Your "Wings" are the adjacent types that flavor your personality. Expanding into both wings gives you balance—like a bird needs two wings to fly straight.</p>
@@ -1729,7 +1732,7 @@
             document.getElementById('movedSectionsContainer').innerHTML = growthStressWingsHTML;
 
             document.getElementById('detailedReport').innerHTML = `
-                <div class="report-card avoid-slice">
+                <div id="core-drivers" class="report-card avoid-slice">
                     <div class="context-box">
                         <p class="font-bold">Why you need to know this:</p>
                         <p>Your core drivers explain the subconscious "why" behind every decision you make. Understanding this stops you from running on autopilot.</p>
@@ -1741,7 +1744,7 @@
                     <p><strong class="text-royal-navy">Basic Weakness (Vice):</strong> <span class="text-red-flag">${info.basicWeaknessVice}</span></p>
                 </div>
                 
-                <div class="report-card avoid-slice">
+                <div id="center-intel" class="report-card avoid-slice">
                     <h3 class="text-2xl font-bold text-aubergine mb-6">Your Center of Intelligence</h3>
                     <div class="mb-6">
                         <p>The 9 types are grouped into three Centers. Your type determines your dominant Center:</p>
@@ -1768,7 +1771,7 @@
                     </div>
                 </div>
 
-                <div class="report-card avoid-slice">
+                <div id="blind-spots" class="report-card avoid-slice">
                     <div class="context-box">
                         <p class="font-bold">Why you need to know this:</p>
                         <p>We cannot fix what we cannot see. Your blind spots are the primary cause of friction in your leadership and relationships.</p>
@@ -1784,7 +1787,7 @@
                     </ul>
                 </div>
 
-                <div class="report-card avoid-slice">
+                <div id="strengths-struggles" class="report-card avoid-slice">
                     <div class="context-box">
                         <p class="font-bold">Why you need to know this:</p>
                         <p>Aligning your role with your natural strengths creates flow. Ignoring your natural struggles creates burnout.</p>
@@ -1802,7 +1805,7 @@
                     </div>
                 </div>
                 
-                <div class="report-card avoid-slice">
+                <div id="leadership-deep-dive" class="report-card avoid-slice">
                     <h3 class="text-2xl font-bold text-aubergine mb-6">Leadership Strategy & Deep Dive</h3>
                     <p class="text-lg leading-relaxed mb-6">${info.leadershipStyle}</p>
                     <div class="deep-dive-section">
@@ -1811,7 +1814,7 @@
                     </div>
                 </div>
 
-                <div class="report-card avoid-slice">
+                <div id="work-implications" class="report-card avoid-slice">
                     <h3 class="text-2xl font-bold text-aubergine mb-6">Work & Relationship Implications</h3>
                     <div class="space-y-6">
                         <div>
@@ -1825,7 +1828,7 @@
                     </div>
                 </div>
 
-                <div id="relate-section-1-5" class="report-card avoid-slice">
+                <div id="relate-part-1" class="report-card avoid-slice">
                      <h3 class="text-2xl font-bold text-aubergine mb-6">How You Can Relate Better to Others (Types 1-5)</h3>
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         ${Object.entries(info.relatingTo).filter(([k]) => parseInt(k) >= 1 && parseInt(k) <= 5).map(([key, val]) => `
@@ -1837,7 +1840,7 @@
                      </div>
                 </div>
 
-                <div id="relate-section-6-9" class="report-card avoid-slice">
+                <div id="relate-part-2" class="report-card avoid-slice">
                      <h3 class="text-2xl font-bold text-aubergine mb-6">How You Can Relate Better to Others (Types 6-9)</h3>
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         ${Object.entries(info.relatingTo).filter(([k]) => parseInt(k) >= 6 && parseInt(k) <= 9).map(([key, val]) => `
@@ -2232,58 +2235,43 @@
                 styleEl.innerHTML = `
                     @media print {
                         .html2pdf__page-break { page-break-before: always !important; break-before: always !important; clear: both; }
-                        #relate-section-1-5, #relate-section-6-9 { transform: scale(0.98); transform-origin: top; }
+                        * { transform: scale(1.0) !important; }
                     }
                 `;
                 document.head.appendChild(styleEl);
             }
 
             // Target Explicit 14 breaks (For 15 pages)
-            const strictBreakTargets = [
-                document.querySelector('.graph-container'), // Page 3
-                document.querySelector('.reference-guide'), // Page 4
-                document.querySelector('.circular-diagram-container') // Page 5
+            const strictBreakIds = [
+                'page-2-anchor',
+                'score-chart',
+                'styles-ref',
+                'type-map',
+                'growth-mastery',
+                'wings-balance',
+                'core-drivers',
+                'center-intel',
+                'blind-spots',
+                'strengths-struggles',
+                'leadership-deep-dive',
+                'work-implications',
+                'relate-part-1',
+                'relate-part-2'
             ];
-
-            // Map strict H3 texts to inject before
-            const strictHeadingTexts = [
-                "Growth & Stress Mastery", // 6
-                "Your Wings & Balance", // 7
-                "Core Drivers", // 8
-                "Your Center of:", // Center of Intelligence catch-all // 9
-                "Blind Spots & Hidden Fears", // 10
-                "Work Strengths & Struggles", // 11
-                "Leadership Strategy & Deep Dive", // 12
-                "Work & Relationship Implications", // 13
-                "How You Can Relate Better to Others (Types 1-5)", // 14
-                "How You Can Relate Better to Others (Types 6-9)" // 15
-            ];
-
-            document.querySelectorAll('h2, h3, h4, .center-card, .text-xl, .text-2xl').forEach(heading => {
-                if (strictHeadingTexts.some(t => {
-                    if (t === "Your Center of:") return heading.innerText.includes("You are in the");
-                    return heading.innerText.includes(t);
-                })) {
-                    // Try to grab the report-card
-                    const container = heading.closest('.report-card') || heading.closest('.center-card') || heading;
-                    // Prevent dupes
-                    if (!strictBreakTargets.includes(container)) {
-                        strictBreakTargets.push(container);
-                    }
-                }
-            });
 
             // Execute exact 14 breaks
-            strictBreakTargets.filter(Boolean).forEach(el => {
-                const wrapper = el.parentNode;
-                const brk = document.createElement('div');
-                brk.className = 'html2pdf__page-break';
-                wrapper.insertBefore(brk, el);
+            strictBreakIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.parentNode) {
+                    const brk = document.createElement('div');
+                    brk.className = 'html2pdf__page-break';
+                    el.parentNode.insertBefore(brk, el);
+                }
             });
 
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V50_FinalBlueprint_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V50_Final_Blueprint_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
