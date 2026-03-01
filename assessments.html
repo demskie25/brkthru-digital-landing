@@ -2204,9 +2204,9 @@
             // STRICT TASK 2: CLEAN THE SCRIPT
             // Deleted all lines that tried to move elements, calculate heights, or perform smart merges
 
-            // STRICT TASK 3: SIMPLIFIED BREAKS
-            const breakTargets = ['#pdf-page-2-consolidated', '.chart-container', '.circular-diagram-container', '#relate-section'];
-            breakTargets.forEach(selector => {
+            // STRICT TASK 3: RIGID BREAKS
+            const forceBreaks = ['#pdf-page-2-consolidated', '.chart-container', '.circular-diagram-container', '#relate-section'];
+            forceBreaks.forEach(selector => {
                 const el = document.querySelector(selector);
                 if (el && el.parentNode) {
                     const brk = document.createElement('div');
@@ -2230,7 +2230,7 @@
 
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V51_StaticWeld_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V52_NakedStructure_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
@@ -2277,12 +2277,12 @@ To download your full 15-page visual report, please use the Print/Save button on
                     }
                 }).catch(err => console.error("Netlify Fetch Failed:", err));
 
-                // STRICT TASK 4: RENDER WAIT
+                // STRICT TASK 4: RENDER STABILITY
                 setTimeout(() => {
                     html2pdf().set(opt).from(target).save().then(() => {
                         window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
                     });
-                }, 1000);
+                }, 1200);
 
             } catch (err) {
                 console.error("downloadAndSend Error:", err);
