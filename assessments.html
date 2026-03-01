@@ -251,6 +251,56 @@
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
+
+            /* ProPrintCSS V56 Overrides */
+            /* 1. HIDE BROWSER JUNK & SET MARGINS */
+            @page {
+                margin: 0;
+            }
+
+            /* Kills the URL and Date stamps */
+            body {
+                padding: 15mm !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            /* 2. KILL THE VIEWPORT VOIDS */
+            * {
+                height: auto !important;
+                min-height: 0 !important;
+                overflow: visible !important;
+            }
+
+            /* 3. FIX THE PHANTOM BLANK PAGE 1 */
+            body,
+            main,
+            #root,
+            .app-container {
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+            }
+
+            .pdf-section-block:first-of-type {
+                break-before: avoid !important;
+                page-break-before: avoid !important;
+                margin-top: 0 !important;
+            }
+
+            /* 4. CONTROL THE PAGE BREAKS */
+            .pdf-section-block {
+                break-before: always;
+                page-break-before: always;
+            }
+
+            /* 5. PROTECT THE 9 TYPES AND CHARTS (NO SCALING NEEDED) */
+            .chart-container,
+            .type-block,
+            li,
+            p {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
         }
     </style>
 
@@ -1029,15 +1079,18 @@
                     <!-- INTRODUCTORY REPORT SECTIONS -->
                     <div id="introReportContent"></div>
 
-                    <div id="pdf-page-2-consolidated" class="report-card text-lg mb-8"
-                        style="display: block !important; gap: 0 !important;">
-                    </div>
+                    <div id="pdf-page-2-consolidated" class="pdf-section-block">
+                        <div id="participant-info-container" class="report-card text-lg mb-8"
+                            style="display: block !important; gap: 0 !important;">
+                        </div>
 
-                    <div id="score-chart" class="graph-container">
-                        <h3 class="text-3xl font-bold text-aubergine mb-8 text-center">Your Enneagram Score Distribution
-                        </h3>
-                        <div id="barChart" class="bar-chart"></div>
-                        <!-- Reference Guide will be inserted here dynamically -->
+                        <div id="score-chart" class="chart-container">
+                            <h3 class="text-3xl font-bold text-aubergine mb-8 text-center">Your Enneagram Score
+                                Distribution
+                            </h3>
+                            <div id="barChart" class="bar-chart"></div>
+                            <!-- Reference Guide will be inserted here dynamically -->
+                        </div>
                     </div>
 
                     <div id="type-map" class="circular-diagram-container avoid-slice">
@@ -1663,7 +1716,7 @@
 
             document.getElementById('introReportContent').innerHTML = introHTML;
 
-            document.getElementById('pdf-page-2-consolidated').innerHTML = `
+            document.getElementById('participant-info-container').innerHTML = `
                 <h3 class="text-3xl font-black mb-4 text-aubergine">Participant: ${participantData.firstName} ${participantData.familyName}</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xl mb-6">
                     <p><strong>Position:</strong> ${participantData.position}</p>
