@@ -1029,10 +1029,8 @@
                     <!-- INTRODUCTORY REPORT SECTIONS -->
                     <div id="introReportContent"></div>
 
-                    <div id="pdf-page-2-consolidated" style="display: block !important; gap: 0 !important;">
-                        <div id="participantSummary" class="report-card text-lg"></div>
-                        <div id="typeResult" class="report-card border-l-8 border-chartreuse-bright bg-aubergine/10">
-                        </div>
+                    <div id="pdf-page-2-consolidated" class="report-card text-lg mb-8"
+                        style="display: block !important; gap: 0 !important;">
                     </div>
 
                     <div id="score-chart" class="graph-container">
@@ -1665,17 +1663,17 @@
 
             document.getElementById('introReportContent').innerHTML = introHTML;
 
-            document.getElementById('participantSummary').innerHTML = `
+            document.getElementById('pdf-page-2-consolidated').innerHTML = `
                 <h3 class="text-3xl font-black mb-4 text-aubergine">Participant: ${participantData.firstName} ${participantData.familyName}</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xl mb-6">
                     <p><strong>Position:</strong> ${participantData.position}</p>
                     <p><strong>Company:</strong> ${participantData.company}</p>
                 </div>
-                <p class="mt-4 text-gray-500 font-bold">Assessment Date: ${new Date().toLocaleDateString()}</p>
-            `;
-
-            document.getElementById('typeResult').innerHTML = `
-                <h2 class="text-4xl font-black text-aubergine mb-2">Primary Type: ${primary} - ${info.name}</h2>
+                <p class="mb-8 text-gray-500 font-bold">Assessment Date: ${new Date().toLocaleDateString()}</p>
+                
+                <div class="p-6 border-l-8 border-chartreuse-bright bg-aubergine/10 rounded-r-lg mt-4">
+                    <h2 class="text-4xl font-black text-aubergine mb-2">Primary Type: ${primary} - ${info.name}</h2>
+                </div>
             `;
 
             displayBarChart(fs, [primary]);
@@ -2203,39 +2201,19 @@
                 el.setAttribute("style", "font-size: 7px !important; transform: rotate(-45deg) translate(-10px, -5px) !important;");
             });
 
-            // SECTION MAGNETIC LOCK: Wrap all major report sections naturally
-            const h2sForWrap = Array.from(target.querySelectorAll('h2'));
-            h2sForWrap.forEach(h2 => {
-                if (h2.closest('#participantSummary') || h2.closest('#typeResult') || h2.closest('#pdf-page-2-consolidated')) {
-                    return;
-                }
-                let current = h2;
-                const toWrap = [];
-                while (current) {
-                    if (current.id === 'relate-section') break;
-                    toWrap.push(current);
-                    current = current.nextElementSibling;
-                    if (!current || current.tagName.toLowerCase() === 'h2') break;
-                }
-                const wrapper = document.createElement('div');
-                wrapper.className = 'pdf-section-block';
-                h2.parentNode.insertBefore(wrapper, h2);
-                toWrap.forEach(el => wrapper.appendChild(el));
-            });
+            // STRICT TASK 2: CLEAN THE SCRIPT
+            // Deleted all lines that tried to move elements, calculate heights, or perform smart merges
 
-            // STRICT TASK 1: SIMPLIFY THE LOOP
-            const simpleBreakTargets = Array.from(target.querySelectorAll('.chart-container, .circular-diagram-container, #relate-section, .pdf-section-block'));
-            simpleBreakTargets.forEach((el, index) => {
-                // Skip the first two elements
-                if (index === 0 || index === 1) return;
-                const brk = document.createElement('div');
-                brk.className = 'html2pdf__page-break';
-                el.parentNode.insertBefore(brk, el);
+            // STRICT TASK 3: SIMPLIFIED BREAKS
+            const breakTargets = ['#pdf-page-2-consolidated', '.chart-container', '.circular-diagram-container', '#relate-section'];
+            breakTargets.forEach(selector => {
+                const el = document.querySelector(selector);
+                if (el && el.parentNode) {
+                    const brk = document.createElement('div');
+                    brk.className = 'html2pdf__page-break';
+                    el.parentNode.insertBefore(brk, el);
+                }
             });
-
-            // STRICT TASK 1: DELETE ALL BREAKS
-            const oldBreaks = target.querySelectorAll('.html2pdf__page-break');
-            oldBreaks.forEach(b => b.remove());
 
             const styleId = 'pdf-section-block-style';
             let styleEl = document.getElementById(styleId);
@@ -2252,7 +2230,7 @@
 
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V50_Stabilized_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V51_StaticWeld_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
@@ -2299,12 +2277,12 @@ To download your full 15-page visual report, please use the Print/Save button on
                     }
                 }).catch(err => console.error("Netlify Fetch Failed:", err));
 
-                // TIMEOUT PROTECTION (500ms DOM sync buffer)
+                // STRICT TASK 4: RENDER WAIT
                 setTimeout(() => {
                     html2pdf().set(opt).from(target).save().then(() => {
                         window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
                     });
-                }, 500);
+                }, 1000);
 
             } catch (err) {
                 console.error("downloadAndSend Error:", err);
