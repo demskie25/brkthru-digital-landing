@@ -1029,7 +1029,7 @@
                     <!-- INTRODUCTORY REPORT SECTIONS -->
                     <div id="introReportContent"></div>
 
-                    <div id="pdf-page-2-consolidated">
+                    <div id="pdf-page-2-consolidated" style="display: block !important; gap: 0 !important;">
                         <div id="participantSummary" class="report-card text-lg"></div>
                         <div id="typeResult" class="report-card border-l-8 border-chartreuse-bright bg-aubergine/10">
                         </div>
@@ -2206,6 +2206,10 @@
             // SECTION MAGNETIC LOCK: Wrap all major report sections
             const h2sForWrap = Array.from(target.querySelectorAll('h2'));
             h2sForWrap.forEach(h2 => {
+                // SMART MERGE OVERRIDE: Check by ID and ensure no wrapper/page-break is inserted between Participant Info and Primary Type
+                if (h2.closest('#participantSummary') || h2.closest('#typeResult') || h2.closest('#pdf-page-2-consolidated')) {
+                    return;
+                }
                 let current = h2;
                 const toWrap = [];
                 // Gather elements until the next H2
@@ -2224,12 +2228,17 @@
 
             // Consolidation & Scaling Logic
             const consolidatedNode = document.getElementById('pdf-page-2-consolidated');
-            let scaleCSS = "";
             if (consolidatedNode) {
-                const heightInInches = consolidatedNode.offsetHeight / 96;
-                if (heightInInches > 10) {
-                    scaleCSS = '#pdf-page-2-consolidated { transform: scale(0.95); transform-origin: top; }';
-                }
+                consolidatedNode.style.setProperty('display', 'block', 'important');
+                consolidatedNode.style.setProperty('gap', '0', 'important');
+            }
+
+            // SMART MERGE OVERRIDE explicitly check for these two sections by ID
+            const pSummary = document.getElementById('participantSummary');
+            const tResult = document.getElementById('typeResult');
+            if (pSummary && tResult) {
+                pSummary.style.setProperty('page-break-after', 'avoid', 'important');
+                tResult.style.setProperty('page-break-before', 'avoid', 'important');
             }
 
             // Section Block CSS
@@ -2245,8 +2254,7 @@
                             break-before: always !important;
                             clear: both;
                         }
-                        #pdf-page-2-consolidated { display: block !important; margin-top: 0 !important; padding-top: 0 !important; }
-                        ${scaleCSS}
+                        #pdf-page-2-consolidated { display: block !important; gap: 0 !important; margin-top: 0 !important; padding-top: 0 !important; }
                     }
                 `;
                 document.head.appendChild(styleEl);
@@ -2306,7 +2314,7 @@
 
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V46_Page2Merge_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V48_TheWeld_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
