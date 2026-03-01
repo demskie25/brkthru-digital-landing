@@ -1828,11 +1828,11 @@
                     </div>
                 </div>
 
-                <div class="report-card avoid-slice">
+                <div id="relate-section" class="report-card avoid-slice">
                      <h3 class="text-2xl font-bold text-aubergine mb-6">How You Can Relate Better to Others</h3>
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         ${Object.entries(info.relatingTo).map(([key, val]) => `
-                            <div class="p-3 bg-gray-50 border border-gray-200 rounded">
+                            <div class="type-block p-3 bg-gray-50 border border-gray-200 rounded">
                                 <p class="font-bold text-aubergine">To Type ${key} (${enneagramTypesData[key].shortName}):</p>
                                 <p class="text-sm italic text-royal-navy">${val}</p>
                             </div>
@@ -2214,6 +2214,8 @@
                 const toWrap = [];
                 // Gather elements until the next H2
                 while (current) {
+                    // SMART MERGE REFINEMENT
+                    if (current.id === 'relate-section') break;
                     toWrap.push(current);
                     current = current.nextElementSibling;
                     if (!current || current.tagName.toLowerCase() === 'h2') break;
@@ -2255,6 +2257,9 @@
                             clear: both;
                         }
                         #pdf-page-2-consolidated { display: block !important; gap: 0 !important; margin-top: 0 !important; padding-top: 0 !important; }
+                        #relate-section .type-block { margin-bottom: 4px !important; padding: 8px !important; } 
+                        #relate-section h3 { margin-bottom: 10px !important; }
+                        #relate-section { transform: scale(0.92); transform-origin: top; }
                     }
                 `;
                 document.head.appendChild(styleEl);
@@ -2314,7 +2319,7 @@
 
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V48_TheWeld_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V49_FinalCompression_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
