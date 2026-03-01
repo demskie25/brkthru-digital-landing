@@ -1029,7 +1029,7 @@
                     <!-- INTRODUCTORY REPORT SECTIONS -->
                     <div id="introReportContent"></div>
 
-                    <div id="page-2-anchor" style="display: block !important; gap: 0 !important;">
+                    <div id="pdf-page-2-consolidated" style="display: block !important; gap: 0 !important;">
                         <div id="participantSummary" class="report-card text-lg"></div>
                         <div id="typeResult" class="report-card border-l-8 border-chartreuse-bright bg-aubergine/10">
                         </div>
@@ -1828,22 +1828,10 @@
                     </div>
                 </div>
 
-                <div id="relate-part-1" class="report-card avoid-slice">
-                     <h3 class="text-2xl font-bold text-aubergine mb-6">How You Can Relate Better to Others (Types 1-5)</h3>
+                <div id="relate-section" class="report-card avoid-slice">
+                     <h3 class="text-2xl font-bold text-aubergine mb-6">How You Can Relate Better to Others</h3>
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${Object.entries(info.relatingTo).filter(([k]) => parseInt(k) >= 1 && parseInt(k) <= 5).map(([key, val]) => `
-                            <div class="type-block p-3 bg-gray-50 border border-gray-200 rounded">
-                                <p class="font-bold text-aubergine">To Type ${key} (${enneagramTypesData[key].shortName}):</p>
-                                <p class="text-sm italic text-royal-navy">${val}</p>
-                            </div>
-                        `).join('')}
-                     </div>
-                </div>
-
-                <div id="relate-part-2" class="report-card avoid-slice">
-                     <h3 class="text-2xl font-bold text-aubergine mb-6">How You Can Relate Better to Others (Types 6-9)</h3>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${Object.entries(info.relatingTo).filter(([k]) => parseInt(k) >= 6 && parseInt(k) <= 9).map(([key, val]) => `
+                        ${Object.entries(info.relatingTo).map(([key, val]) => `
                             <div class="type-block p-3 bg-gray-50 border border-gray-200 rounded">
                                 <p class="font-bold text-aubergine">To Type ${key} (${enneagramTypesData[key].shortName}):</p>
                                 <p class="text-sm italic text-royal-navy">${val}</p>
@@ -2215,11 +2203,40 @@
                 el.setAttribute("style", "font-size: 7px !important; transform: rotate(-45deg) translate(-10px, -5px) !important;");
             });
 
+            // SECTION MAGNETIC LOCK: Wrap all major report sections naturally
+            const h2sForWrap = Array.from(target.querySelectorAll('h2'));
+            h2sForWrap.forEach(h2 => {
+                if (h2.closest('#participantSummary') || h2.closest('#typeResult') || h2.closest('#pdf-page-2-consolidated')) {
+                    return;
+                }
+                let current = h2;
+                const toWrap = [];
+                while (current) {
+                    if (current.id === 'relate-section') break;
+                    toWrap.push(current);
+                    current = current.nextElementSibling;
+                    if (!current || current.tagName.toLowerCase() === 'h2') break;
+                }
+                const wrapper = document.createElement('div');
+                wrapper.className = 'pdf-section-block';
+                h2.parentNode.insertBefore(wrapper, h2);
+                toWrap.forEach(el => wrapper.appendChild(el));
+            });
+
+            // STRICT TASK 1: SIMPLIFY THE LOOP
+            const simpleBreakTargets = Array.from(target.querySelectorAll('.chart-container, .circular-diagram-container, #relate-section, .pdf-section-block'));
+            simpleBreakTargets.forEach((el, index) => {
+                // Skip the first two elements
+                if (index === 0 || index === 1) return;
+                const brk = document.createElement('div');
+                brk.className = 'html2pdf__page-break';
+                el.parentNode.insertBefore(brk, el);
+            });
+
             // STRICT TASK 1: DELETE ALL BREAKS
             const oldBreaks = target.querySelectorAll('.html2pdf__page-break');
             oldBreaks.forEach(b => b.remove());
 
-            // NORMALIZE SPACING (Single Canvas Infographic)
             const styleId = 'pdf-section-block-style';
             let styleEl = document.getElementById(styleId);
             if (!styleEl) {
@@ -2227,41 +2244,28 @@
                 styleEl.id = styleId;
                 styleEl.innerHTML = `
                     @media print {
-                        .pdf-section-block, .report-card, .graph-container, .circular-diagram-container { 
-                            margin-bottom: 40px !important; 
-                            display: block !important; 
-                            page-break-before: auto !important;
-                            page-break-inside: auto !important;
-                            break-before: auto !important;
-                            break-inside: auto !important;
-                        }
-                        * { transform: scale(1.0) !important; }
+                        .html2pdf__page-break { page-break-before: always !important; break-before: always !important; clear: both; }
                     }
                 `;
                 document.head.appendChild(styleEl);
             }
 
-            // Calculate exact height dynamically
-            // target.scrollHeight gives total pixel height of content
-            const dynamicHeightMM = target.scrollHeight * 0.2645;
-
-            // STRICT TASK 2, 3, 4: SINGLE CANVAS CONFIG
             const opt = {
-                margin: 0,
-                filename: `Enneagram_Report_V51_SingleCanvas_Final_${firstName}_${familyName}.pdf`,
-                image: { type: 'jpeg', quality: 1.0 },
+                margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
+                filename: `Enneagram_Report_V50_Stabilized_${firstName}_${familyName}.pdf`,
+                image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
                     useCORS: true,
-                    logging: false,
-                    windowWidth: 700
-                },
-                jsPDF: {
-                    unit: 'mm',
-                    format: [210, dynamicHeightMM], // STRICT TASK 3: Fixed width, infinite height
-                    orientation: 'portrait'
-                },
-                pagebreak: { mode: [] } // STRICT TASK 2: Remove Pagination Engine
+                    letterRendering: true,
+                    x: 0,
+                    y: 0,
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: 750
+                }, // VIRTUAL DESKTOP VIEWPORT
+                jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' },
+                pagebreak: { mode: 'css', avoid: '.pdf-section-block' }
             };
 
             try {
@@ -2295,11 +2299,12 @@ To download your full 15-page visual report, please use the Print/Save button on
                     }
                 }).catch(err => console.error("Netlify Fetch Failed:", err));
 
-                // Execute HTML2PDF Single Canvas Architecture
-                html2pdf().set(opt).from(target).save().then(() => {
-                    // Redirect gracefully
-                    window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
-                });
+                // TIMEOUT PROTECTION (500ms DOM sync buffer)
+                setTimeout(() => {
+                    html2pdf().set(opt).from(target).save().then(() => {
+                        window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
+                    });
+                }, 500);
 
             } catch (err) {
                 console.error("downloadAndSend Error:", err);
