@@ -1029,8 +1029,11 @@
                     <!-- INTRODUCTORY REPORT SECTIONS -->
                     <div id="introReportContent"></div>
 
-                    <div id="participantSummary" class="report-card text-lg"></div>
-                    <div id="typeResult" class="report-card border-l-8 border-chartreuse-bright bg-aubergine/10"></div>
+                    <div id="pdf-page-2-consolidated">
+                        <div id="participantSummary" class="report-card text-lg"></div>
+                        <div id="typeResult" class="report-card border-l-8 border-chartreuse-bright bg-aubergine/10">
+                        </div>
+                    </div>
 
                     <div class="graph-container">
                         <h3 class="text-3xl font-bold text-aubergine mb-8 text-center">Your Enneagram Score Distribution
@@ -2219,6 +2222,16 @@
                 toWrap.forEach(el => wrapper.appendChild(el));
             });
 
+            // Consolidation & Scaling Logic
+            const consolidatedNode = document.getElementById('pdf-page-2-consolidated');
+            let scaleCSS = "";
+            if (consolidatedNode) {
+                const heightInInches = consolidatedNode.offsetHeight / 96;
+                if (heightInInches > 10) {
+                    scaleCSS = '#pdf-page-2-consolidated { transform: scale(0.95); transform-origin: top; }';
+                }
+            }
+
             // Section Block CSS
             const styleId = 'pdf-section-block-style';
             let styleEl = document.getElementById(styleId);
@@ -2232,6 +2245,8 @@
                             break-before: always !important;
                             clear: both;
                         }
+                        #pdf-page-2-consolidated { display: block !important; margin-top: 0 !important; padding-top: 0 !important; }
+                        ${scaleCSS}
                     }
                 `;
                 document.head.appendChild(styleEl);
@@ -2262,7 +2277,6 @@
             });
 
             const targetHeadings = [
-                "Primary Type:",
                 "Growth & Stress Mastery",
                 "Your Wings & Balance",
                 "Core Drivers",
@@ -2292,7 +2306,7 @@
 
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V44_DataRestored_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V46_Page2Merge_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
