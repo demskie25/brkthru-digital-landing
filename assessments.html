@@ -2215,18 +2215,11 @@
                 el.setAttribute("style", "font-size: 7px !important; transform: rotate(-45deg) translate(-10px, -5px) !important;");
             });
 
-            // SECTION STRIP (NUKE SMART MERGE)
-            const htmlWrappers = target.querySelectorAll('.pdf-section-block');
-            htmlWrappers.forEach(w => {
-                while (w.firstChild) {
-                    w.parentNode.insertBefore(w.firstChild, w);
-                }
-                w.parentNode.removeChild(w);
-            });
+            // STRICT TASK 1: DELETE ALL BREAKS
             const oldBreaks = target.querySelectorAll('.html2pdf__page-break');
             oldBreaks.forEach(b => b.remove());
 
-            // Section Block CSS Overrides (Professional Minimal Flow)
+            // NORMALIZE SPACING (Single Canvas Infographic)
             const styleId = 'pdf-section-block-style';
             let styleEl = document.getElementById(styleId);
             if (!styleEl) {
@@ -2234,41 +2227,41 @@
                 styleEl.id = styleId;
                 styleEl.innerHTML = `
                     @media print {
-                        @page { margin: 15mm 15mm; }
-                        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: white !important; }
-                        #pdf-blueprint-wrap { width: 100% !important; max-width: 950px !important; margin: 0 auto !important; }
-                        #pdfContentArea { display: block !important; width: 100% !important; }
-                        .report-card, .graph-container, .reference-guide, .circular-diagram-container, .avoid-slice, .type-block {
-                            page-break-inside: avoid !important;
-                            break-inside: avoid !important;
-                            margin-bottom: 24px !important;
+                        .pdf-section-block, .report-card, .graph-container, .circular-diagram-container { 
+                            margin-bottom: 40px !important; 
+                            display: block !important; 
+                            page-break-before: auto !important;
+                            page-break-inside: auto !important;
+                            break-before: auto !important;
+                            break-inside: auto !important;
                         }
-                        h1, h2, h3, h4, h5 {
-                            page-break-after: avoid !important;
-                            break-after: avoid !important;
-                        }
-                        .html2pdf__page-break { display: none !important; }
+                        * { transform: scale(1.0) !important; }
                     }
                 `;
                 document.head.appendChild(styleEl);
             }
 
+            // Calculate exact height dynamically
+            // target.scrollHeight gives total pixel height of content
+            const dynamicHeightMM = target.scrollHeight * 0.2645;
+
+            // STRICT TASK 2, 3, 4: SINGLE CANVAS CONFIG
             const opt = {
-                margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V51_Professional_Flow_${firstName}_${familyName}.pdf`,
-                image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
+                margin: 0,
+                filename: `Enneagram_Report_V51_SingleCanvas_Final_${firstName}_${familyName}.pdf`,
+                image: { type: 'jpeg', quality: 1.0 },
                 html2canvas: {
                     scale: 2,
                     useCORS: true,
-                    letterRendering: true,
-                    x: 0,
-                    y: 0,
-                    scrollX: 0,
-                    scrollY: 0,
-                    windowWidth: 750
-                }, // VIRTUAL DESKTOP VIEWPORT
-                jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' },
-                pagebreak: { mode: 'css', avoid: '.pdf-section-block' }
+                    logging: false,
+                    windowWidth: 700
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: [210, dynamicHeightMM], // STRICT TASK 3: Fixed width, infinite height
+                    orientation: 'portrait'
+                },
+                pagebreak: { mode: [] } // STRICT TASK 2: Remove Pagination Engine
             };
 
             try {
@@ -2302,12 +2295,11 @@ To download your full 15-page visual report, please use the Print/Save button on
                     }
                 }).catch(err => console.error("Netlify Fetch Failed:", err));
 
-                // 2. IMPLEMENT WINDOW.PRINT
-                // Trigger Native Print Dialog natively (Blocks DOM until resolved)
-                window.print();
-
-                // Redirect gracefully
-                window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
+                // Execute HTML2PDF Single Canvas Architecture
+                html2pdf().set(opt).from(target).save().then(() => {
+                    // Redirect gracefully
+                    window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";
+                });
 
             } catch (err) {
                 console.error("downloadAndSend Error:", err);
