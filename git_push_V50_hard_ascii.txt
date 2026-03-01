@@ -1,0 +1,9 @@
+git : To https://github.com/demskie25/brkthru-digital-landing.git
+At line:1 char:1
++ git push origin HEAD > git_push_V50_hard.txt 2>&1; Get-Content git_pu ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (To https://gith...tal-landing.git:String) [], Remo 
+   teException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   c446fc1..928e54e  HEAD -> main

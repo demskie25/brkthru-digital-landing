@@ -2226,7 +2226,7 @@
             const oldBreaks = target.querySelectorAll('.html2pdf__page-break');
             oldBreaks.forEach(b => b.remove());
 
-            // Section Block CSS Overrides (Minimal)
+            // Section Block CSS Overrides (Professional Minimal Flow)
             const styleId = 'pdf-section-block-style';
             let styleEl = document.getElementById(styleId);
             if (!styleEl) {
@@ -2234,44 +2234,28 @@
                 styleEl.id = styleId;
                 styleEl.innerHTML = `
                     @media print {
-                        .html2pdf__page-break { page-break-before: always !important; break-before: always !important; clear: both; }
-                        * { transform: scale(1.0) !important; }
+                        @page { margin: 15mm 15mm; }
+                        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: white !important; }
+                        #pdf-blueprint-wrap { width: 100% !important; max-width: 950px !important; margin: 0 auto !important; }
+                        #pdfContentArea { display: block !important; width: 100% !important; }
+                        .report-card, .graph-container, .reference-guide, .circular-diagram-container, .avoid-slice, .type-block {
+                            page-break-inside: avoid !important;
+                            break-inside: avoid !important;
+                            margin-bottom: 24px !important;
+                        }
+                        h1, h2, h3, h4, h5 {
+                            page-break-after: avoid !important;
+                            break-after: avoid !important;
+                        }
+                        .html2pdf__page-break { display: none !important; }
                     }
                 `;
                 document.head.appendChild(styleEl);
             }
 
-            // Target Explicit 14 breaks (For 15 pages)
-            const strictBreakIds = [
-                'page-2-anchor',
-                'score-chart',
-                'styles-ref',
-                'type-map',
-                'growth-mastery',
-                'wings-balance',
-                'core-drivers',
-                'center-intel',
-                'blind-spots',
-                'strengths-struggles',
-                'leadership-deep-dive',
-                'work-implications',
-                'relate-part-1',
-                'relate-part-2'
-            ];
-
-            // Execute exact 14 breaks
-            strictBreakIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (el && el.parentNode) {
-                    const brk = document.createElement('div');
-                    brk.className = 'html2pdf__page-break';
-                    el.parentNode.insertBefore(brk, el);
-                }
-            });
-
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V50_Final_Blueprint_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V51_Professional_Flow_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
