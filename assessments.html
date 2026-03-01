@@ -1029,11 +1029,8 @@
                     <!-- INTRODUCTORY REPORT SECTIONS -->
                     <div id="introReportContent"></div>
 
-                    <div id="pdf-page-2-consolidated" style="display: block !important; gap: 0 !important;">
-                        <div id="participantSummary" class="report-card text-lg"></div>
-                        <div id="typeResult" class="report-card border-l-8 border-chartreuse-bright bg-aubergine/10">
-                        </div>
-                    </div>
+                    <div id="participantSummary" class="report-card text-lg"></div>
+                    <div id="typeResult" class="report-card border-l-8 border-chartreuse-bright bg-aubergine/10"></div>
 
                     <div class="graph-container">
                         <h3 class="text-3xl font-bold text-aubergine mb-8 text-center">Your Enneagram Score Distribution
@@ -1828,10 +1825,22 @@
                     </div>
                 </div>
 
-                <div id="relate-section" class="report-card avoid-slice">
-                     <h3 class="text-2xl font-bold text-aubergine mb-6">How You Can Relate Better to Others</h3>
+                <div id="relate-section-1-5" class="report-card avoid-slice">
+                     <h3 class="text-2xl font-bold text-aubergine mb-6">How You Can Relate Better to Others (Types 1-5)</h3>
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${Object.entries(info.relatingTo).map(([key, val]) => `
+                        ${Object.entries(info.relatingTo).filter(([k]) => parseInt(k) >= 1 && parseInt(k) <= 5).map(([key, val]) => `
+                            <div class="type-block p-3 bg-gray-50 border border-gray-200 rounded">
+                                <p class="font-bold text-aubergine">To Type ${key} (${enneagramTypesData[key].shortName}):</p>
+                                <p class="text-sm italic text-royal-navy">${val}</p>
+                            </div>
+                        `).join('')}
+                     </div>
+                </div>
+
+                <div id="relate-section-6-9" class="report-card avoid-slice">
+                     <h3 class="text-2xl font-bold text-aubergine mb-6">How You Can Relate Better to Others (Types 6-9)</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${Object.entries(info.relatingTo).filter(([k]) => parseInt(k) >= 6 && parseInt(k) <= 9).map(([key, val]) => `
                             <div class="type-block p-3 bg-gray-50 border border-gray-200 rounded">
                                 <p class="font-bold text-aubergine">To Type ${key} (${enneagramTypesData[key].shortName}):</p>
                                 <p class="text-sm italic text-royal-navy">${val}</p>
@@ -2203,47 +2212,18 @@
                 el.setAttribute("style", "font-size: 7px !important; transform: rotate(-45deg) translate(-10px, -5px) !important;");
             });
 
-            // SECTION MAGNETIC LOCK: Wrap all major report sections
-            const h2sForWrap = Array.from(target.querySelectorAll('h2'));
-            h2sForWrap.forEach(h2 => {
-                // SMART MERGE OVERRIDE: Check by ID and ensure no wrapper/page-break is inserted between Participant Info and Primary Type
-                if (h2.closest('#participantSummary') || h2.closest('#typeResult') || h2.closest('#pdf-page-2-consolidated')) {
-                    return;
+            // SECTION STRIP (NUKE SMART MERGE)
+            const htmlWrappers = target.querySelectorAll('.pdf-section-block');
+            htmlWrappers.forEach(w => {
+                while (w.firstChild) {
+                    w.parentNode.insertBefore(w.firstChild, w);
                 }
-                let current = h2;
-                const toWrap = [];
-                // Gather elements until the next H2
-                while (current) {
-                    // SMART MERGE REFINEMENT
-                    if (current.id === 'relate-section') break;
-                    toWrap.push(current);
-                    current = current.nextElementSibling;
-                    if (!current || current.tagName.toLowerCase() === 'h2') break;
-                }
-                const wrapper = document.createElement('div');
-                wrapper.className = 'pdf-section-block';
-                // Insert wrapper before h2
-                h2.parentNode.insertBefore(wrapper, h2);
-                // Append all selected elements into wrapper
-                toWrap.forEach(el => wrapper.appendChild(el));
+                w.parentNode.removeChild(w);
             });
+            const oldBreaks = target.querySelectorAll('.html2pdf__page-break');
+            oldBreaks.forEach(b => b.remove());
 
-            // Consolidation & Scaling Logic
-            const consolidatedNode = document.getElementById('pdf-page-2-consolidated');
-            if (consolidatedNode) {
-                consolidatedNode.style.setProperty('display', 'block', 'important');
-                consolidatedNode.style.setProperty('gap', '0', 'important');
-            }
-
-            // SMART MERGE OVERRIDE explicitly check for these two sections by ID
-            const pSummary = document.getElementById('participantSummary');
-            const tResult = document.getElementById('typeResult');
-            if (pSummary && tResult) {
-                pSummary.style.setProperty('page-break-after', 'avoid', 'important');
-                tResult.style.setProperty('page-break-before', 'avoid', 'important');
-            }
-
-            // Section Block CSS
+            // Section Block CSS Overrides (Minimal)
             const styleId = 'pdf-section-block-style';
             let styleEl = document.getElementById(styleId);
             if (!styleEl) {
@@ -2251,75 +2231,59 @@
                 styleEl.id = styleId;
                 styleEl.innerHTML = `
                     @media print {
-                        .pdf-section-block, .graph-container, .reference-guide, .circular-diagram-container {
-                            page-break-before: always !important;
-                            break-before: always !important;
-                            clear: both;
-                        }
-                        #pdf-page-2-consolidated { display: block !important; gap: 0 !important; margin-top: 0 !important; padding-top: 0 !important; }
-                        #relate-section .type-block { margin-bottom: 4px !important; padding: 8px !important; } 
-                        #relate-section h3 { margin-bottom: 10px !important; }
-                        #relate-section { transform: scale(0.92); transform-origin: top; }
+                        .html2pdf__page-break { page-break-before: always !important; break-before: always !important; clear: both; }
+                        #relate-section-1-5, #relate-section-6-9 { transform: scale(0.98); transform-origin: top; }
                     }
                 `;
                 document.head.appendChild(styleEl);
             }
 
-            // DOM DETACHMENT & DATA RESTORATION (V44)
-            // Detachment Logic
-            const originalTargetStyle = target.getAttribute('style') || '';
-            target.style.setProperty('display', 'block', 'important');
-            target.style.setProperty('width', '700px', 'important');
-
-            // Data Integrity Check (prevent hidden text)
-            document.querySelectorAll('.pdf-section-block, .bg-white, .flex-col, .grid').forEach(el => {
-                el.style.setProperty('overflow', 'visible', 'important');
-            });
-
-            // TARGETED FORCED BREAKS
-            const breakTargets = [
-                document.querySelector('.graph-container'), // Bar chart
-                document.querySelector('.reference-guide'), // The 9 types legend
-                document.querySelector('.circular-diagram-container') // interconnected-map
-            ].filter(Boolean); // Remove any null elements
-
-            breakTargets.forEach(el => {
-                const brk = document.createElement('div');
-                brk.className = 'html2pdf__page-break';
-                el.parentNode.insertBefore(brk, el);
-            });
-
-            const targetHeadings = [
-                "Growth & Stress Mastery",
-                "Your Wings & Balance",
-                "Core Drivers",
-                "Your Center of Intelligence",
-                "Blind Spots & Hidden Fears",
-                "Work Strengths & Struggles",
-                "Leadership Strategy & Deep Dive",
-                "Work & Relationship Implications",
-                "How You Can Relate Better to Others"
+            // Target Explicit 14 breaks (For 15 pages)
+            const strictBreakTargets = [
+                document.querySelector('.graph-container'), // Page 3
+                document.querySelector('.reference-guide'), // Page 4
+                document.querySelector('.circular-diagram-container') // Page 5
             ];
 
-            document.querySelectorAll('h2, h3, h4, .text-xl, .text-2xl').forEach(heading => {
-                if (targetHeadings.some(t => heading.innerText.includes(t))) {
-                    const wrapper = heading.closest('.pdf-section-block') || heading.closest('.bg-white') || heading.parentElement;
-                    if (wrapper && !wrapper.previousElementSibling?.classList.contains('html2pdf__page-break')) {
-                        wrapper.insertAdjacentHTML('beforebegin', '<div class="html2pdf__page-break"></div>');
+            // Map strict H3 texts to inject before
+            const strictHeadingTexts = [
+                "Growth & Stress Mastery", // 6
+                "Your Wings & Balance", // 7
+                "Core Drivers", // 8
+                "Your Center of:", // Center of Intelligence catch-all // 9
+                "Blind Spots & Hidden Fears", // 10
+                "Work Strengths & Struggles", // 11
+                "Leadership Strategy & Deep Dive", // 12
+                "Work & Relationship Implications", // 13
+                "How You Can Relate Better to Others (Types 1-5)", // 14
+                "How You Can Relate Better to Others (Types 6-9)" // 15
+            ];
+
+            document.querySelectorAll('h2, h3, h4, .center-card, .text-xl, .text-2xl').forEach(heading => {
+                if (strictHeadingTexts.some(t => {
+                    if (t === "Your Center of:") return heading.innerText.includes("You are in the");
+                    return heading.innerText.includes(t);
+                })) {
+                    // Try to grab the report-card
+                    const container = heading.closest('.report-card') || heading.closest('.center-card') || heading;
+                    // Prevent dupes
+                    if (!strictBreakTargets.includes(container)) {
+                        strictBreakTargets.push(container);
                     }
                 }
             });
 
-            // RELATE BETTER COMPRESSION
-            const relateSection = document.getElementById('relate-section');
-            if (relateSection) {
-                relateSection.style.setProperty('transform', 'scale(0.9)', 'important');
-                relateSection.style.setProperty('transform-origin', 'top', 'important');
-            }
+            // Execute exact 14 breaks
+            strictBreakTargets.filter(Boolean).forEach(el => {
+                const wrapper = el.parentNode;
+                const brk = document.createElement('div');
+                brk.className = 'html2pdf__page-break';
+                wrapper.insertBefore(brk, el);
+            });
 
             const opt = {
                 margin: [30, 0, 30, 0], // The 1% Margin Fix (V29)
-                filename: `Enneagram_Report_V49_FinalCompression_${firstName}_${familyName}.pdf`,
+                filename: `Enneagram_Report_V50_FinalBlueprint_${firstName}_${familyName}.pdf`,
                 image: { type: 'jpeg', quality: 0.82 }, // OPTIMIZED FOR NETLIFY TIMEOUTS
                 html2canvas: {
                     scale: 2,
