@@ -35,9 +35,16 @@ const newPDFLogic = `// --- 2. PREMIUM PDF GENERATION ENGINE ---
                 brandedHeader.innerHTML = '<strong>Full Enneagram Assessment Report</strong><br>Prepared for: ' + userName + ' | Brkthru Digital V124';
                 element.insertBefore(brandedHeader, element.firstChild);
 
-                // Fix Page Breaks
+                // Fix Page Breaks - SECURE MODE V124
                 const typeResult = document.getElementById('typeResult');
-                if (typeResult) typeResult.classList.add('page-break-before', 'report-card');
+                // Only add page break if it's not the first element or if we're explicitly starting a new section
+                if (typeResult) {
+                    typeResult.classList.add('report-card');
+                    // Avoid break if it's the very first content block
+                    if (typeResult.previousElementSibling && typeResult.previousElementSibling.offsetHeight > 0) {
+                        typeResult.classList.add('page-break-before');
+                    }
+                }
                 
                 const diagramContainer = document.querySelector('.circular-diagram-container');
                 let diagTitle = null;
@@ -130,7 +137,7 @@ const newPDFLogic = `// --- 2. PREMIUM PDF GENERATION ENGINE ---
                             scrollY: 0
                         },
                         jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
-                        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+                        pagebreak:    { mode: ['css', 'legacy'] }
                     };
 
                     html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {

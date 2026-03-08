@@ -1,0 +1,10 @@
+﻿e72b48c fix: V59 use CSS grid to fix chart labels and permanently eliminate purple voids
+57b2296 fix: V56 definitive print CSS to eliminate voids and blank pages
+17f7f38 fix: V53 total reset to native print to eliminate browser hang
+7b4ba4d fix: V52 remove dynamic logic to kill browser hang
+db31fce fix: V51 permanent static structure to prevent hang
+12b0cac fix: V50 emergency hang fix and loop simplification
+2ba1f18 fix: V51 move to single high-res canvas infographic
+f6be58f fix: V51 professional PDF flow via native print CSS instead of hard breaks
+928e54e fix: V50 hard-coded 15 page blueprint
+c446fc1 fix: V50 enforce rigid 15-page blueprint

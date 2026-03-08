@@ -1,0 +1,100 @@
+﻿e72b48c fix: V59 use CSS grid to fix chart labels and permanently eliminate purple voids
+57b2296 fix: V56 definitive print CSS to eliminate voids and blank pages
+17f7f38 fix: V53 total reset to native print to eliminate browser hang
+7b4ba4d fix: V52 remove dynamic logic to kill browser hang
+db31fce fix: V51 permanent static structure to prevent hang
+12b0cac fix: V50 emergency hang fix and loop simplification
+2ba1f18 fix: V51 move to single high-res canvas infographic
+f6be58f fix: V51 professional PDF flow via native print CSS instead of hard breaks
+928e54e fix: V50 hard-coded 15 page blueprint
+c446fc1 fix: V50 enforce rigid 15-page blueprint
+c65133b fix: V49 scale down relate better section for single page fit
+c05d855 fix: V48 weld participant info and primary type together
+876d467 fix: V46 merge participant and primary type onto one page
+3f5312e fix: V45 pivot to native printing for layout perfection
+e488c06 fix: V44 restore data and enforce manual breaks
+747024d fix: V43 pageless pdf architecture
+8dd5d53 fix: V42 destroy grid cascade for top alignment
+2955868 fix: V41 block override for page breaks
+fd9b3d2 fix: V40 padding purge for top alignment
+02356b5 fix: V38 text-based page breaks
+b32d14d fix: V36 universal top alignment
+472dd86 fix: V35 terminal override
+2758496 fix(pdf): implement The Slice & Compression Fix (V30) activating html2pdf CSS pagebreak awareness and injecting strict visual armor
+46a2c47 fix(pdf): implement The 99% Restoration (V29) rolling back to html2pdf pipeline with absolute 30mm hardware engine margins
+7c0c25c feat(pdf): implement Cloud Render Prep (V28) connecting frontend payload to future webhook
+c219a56 fix(pdf): implement Print Fidelity Lockdown (V26) for high resolution native vector printing
+dab98b7 fix(pdf): implement The Native Print Execution (V24) via window.print() and CSS media print rules
+14a8f49 fix(pdf): implement The Table Gasket (V23) protocol using HTML table wrappers for physical page margins
+547f862 fix(pdf): implement Coordinate Decoupling (V21) with safe Y-mapping and anti-slicing CSS
+40d5716 fix(pdf): implement Google Docs Paradigm (V20) with absolute PDF engine margins
+1245f47 fix(pdf): implement Sacred Ground Reset with pure DOM wrapping for V19 stability
+7f4337a fix(pdf): implement Structural Lockdown protocol with dynamic section wrapping, rotating chart labels, and V18 margins
+2802ec1 fix(pdf): implement Ironclad Layout protocol with extreme margins, orphan protection, and V16 label nano-scaling
+689239c fix(pdf): implement Surgical Polish protocol with expanded margins and chart label fixes for V15
+ef0fe74 fix(pdf): implement Total Lockdown protocol with 750px mathematical mold and upgrade to V14
+68c4a16 fix(pdf): implement Virtual Blueprint protocol with rigid 800px width and upgrade to V13
+58bb00d Implement exact camera coordinate mapping and massive top margin to fix PDF layout
+cd412fd Implement simple padding nudge for proper alignment and windowWidth fix
+82b974c Implement gentle margin override for html2pdf alignment
+bc83f7f Implement Absolute Zero trick for true left-aligned html2pdf captures
+80ec265 Implement camera viewfinder trick for responsive html2pdf alignment
+59d2d9d Fix vertical pagination and layout overlap via dynamic css and margins
+f1bed0c Fix html2pdf alignment via scroll lock and margin adjustments
+ef97c55 Restore 300kb html2pdf logic, purge SVG cloning, inject v2.0 cache busters
+f7c8f8e Implement Native Hybrid Print approach (purge html2pdf, verify CSS)
+953694a Revert PDF logic to b2b2d0a (300kb compression) with resultsSection ID
+975034e Emergency PDF Bypass: Use window.print() and strict print CSS
+a34eb30 Fix blank PDF issue: Correct ID mismatches and make clone visible
+8e352a8 Fix: Finalize @media print styles for strict A4 pagination, heading page-breaks, and hidden web UI clutter
+82f362c Fix: Add native 'window.print()' fallback with '@media print' styles to bypass SES intrinsics stripping
+6974e51 Fix: Deep-clone PDF results container to bypass CSS overflow clipping and strip layout animations
+bd197c1 Fix: Strict html2pdf configuration to resolve blank PDF page captures
+559be80 Fix: Add white background and 1000ms render delay to resolve blank PDF captures
+dd1f6c1 Fix: Revert PDF engine to html2pdf and add CSS page breaks
+9b7308f Patch: Revert to html2pdf.js utilizing isolated off-screen 1024px render tree to resolve jsPDF layout bleeding, ghost repetitions, and utf-8 strategy string issues
+00fa817 Patch: Resolves html2canvas createPattern zero-width crash by dynamically scrubbing linear-gradients on charts during PDF generation
+de24ab7 Patch: NaN crash fix in Vector PDF scale calculation
+8e71547 Compliance fix: Rasterize branding logo into jsPDF native header
+1a3b541 Architectural Shift: Retire html2pdf for Native Vector PDF format matching exact brand hex codes with sub 250KB footprint
+0141c24 Fix: Natively compute negative screen bleed and dynamically shift content via padding to guarantee X >= 0 origin
+d019785 Fix: Hard left align and explicit padding to stop negative-bleed left edge clipping
+3b1bc8e Fix: html2canvas crash by preventing 0px bar height and revert absolute position
+b718c99 Fix: Revert 1024px capture with absolute origin 0,0 anchor and 1.0 scale to bypass Netlify limits
+3ba9559 Fix: Restore chart bars and fix right-edge clipping with 1200px viewport
+e273c0b Fix: Add 80px left padding and coordinate buffering to prevent PDF clipping
+b293d4c Fix: Revert fixed positioning and implement stable margin-reset for PDF generation
+b5c3c01 Fix: Nuclear Positioning for PDF Generation to prevent left-edge clipping
+b1bd3f9 Fix: Hardcode pdfContentArea width temporarily to prevent html2canvas clipping text on wide screens
+42529e5 Fix: Render Squeeze Configuration (Scale 1.2, Quality 0.2) and Background Clutter Stripping
+e1047ea Fix: Optimize PDF execution speed and serverless memory management
+e0510ec Fix: Execute Nuclear Compression for PDF Base64 Payload
+5260801 Fix: Aggressive 0.4 JPEG Compression to Prevent Base64 10s Timeout limit
+ba466ee Fix: Add CORS Headers and Absolute URL for Cross-Origin Hosting
+b2b2d0a Enhance: Premium UI Visuals, PDF Branding, and HTML Emails
+3b5583c Fix: Implement avoid-all inline pagebreak logic to fix Mobile PDF gaps
+af46d98 Fix: Implement Desktop Virtual Viewport for Mobile PDF Generation
+d19fefa Deploy V124 Mobile UX Upgrade: CTA Injection, Banner Fixes, Readability Tweaks
+729e117 Optimize PDF compression to bypass Netlify 6MB/10s timeout
+4cb6c48 Refactor Nodemailer for strict Gmail configuration and bust Lambda cache
+b6b61ea Trigger clean build to inject SMTP environment variables into Netlify Functions
+8aca27b Expose precise backend trace and decode base64 bodies
+36eb526 Add npm install build command for Netlify Functions
+6fe71fe Implement native Netlify Serverless Function for email delivery and remove EmailJS
+891cfe7 Add explicit intrinsic width and height to SVG to fix invisible base64 rendering crop
+c2b2414 Fix SVG image render race condition
+6b9f82c Migrate PDF email delivery from FormSubmit to EmailJS
+a9306b8 Eliminate blank PDF page by removing avoid-all and redundant HTML wrapper
+59a5122 Fix SVG serialization styles and ghost image bug
+5f8d18e Implement SVG-to-Image serialization for HTML2Canvas PDF scaling bug
+23df4b2 Fix SVG scaling for HTML2Canvas by providing explicit pixel dimensions
+aee1b67 Fix PDF header text and SVG scaling
+655c44b V127: Enhanced Enneagram Reporting Logic with Leadership Profiles
+44e3f20 Fix Enneagram assessment unlock button
+9221752 Final bypass fix
+12a3ab7 Fix
+340bd1f Final working PDF and Email
+476741a Final vibe code fix
+6a1d9ac  message for your changes. Lines starting
+f9cb596 Final PDF and Email fix
+0f3153d V129: Implementing Crash-Proof PDF Download and FormSubmit AJAX Email
