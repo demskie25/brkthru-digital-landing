@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Brkthru Digital Landing Page",
   "dependencies": {
-    "node-fetch": "^2.6.7",
+    "form-data": "^4.0.5",
+    "node-fetch": "^2.7.0",
     "nodemailer": "^8.0.1"
   }
 }

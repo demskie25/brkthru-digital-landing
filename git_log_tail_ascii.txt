@@ -1,0 +1,5 @@
+3e16d0f fix: V64 append surgical grid fix for chart labels
+57b2296 fix: V56 definitive print CSS to eliminate voids and blank pages
+17f7f38 fix: V53 total reset to native print to eliminate browser hang
+7b4ba4d fix: V52 remove dynamic logic to kill browser hang
+db31fce fix: V51 permanent static structure to prevent hang

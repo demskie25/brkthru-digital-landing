@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -856,6 +856,8 @@
     <!-- V64 Surgical Graph Fix (Moved inside Head) -->
     <style id="surgical-print-fix">
 @media print {
+  body, html, #root, main, .app-container, .pdf-section-block { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 15mm !important; box-sizing: border-box !important; overflow-x: hidden !important; }
+  h1, h2, h3, p, div { margin-left: 0 !important; }
   .chart-labels-container { 
     display: grid !important; 
     grid-template-columns: repeat(9, 1fr) !important; 
