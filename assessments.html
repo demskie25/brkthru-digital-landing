@@ -208,9 +208,8 @@
 
             body {
                 background: white !important;
-                -webkit-print-
-                
-                print-
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
 
             /* Hide Non-Essential Elements */
@@ -783,14 +782,14 @@
             }
 
             * {
-                -webkit-print-
-                print-
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
 
             body {
                 background: white;
-                -webkit-print-
-                print-
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
 
             /* Hide Clutter */
@@ -1111,7 +1110,33 @@
                     <h1 class="text-3xl font-black text-gold-main">Full Report Generated</h1>
                     <button type="button" onclick="event.preventDefault(); downloadAndSend();"
                         class="w-full py-4 rounded-xl font-bold text-gray-900 bg-gradient-to-r from-yellow-400 to-yellow-600 shadow-lg mt-6">
-                        Download PDF & Send Email
+                        <div style="display: none;">Download PDF & Send Email</div>
+                        <!-- Instruction Box (Premium Styled) -->
+                        <div class="instruction-box">
+                            <h2><i class="fa-solid fa-file-pdf mr-2"></i>To Save Your Full Leadership Report (Best Quality):</h2>
+                            <ol>
+                                <li><strong>Use Google Chrome:</strong> Open this page in a Chrome browser on your desktop.</li>
+                                <li><strong>Install Helper:</strong> <a href="https://chrome.google.com/webstore/detail/gofullpage-full-page-scre/bbpjiakebokifpjofgejbgfeelbkpkoc" class="instruction-link" target="_blank">Click here to install GoFullPage</a> (it's free).</li>
+                                <li><strong>Capture Report:</strong> Click the <strong>Camera Icon</strong> at the top right of your browser. Wait for it to scroll.</li>
+                                <li><strong>Download PDF:</strong> Once the new tab opens, click the <strong>PDF icon</strong> to save your report.</li>
+                            </ol>
+                            
+                            <div class="mt-6 p-4 bg-white/20 rounded-xl border border-purple-300/30 backdrop-blur-sm">
+                                <p class="text-xs font-bold text-purple-100 mb-2 flex items-center">
+                                    <i class="fa-solid fa-mobile-screen mr-2 text-yellow-500"></i> 
+                                    Using a Phone or Tablet?
+                                </p>
+                                <ul class="text-[0.75rem] text-purple-100 leading-relaxed list-disc ml-4 space-y-1">
+                                    <li><strong>Highly Recommended:</strong> For a professional, high-quality PDF, please open this link on a <strong>Desktop or Laptop</strong> computer and follow the Chrome steps above.</li>
+                                    <li><strong>On Mobile:</strong> Use your browser's "Share" or settings menu (three dots) and select <strong>"Print"</strong> or <strong>"Export as PDF"</strong>.</li>
+                                </ul>
+                            </div>
+
+                            <p class="warning-text">
+                                <i class="fa-solid fa-triangle-exclamation mr-2"></i> DO NOT CLOSE OR REFRESH THIS PAGE. 
+                                <span class="block mt-1 font-normal opacity-90">Your results are generated dynamically. If you leave now or refresh, your results will be lost and you may be required to redo the assessment.</span>
+                            </p>
+                        </div>
                     </button>
                 </div>
 
@@ -2428,3 +2453,4 @@ To download your full 15-page visual report, please use the Print/Save button on
 </body>
 
 </html>
+

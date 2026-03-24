@@ -1,0 +1,33 @@
+DEPLOY ATTEMPT LOG:
+Running: git add .
+Result: SUCCESS
+OUT: 
+ERR: 
+---
+Running: git commit -m "fix: resolve IDE JSX diagnostics and restore static about.html"
+Result: SUCCESS
+OUT: [main f8e31fe] fix: resolve IDE JSX diagnostics and restore static about.html
+ 5 files changed, 77 insertions(+)
+ create mode 100644 final_deploy.js
+ create mode 100644 git_debug.js
+ create mode 100644 git_debug_log.txt
+ create mode 100644 git_remote.txt
+
+ERR: 
+---
+Running: git push origin main:main --force
+Result: SUCCESS
+OUT: 
+ERR: 
+---
+Running: git push origin main:master --force
+Result: SUCCESS
+OUT: 
+ERR: 
+---
+Running: git log -n 1 --pretty=oneline
+Result: SUCCESS
+OUT: f8e31fe9ee4ca6c940d58100f48b3df633ff4180 fix: resolve IDE JSX diagnostics and restore static about.html
+
+ERR: 
+---
