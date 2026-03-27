@@ -5,6 +5,8 @@
   "dependencies": {
     "form-data": "^4.0.5",
     "node-fetch": "^2.7.0",
-    "nodemailer": "^8.0.1"
+    "nodemailer": "^8.0.1",
+    "puppeteer-core": "^23.6.0",
+    "@sparticuz/chromium-min": "131.0.1"
   }
 }

@@ -1077,23 +1077,6 @@
                 </div>
             </div>
 
-            <!-- RESULTS SECTION (To be Printed to PDF) -->
-            <div id="resultsSection" class="hidden" x-show="hasFinished" x-cloak>
-
-
-                <!-- PDF Download Button -->
-                <div class="flex justify-between items-center mb-8 no-print">
-                    <h1 class="text-3xl font-black text-gold-main">Full Report Generated</h1>
-                    <button type="button" onclick="event.preventDefault(); downloadAndSend();"
-                        class="w-full py-4 rounded-xl font-bold text-gray-900 bg-gradient-to-r from-yellow-400 to-yellow-600 shadow-lg mt-6">
-                        Download PDF & Send Email
-                    </button>
-                </div>
-
-                <div id="pdfContentArea">
-                    <h1 class="text-5xl font-black text-center mb-10 text-gold-main tracking-tight">Full Leadership
-                        Intelligence Report</h1>
-
                     <!-- INTRODUCTORY REPORT SECTIONS -->
                     <div id="introReportContent"></div>
 
@@ -2201,7 +2184,57 @@
         })();
     </script>
     <script>
-        async function downloadAndSend() {
+            <script>
+        async function generatePremiumPDF() {
+            const btn = document.getElementById('download-btn');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerText = "Processing Server-Side PDF...";
+            }
+
+            try {
+                const fs_scores = {}; for (let i = 1; i <= 9; i++) fs_scores[i] = 0;
+                userAnswers.forEach((ans, i) => { if (ans !== undefined) questions[i].scoring[ans].forEach(t => fs_scores[t]++); });
+                
+                const payload = {
+                    scores: fs_scores,
+                    participant: participantData,
+                    url: window.location.href.split('?')[0] + "?access=enneagram"
+                };
+
+                const response = await fetch('/.netlify/functions/render-pdf', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error('PDF Generation Failed');
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Enneagram_Report_${participantData.firstName}_${participantData.familyName}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                
+                // Still send the email fallback
+                downloadAndSend(true); // Modified to skip local print
+
+            } catch (error) {
+                console.error("PDF Error:", error);
+                alert("Server PDF failed. Falling back to browser print.");
+                downloadAndSend();
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerText = "Download PDF & Send Email";
+                }
+            }
+        }
+
+        async function downloadAndSend(skipPrint = false) {
             console.log("downloadAndSend: Initiated.");
             const btn = document.querySelector('button[onclick*="downloadAndSend"]');
             if (btn) {
@@ -2300,8 +2333,8 @@ To download your full 15-page visual report, please use the Print/Save button on
                     }
                 }).catch(err => console.error("Netlify Fetch Failed:", err));
 
-                // STRICT TASK 3: IMPLEMENT WINDOW.PRINT
-                window.print();
+                                // STRICT TASK 3: IMPLEMENT WINDOW.PRINT
+                if (!skipPrint) window.print();
 
                 // Redirect gracefully
                 window.location.href = "https://brkthru-digital.netlify.app/assessments.html?status=delivered";

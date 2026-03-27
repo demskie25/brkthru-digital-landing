@@ -1,18 +1,1 @@
-﻿On branch main
-Your branch is up to date with 'origin/main'.
-
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-	modified:   assessments.html
-	modified:   git_status.txt
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	git_commit_v43.txt
-	git_push_v43.txt
-	git_push_v43_utf8.txt
-	git_push_v44.txt
-	git_push_v44_utf8.txt
-
-no changes added to commit (use "git add" and/or "git commit -a")
+﻿348a26a1f7d90ee9a84c56af7ee4f0c4451f8f22 fix: resolve IDE JSX diagnostics in event-app and restore static about.html

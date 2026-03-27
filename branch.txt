@@ -1,0 +1,7 @@
+﻿* main
+  master
+  netlify-draft-test
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/main
+  remotes/origin/master
+  remotes/origin/netlify-draft-test

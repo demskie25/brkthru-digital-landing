@@ -1,0 +1,84 @@
+﻿git : warning: in the working copy of 
+'assessments.html', LF will be replaced by 
+CRLF the next time Git touches it
+At line:1 char:66
++ ... e -FilePath deploy_log_new.txt 
+-Encoding UTF8; git add . 2>&1 | Out-F ...
++                                            
+        ~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified:  
+   (warning: in the... Git touches it:Strin  
+  g) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandE 
+   rror
+ 
+warning: in the working copy of 
+'start-enneagram.html', LF will be replaced 
+by CRLF the next time Git touches it
+warning: in the working copy of 
+'debug_encoding.py', LF will be replaced by 
+CRLF the next time Git touches it
+warning: in the working copy of 
+'edit_assessment.py', LF will be replaced by 
+CRLF the next time Git touches it
+warning: in the working copy of 
+'netlify/functions/render-pdf.js', LF will 
+be replaced by CRLF the next time Git 
+touches it
+warning: in the working copy of 
+'remove_legacy.py', LF will be replaced by 
+CRLF the next time Git touches it
+warning: in the working copy of 
+'replace.js', LF will be replaced by CRLF 
+the next time Git touches it
+warning: in the working copy of 
+'update_asmt.py', LF will be replaced by 
+CRLF the next time Git touches it
+warning: in the working copy of 
+'update_gofullpage.py', LF will be replaced 
+by CRLF the next time Git touches it
+warning: in the working copy of 
+'update_gofullpage_exact.py', LF will be 
+replaced by CRLF the next time Git touches it
+warning: in the working copy of 
+'update_start.py', LF will be replaced by 
+CRLF the next time Git touches it
+git : error: pathspec 'V76' did not match 
+any file(s) known to git
+At line:1 char:145
++ ... oding UTF8; git commit --no-verify -m 
+\fix: V76 implement unique URL  ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified:  
+   (error: pathspec...s) known to git:Strin  
+  g) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandE 
+   rror
+ 
+error: pathspec 'implement' did not match 
+any file(s) known to git
+error: pathspec 'unique' did not match any 
+file(s) known to git
+error: pathspec 'URL' did not match any 
+file(s) known to git
+error: pathspec 'handover' did not match any 
+file(s) known to git
+error: pathspec 'for' did not match any 
+file(s) known to git
+error: pathspec 'mobile' did not match any 
+file(s) known to git
+error: pathspec 'users\' did not match any 
+file(s) known to git
+git : Everything up-to-date
+At line:1 char:298
++ ... log_new.txt -Append -Encoding UTF8; 
+git push origin main 2>&1 | Out-F ...
++                                         
+~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified:  
+   (Everything up-to-date:String) [], Remot  
+  eException
+    + FullyQualifiedErrorId : NativeCommandE 
+   rror
+ 

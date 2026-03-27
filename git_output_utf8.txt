@@ -1,0 +1,5 @@
+﻿commit 8b8e3a5f94544b4c0d1a7dc277424d8bb5c26219
+Author: Michael Hall~ <brkthru.consulting@gmail.com>
+Date:   Fri Mar 20 08:59:02 2026 +0800
+
+    fix: resolve IDE JSX diagnostics in event-app and restore static about.html
