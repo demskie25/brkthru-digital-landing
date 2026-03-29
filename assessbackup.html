@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <link rel="stylesheet" href="universal-header.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js?v=2.0"></script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .backdoor-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #4A148C;
+            color: #FFD700;
+            text-align: center;
+            font-size: 10px;
+            font-weight: bold;
+            z-index: 99999;
+            padding: 4px;
+            border-bottom: 2px solid #FFD700;
+        }
+
+
+
+        /* PDF Branding Styles (V123 Fidelity Fix) */
+        .pdf-only {
+            display: none !important;
+        }
+
+        .pdf-rendering .pdf-only {
+            display: block !important;
+        }
+
+        .pdf-rendering .no-pdf {
+            display: none !important;
+        }
+
+        /* Professional Header applied via DOM */
+        .pdf-header {
+            text-align: center;
+            font-size: 16px;
+            color: #4A148C;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+            font-weight: bold;
+        }
+
+        /* Prevention of premature cuts */
+        .pdf-rendering .report-card {
+            page-break-inside: avoid !important;
+            margin-bottom: 40px !important;
+            display: block !important;
+        }
+
+        .pdf-rendering h1,
+        .pdf-rendering h2,
+        .pdf-rendering h3 {
+            page-break-after: avoid !important;
+            page-break-inside: avoid !important;
+        }
+
+        .pdf-rendering .graph-container {
+            page-break-inside: avoid !important;
+        }
+
+        /* CRITICAL: html2canvas 1.4.1 crashes on linear-gradients inside zero-dimension sub-elements. 
+               We force solid colors and remove shadows during PDF generation. */
+        .pdf-rendering .bar {
+            background: #000080 !important;
+            /* Solid Royal Navy */
+            box-shadow: none !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        .pdf-rendering .bar.primary-type-bar {
+            background: #008080 !important;
+            /* Solid Teal */
+            box-shadow: none !important;
+        }
+
+        /* --- AD OVERLAY STYLES --- */
+        .message-box-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .message-box-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            border: 3px solid var(--gold-dark);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (max-width: 1024px) {
+            .message-box-overlay {
+                align-items: flex-end;
+                /* Push to bottom on mobile */
+                background: transparent;
+                /* Remove full screen blackout */
+                pointer-events: none;
+                /* Let clicks pass through empty space */
+                padding-bottom: 24px;
+            }
+
+            .message-box-content {
+                pointer-events: auto;
+                /* Re-enable clicks on the banner */
+                padding: 1.5rem;
+                border-radius: 1rem;
+                border: 2px solid var(--gold-main);
+                width: 95%;
+                margin: 0 auto;
+            }
+        }
+
+        /* Explicit Page Breaks */
+        .page-break-before {
+            page-break-before: always !important;
+            clear: both;
+        }
+
+        /* Map Enlarge - FIX for html2canvas SVG dropping */
+        .pdf-rendering #movedSectionsContainer {
+            page-break-before: always !important;
+        }
+
+        .pdf-rendering .circular-diagram-container {
+            page-break-before: always !important;
+            padding-top: 60px !important;
+            padding-bottom: 60px !important;
+            display: block !important;
+            /* Flex breaks html2canvas sometimes */
+            text-align: center;
+            width: 100% !important;
+        }
+
+        .pdf-rendering #enneagramCircleSvg {
+            width: 600px !important;
+            /* EXPLICIT PIXEL WIDTH FOR HTML2CANVAS */
+            height: 600px !important;
+            /* EXPLICIT PIXEL HEIGHT FOR HTML2CANVAS */
+            max-width: none !important;
+            margin: 0 auto !important;
+            display: inline-block;
+        }
+
+        /* PDF VISIBLE-ISOLATION STYLES */
+        body.pdf-rendering {
+            width: 100% !important;
+            margin: 0 !important;
+            overflow: visible !important;
+            background: #ffffff !important;
+        }
+
+        body.pdf-rendering nav,
+        body.pdf-rendering footer,
+        body.pdf-rendering .back-button,
+        body.pdf-rendering #intro-section,
+        body.pdf-rendering #questions-section,
+        body.pdf-rendering #premium-gate,
+        body.pdf-rendering button {
+            display: none !important;
+        }
+
+        body.pdf-rendering #resultsSection,
+        body.pdf-rendering #pdf-clone-container {
+            display: block !important;
+            width: 100% !important;
+            padding: 1in !important;
+            margin: 0 !important;
+        }
+
+        body.pdf-rendering .enneagram-node-text {
+            font-family: sans-serif !important;
+            font-size: 16px !important;
+            fill: #fff !important;
+        }
+
+        body.pdf-rendering .wing-indicator-text {
+            font-family: sans-serif !important;
+            font-size: 12px !important;
+            fill: #64748B !important;
+        }
+
+        /* NATIVE HYBRID PRINT STYLES */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0.5in;
+            }
+
+            body {
+                background: white !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Hide Non-Essential Elements */
+            nav,
+            footer,
+            .back-button,
+            #intro-section,
+            #questions-section,
+            #premium-gate,
+            #accessDeniedOverlay,
+            button,
+            .message-box-overlay {
+                display: none !important;
+            }
+
+            /* Show Only Target Result Section */
+            #resultsSection,
+            .pdf-rendering {
+                display: block !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* CORE PROTOCOL: NUCLEAR BLANK PAGE ELIMINATION (V62) */
+            /* Force everything to ignore screen-height logic */
+            html,
+            body,
+            #root,
+            .app-container,
+            main,
+            section,
+            div:not(.bar-chart):not(.bar-wrapper) {
+                height: auto !important;
+                min-height: 0 !important;
+                max-height: none !important;
+                flex: none !important;
+                display: block !important;
+            }
+
+            .bar-chart {
+                display: flex !important;
+                justify-content: space-around !important;
+                align-items: flex-end !important;
+                height: 380px !important;
+            }
+
+            .bar-wrapper {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                width: 10% !important;
+            }
+
+            /* Kill the jumps permanently */
+            .pdf-section-block,
+            section,
+            div,
+            h1,
+            h2 {
+                page-break-before: avoid !important;
+                break-before: avoid !important;
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+            }
+
+            /* Re-apply breaks ONLY where we actually want them (after major sections) */
+            #relate-section,
+            .chart-container {
+                page-break-before: always !important;
+                break-before: always !important;
+            }
+        }
+    </style>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enneagram Assessment for Leaders (V123)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Native Print / Hybrid PDF Architecture -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // --- PASTE YOUR FIREBASE CONFIG HERE ---
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make db available globally
+        window.saveToFirebase = async (data) => {
+            try {
+                await addDoc(collection(db, "enneagram_submissions"), {
+                    ...data,
+                    timestamp: serverTimestamp()
+                });
+                console.log("Saved to Firebase");
+            } catch (e) { console.error("Firebase Error", e); }
+        };
+    </script>
+    <style>
+        /* Theme Colors */
+        :root {
+            --aubergine: #4A148C;
+            --chartreuse-bright: #ADFF2F;
+            --chartreuse-muted: #9ACD32;
+            --gold-main: #FFD700;
+            --gold-light: #FFF8DC;
+            --gold-dark: #B8860B;
+            --royal-navy: #000080;
+            --teal-accent: #008080;
+            /* NEW PREMIUM SECONDARY ACCENT */
+            --text-on-dark: var(--gold-light);
+            --text-on-light: var(--royal-navy);
+            --container-bg: var(--aubergine);
+            --page-bg: #fdfbf6;
+            --section-bg: #ffffff;
+            --input-border: var(--gold-dark);
+            --ai-section-bg: #eef2ff;
+            --ai-text-color: #312e81;
+            --red-flag: #B91C1C;
+            --strategy-blue: #1E40AF;
+        }
+
+        /* Subtle Fade-in Animation for premium feel */
+        @keyframes subtleFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-ui {
+            animation: subtleFadeIn 0.6s ease-out forwards;
+        }
+
+        /* Access Denied Overlay */
+        #accessDeniedOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--page-bg);
+            color: var(--text-on-light);
+        }
+
+        .assessment-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background-color: var(--container-bg);
+            color: var(--text-on-dark);
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            border: 3px solid var(--gold-dark);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .btn:disabled {
+            background-color: #9ca3af !important;
+            color: #e5e7eb !important;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background-color: var(--chartreuse-muted);
+            color: var(--royal-navy);
+            border: 1px solid var(--gold-dark);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--chartreuse-bright);
+            box-shadow: 0 0 15px var(--chartreuse-bright);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--royal-navy);
+            color: var(--gold-light);
+            border: 1px solid var(--gold-main);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.85rem;
+            border: 2px solid var(--input-border);
+            border-radius: 0.375rem;
+            margin-bottom: 1.25rem;
+            background-color: var(--page-bg);
+            color: var(--text-on-light);
+            font-weight: 500;
+        }
+
+        .label-text {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: var(--gold-light);
+        }
+
+        .question-card,
+        .graph-container,
+        .circular-diagram-container {
+            background-color: var(--section-bg);
+            color: var(--text-on-light);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--gold-dark);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            /* PREMIUM BOX SHADOW */
+        }
+
+        /* MOBILE OPTIMIZATION - PREVENT SQUISHED QUESTIONS ON IPHONE SE */
+        @media (max-width: 640px) {
+            .assessment-container {
+                padding: 1.25rem;
+                margin: 1rem auto;
+            }
+
+            .question-card,
+            .graph-container,
+            .circular-diagram-container {
+                padding: 1.25rem;
+            }
+
+            .btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* New Creative Report Card Style */
+        .report-card {
+            background-color: #ffffff;
+            color: #374151;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--gold-dark);
+            /* Accent Border */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
+            page-break-inside: avoid;
+            /* Prevents cutting cards in PDF */
+        }
+
+        .report-card h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--aubergine);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+        }
+
+        .report-card h3::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--chartreuse-muted);
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .option-label {
+            display: block;
+            padding: 1.25rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background-color: #f9fafb;
+            color: var(--text-on-light);
+            font-weight: 500;
+        }
+
+        .option-label:hover {
+            background-color: var(--gold-light);
+            border-color: var(--gold-main);
+            transform: translateX(5px);
+        }
+
+        .option-label.selected {
+            background-color: var(--chartreuse-muted);
+            border-color: var(--gold-dark);
+            color: var(--royal-navy);
+            font-weight: 800;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Graph & Diagram Styling */
+        .bar-chart {
+            border-bottom: 3px solid var(--gold-dark);
+            background-color: #f0f4f8;
+            padding: 3rem 1rem 1rem 1rem;
+            border-radius: 0.75rem;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 380px;
+        }
+
+        .bar-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 10%;
+        }
+
+        .bar {
+            background: linear-gradient(to top, var(--royal-navy), #1e3a8a);
+            /* 3D GRADIENT */
+            width: 75%;
+            border-radius: 6px 6px 0 0;
+            transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .bar.primary-type-bar {
+            background: linear-gradient(to top, var(--teal-accent), #2dd4bf);
+            /* TEAL 3D GRADIENT */
+            box-shadow: 0 0 20px rgba(45, 212, 191, 0.5);
+        }
+
+        .bar-score {
+            color: var(--aubergine);
+            font-weight: 900;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .bar-label {
+            color: var(--royal-navy);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-align: center;
+            margin-top: 1.25rem;
+            line-height: 1.3;
+            height: 3.5em;
+        }
+
+        .enneagram-outer-path {
+            stroke: var(--gold-dark);
+            stroke-width: 2.5;
+        }
+
+        .enneagram-inner-line {
+            stroke: var(--gold-main);
+            stroke-width: 1.5;
+            opacity: 0.6;
+        }
+
+        .enneagram-node-circle.other-type {
+            fill: var(--gold-light);
+            stroke: var(--royal-navy);
+        }
+
+        .enneagram-node-circle.primary-type {
+            fill: var(--gold-main);
+            stroke: var(--gold-dark);
+            stroke-width: 3;
+        }
+
+        .enneagram-node-circle.wing-type {
+            fill: var(--chartreuse-muted);
+            stroke: var(--gold-dark);
+        }
+
+        .wing-indicator-text {
+            font-size: 10px;
+            font-weight: 900;
+            fill: var(--aubergine);
+            text-anchor: middle;
+        }
+
+        .main-title {
+            color: var(--gold-main);
+            border-bottom: 3px solid var(--gold-dark);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            font-weight: 900;
+        }
+
+        .section-title {
+            color: var(--chartreuse-muted);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .disclaimer-box {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--gold-main);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            color: var(--gold-light);
+        }
+
+        .deep-dive-section {
+            margin-top: 1.5rem;
+            padding: 1.75rem;
+            background-color: #f8fafc;
+            border-left: 4px solid var(--royal-navy);
+            border-radius: 0 0.75rem 0.75rem 0;
+            color: var(--ai-text-color);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .deep-dive-section h4 {
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--aubergine);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .context-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid var(--chartreuse-muted);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: #166534;
+            font-size: 0.95rem;
+        }
+
+        .wing-box {
+            background-color: #fffbeb;
+            border: 1px solid var(--gold-dark);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .report-card {
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            page-break-inside: avoid;
+        }
+
+        .intro-section-card {
+            background-color: #fff;
+            border-top: 6px solid var(--aubergine);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .intro-section-card h3 {
+            color: var(--aubergine);
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--gold-main);
+            padding-bottom: 1rem;
+        }
+
+        /* Red/Blue Text Classes */
+        .text-red-flag {
+            color: var(--red-flag);
+            font-weight: 600;
+        }
+
+        .text-strategy {
+            color: var(--strategy-blue);
+            font-weight: 500;
+            font-style: italic;
+            display: block;
+            margin-top: 0.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .center-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            height: 100%;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .center-active {
+            background-color: #eff6ff;
+            border: 2px solid var(--teal-accent);
+            /* TEAL HIGHLIGHT */
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0, 128, 128, 0.2);
+        }
+
+        .reference-guide {
+            margin-top: 2rem;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            page-break-inside: avoid;
+        }
+
+        .reference-item {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px dotted #d1d5db;
+            padding-bottom: 0.5rem;
+        }
+
+        .page-break-before {
+            page-break-before: always !important;
+            break-before: page !important;
+        }
+
+        /* Prevent CSS from unhiding the SVG when we swap it for the mock Image! */
+        .pdf-rendering .circular-diagram-container svg {
+            width: 800px !important;
+            height: 480px !important;
+            max-width: none !important;
+            margin: 0 auto !important;
+        }
+
+        /* Print Fallback Styles */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0.5in;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                background: white;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Hide Clutter */
+            #accessDeniedOverlay,
+            #intro-section,
+            #userInfoSection,
+            #questionnaireSection,
+            .univ-header,
+            footer,
+            .mobile-cta-btn,
+            button,
+            .no-print,
+            .backdoor-indicator {
+                display: none !important;
+            }
+
+            /* Show Results */
+            #resultsSection,
+            #pdf-results-clone {
+                display: block !important;
+                visibility: visible !important;
+                width: 100% !important;
+                opacity: 1 !important;
+                position: relative !important;
+            }
+
+            /* Force Page Breaks on Sections */
+            #resultsSection h2,
+            #resultsSection h3,
+            #pdf-results-clone h2,
+            #pdf-results-clone h3 {
+                page-break-before: always !important;
+                break-before: page !important;
+                padding-top: 20px;
+            }
+
+            /* Prevent charts/maps from splitting across pages */
+            .chart-container,
+            .enneagram-map,
+            .circular-diagram-container {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            /* Exception: don't break the very first headings to keep the start clean */
+            #introReportContent h3,
+            #participantSummary h3 {
+                page-break-before: auto !important;
+                break-before: auto !important;
+                padding-top: 0;
+            }
+
+            /* Prevent Chart and Map Slicing */
+            .chart-container,
+            .circular-diagram-container,
+            .enneagram-map {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+        }
+    </style>
+
+    <!-- V64 Surgical Graph Fix (Moved inside Head) -->
+    <style id="surgical-print-fix">
+        @media print {
+
+            body,
+            html,
+            #root,
+            main,
+            .app-container,
+            .pdf-section-block {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 15mm !important;
+                box-sizing: border-box !important;
+                overflow-x: hidden !important;
+            }
+
+            h1,
+            h2,
+            h3,
+            p,
+            div {
+                margin-left: 0 !important;
+            }
+
+            /* V67 Surgical Annihilation of Print Glitches */
+            .backdoor-indicator,
+            nav,
+            header,
+            .univ-header,
+            .sticky,
+            .fixed,
+            #checkout-popup,
+            [style*="position: fixed"],
+            [style*="position: sticky"] {
+                display: none !important;
+            }
+
+            /* Force graph background colors to print */
+            #scoreChart div,
+            .chart-container div,
+            .bar-fill {
+                print-color-adjust: exact !important;
+                -webkit-print-color-adjust: exact !important;
+            }
+
+            /* Stop SVG circle from shifting right and clipping */
+            .circular-diagram-container {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 auto !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            .circular-diagram-container svg {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+
+            /* Stop text cutting off on the right */
+            body,
+            html,
+            #root,
+            main,
+            .app-container,
+            .pdf-section-block {
+                width: 100% !important;
+                max-width: 100vw !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-sizing: border-box !important;
+                overflow-x: hidden !important;
+            }
+
+            /* Add safe paddings only to the inner blocks to prevent edge bleed */
+            .pdf-section-block,
+            .app-container {
+                padding: 0 10mm !important;
+            }
+
+            h1,
+            h2,
+            h3,
+            p,
+            div,
+            span,
+            li {
+                max-width: 100% !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+                box-sizing: border-box !important;
+            }
+
+            .chart-labels-container {
+                display: grid !important;
+                grid-template-columns: repeat(9, 1fr) !important;
+                width: 100% !important;
+                text-align: center !important;
+            }
+
+            .chart-labels-container span {
+                font-size: 8px !important;
+                white-space: normal !important;
+            }
+        }
+    </style>
+</head>
+
+<body
+    x-data="{ enneagramUnlocked: new URLSearchParams(window.location.search).get('status') === 'completed' || new URLSearchParams(window.location.search).get('access') === 'enneagram' || new URLSearchParams(window.location.search).get('test') === 'true', backdoorClicks: 0 }">
+    <div x-show="enneagramUnlocked" x-cloak class="backdoor-indicator uppercase tracking-widest">Master Access:
+        Assessment Unlocked</div>
+
+
+    <!-- UNIVERSAL HEADER -->
+    <nav class="univ-header">
+        <div class="univ-container">
+            <a href="index.html" class="univ-logo">
+                <img src="images/brkthru-logo.png" alt="BRKTHRU" class="univ-logo-img">
+                <span class="univ-logo-accent">DIGITAL</span>
+            </a>
+            <div class="univ-nav">
+                <a href="assessments.html" class="univ-nav-item mobile-cta-btn">START ASSESSMENT</a>
+                <a href="index.html" class="univ-nav-item">HOME</a>
+                <a href="odyssey.html" class="univ-nav-item">OUR ODYSSEY</a>
+                <a href="assessments.html" class="univ-nav-item active">ASSESSMENTS</a>
+                <a href="shop.html" class="univ-nav-item">STORE</a>
+            </div>
+            <div class="univ-utility">
+                <a href="index.html#tour" class="univ-btn-tour">TOUR 2026</a>
+            </div>
+        </div>
+    </nav>
+    <div class="univ-spacer"></div>
+
+
+    <!-- 1. PREMIUM GATEKEEPER OVERLAY -->
+
+    <div id="accessDeniedOverlay" x-show="!enneagramUnlocked" x-cloak
+        class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden">
+        <!-- Premium Background -->
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('images/enneagram logo.jpg');">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-900/40 to-slate-900/90 backdrop-blur-md"></div>
+
+        <!-- Premium Card -->
+        <div
+            class="glass-card max-w-md w-full rounded-[3rem] p-10 lg:p-14 relative z-10 bg-white/95 backdrop-blur-2xl border border-white/30 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)]">
+            <div class="flex justify-center mb-8">
+                <span
+                    class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 border border-amber-100 text-amber-600 text-[0.65rem] font-black uppercase tracking-[0.2em]">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    Premium Access Key
+                </span>
+            </div>
+            <div class="text-center mb-10">
+                <h1 @click="backdoorClicks++; if(backdoorClicks >= 6) { enneagramUnlocked = true; backdoorClicks = 0; }"
+                    class="text-4xl lg:text-5xl font-black text-slate-900 leading-[1.1] mb-4 cursor-pointer select-none">
+                    Unlock Your <span class="text-blue-700">Inner Core.</span>
+                </h1>
+                <p class="text-slate-500 font-medium leading-relaxed">
+                    You are one transaction away from revealing the cognitive machinery that drives your leadership
+                    style.
+                </p>
+            </div>
+            <div
+                class="bg-slate-50 rounded-2xl p-6 mb-10 border border-slate-100 flex items-center justify-between shadow-sm relative overflow-hidden">
+                <div class="absolute -top-1 -right-1 opacity-5"><svg width="48" height="48" viewBox="0 0 24 24"
+                        fill="currentColor">
+                        <path
+                            d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.995 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.982z" />
+                    </svg></div>
+                <div class="relative z-10 w-full">
+                    <p class="text-[0.7rem] italic text-slate-600 leading-relaxed mb-3">"In my desire to help others
+                        improve i always thought that they need to be fixed for their weaknesses until the enneagram
+                        showed me that my style of appreciating their unique strengths... was what fell short in our
+                        working relationship."</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-[0.6rem] font-black text-slate-900 uppercase tracking-widest mb-1">One-Time
+                                License</p>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-slate-900 font-black text-3xl">₱299</span>
+                                <span class="text-slate-400 font-bold text-sm">.00</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[0.65rem] font-bold text-blue-700">Geno Hadel</p>
+                            <p class="text-[0.5rem] font-black text-slate-400 uppercase tracking-widest">CEO Testimony
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-6">
+                <a href="https://hitpay.shop/brkthru-ventures/product/enneagram-assessment">Unlock Access Now</a>
+                <div class="flex items-center justify-center gap-3 grayscale opacity-40">
+                    <img src="images/brkthru-logo.png" alt="BRKTHRU" class="h-4 opacity-50">
+                    <span class="text-[0.6rem] font-black uppercase tracking-widest text-slate-400">Secure
+                        Gateway</span>
+                </div>
+            </div>
+            <p class="mt-10 text-center text-slate-400 text-[0.65rem] leading-relaxed">
+                Payment verified by <strong>HitPay</strong>. Your assessment dashboard will activate immediately upon
+                completion.
+            </p>
+        </div>
+    </div>
+
+    <!-- 2. MAIN APP CONTENT (Hidden by default) -->
+    <div id="appContent" x-show="enneagramUnlocked" x-cloak
+        x-data="{ hasFinished: false, currentStep: 'intro', showGoFullPagePopup: false, showDetailedInstructions: false }"
+        @results-ready.window="hasFinished = true; showGoFullPagePopup = true"
+        @quiz-start.window="currentStep = 'quiz'">
+        <div class="assessment-container">
+            <div id="userInfoSection" x-show="currentStep === 'intro'" x-cloak>
+                <h1 @click="backdoorClicks++; if(backdoorClicks >= 6) { enneagramUnlocked = true; backdoorClicks = 0; }"
+                    class="text-4xl main-title text-center cursor-pointer select-none">Enneagram Assessment for Leaders
+                </h1>
+                <div class="intro-text space-y-4 text-lg">
+                    <p>This Enneagram assessment helps leaders understand the core motivations, fears, and subconscious
+                        patterns that drive behavior, decision-making, and interpersonal dynamics. Recognizing these
+                        patterns allows you to:</p>
+                    <ul class="list-disc ml-10 space-y-2">
+                        <li><strong>Communicate More Effectively:</strong> Bridge communication gaps and tailor your
+                            leadership style to resonate with different personality types.</li>
+                        <li><strong>Build High-Performance Teams:</strong> Harness the unique strengths of each type to
+                            create a more balanced, resilient, and effective workspace.</li>
+                        <li><strong>Coach with Precision:</strong> Identify specific growth pathways and stressors for
+                            each team member to unlock their full potential.</li>
+                        <li><strong>Master Self-Leadership:</strong> Gain deep insights into your own blind spots and
+                            leverage your type's natural strengths for maximum impact.</li>
+                    </ul>
+                    <p>This assessment isn't a test, but a powerful method for self-discovery and people-literacy.
+                        Understanding the Enneagram provides a practical framework to boost team productivity, resolve
+                        conflicts, and enhance your overall leadership effectiveness.</p>
+                </div>
+
+                <h2 class="text-2xl section-title mt-10 text-center">Assessment Instructions</h2>
+                <p class="intro-text mb-6 text-center text-gold-light">Read each statement carefully. Choose the option
+                    that most accurately reflects your typical behaviors. <strong>The app will auto-advance once you
+                        select an answer.</strong></p>
+
+                <div class="disclaimer-box">
+                    <h3 class="font-bold text-chartreuse-bright mb-3 text-xl">Important Note:</h3>
+                    <p class="leading-relaxed">This tool is for self-discovery. The Enneagram is a dynamic system; use
+                        these results as a starting point for deeper exploration rather than a definitive label. It
+                        describes tendencies, not fixed destinies, and should never be used to pigeonhole or excuse
+                        behavior.</p>
+                </div>
+
+                <h2 class="text-2xl section-title border-t border-gold-dark pt-10 text-center">Participant Information
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 mt-6">
+                    <div>
+                        <label for="firstName" class="label-text">First Name</label>
+                        <input type="text" id="firstName" class="input-field" placeholder="Enter first name" required>
+                    </div>
+                    <div>
+                        <label for="familyName" class="label-text">Family Name</label>
+                        <input type="text" id="familyName" class="input-field" placeholder="Enter family name" required>
+                    </div>
+                    <div>
+                        <label for="position" class="label-text">Position</label>
+                        <input type="text" id="position" class="input-field" placeholder="Enter your role" required>
+                    </div>
+                    <div>
+                        <label for="company" class="label-text">Company</label>
+                        <input type="text" id="company" class="input-field" placeholder="Enter your company" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="email" class="label-text">Email for Results</label>
+                        <input type="email" id="email" class="input-field" placeholder="you@example.com" required>
+                    </div>
+                    <input type="hidden" id="assessmentDate">
+                </div>
+                <button id="proceedToAssessmentButton" class="btn btn-primary w-full mt-8 text-xl h-16 shadow-xl">Begin
+                    Assessment</button>
+                <p id="userInfoValidationMessage" class="text-red-400 text-lg mt-6 text-center hidden font-bold">Please
+                    fill in all participant information fields to continue.</p>
+            </div>
+
+            <div id="questionnaireSection" x-show="currentStep === 'quiz'" x-cloak>
+                <div class="flex justify-between items-center mb-10">
+                    <h2 class="text-2xl font-black text-chartreuse-bright" id="questionCounter">Question 1 of 27</h2>
+                    <button id="prevButton" class="btn btn-secondary py-2 px-6">Previous</button>
+                </div>
+                <div id="questionContainer" class="question-card"></div>
+                <div class="flex justify-center">
+                    <button id="finishButton"
+                        class="btn btn-primary hidden w-full md:w-auto mt-6 text-2xl px-12 py-5 shadow-2xl">Generate
+                        Detailed Report</button>
+                </div>
+            </div>
+
+            <!-- RESULTS SECTION (To be Printed to PDF) -->
+            <div id="resultsSection" class="hidden" x-show="hasFinished" x-cloak>
+
+
+                <!-- PDF Download Button -->
+                <div class="flex justify-between items-center mb-8 no-print">
+                    <h1 class="text-3xl font-black text-gold-main">Full Report Generated</h1>
+                    <button type="button" id="download-btn"
+                        class="w-full py-4 rounded-xl font-bold text-gray-900 bg-gradient-to-r from-yellow-400 to-yellow-600 shadow-lg mt-6">
+                        <!-- Instruction Box (Premium Styled) -->
+                        <div class="instruction-box bg-white text-black p-6 rounded-xl border-4 border-black">
+                            <h2 class="text-xl font-bold mb-4 text-left text-black"><i
+                                    class="fa-solid fa-file-pdf mr-2"></i>To Save Your Full Leadership Report (Best
+                                Quality):</h2>
+                            <ol class="text-left text-black space-y-4 font-semibold text-lg list-decimal list-inside">
+                                <li><strong>Open a NEW TAB</strong> in Google Chrome (Do not close this page!).</li>
+                                <li>Search for and install the free <strong>"GoFullPage" Chrome Extension</strong>.</li>
+                                <li>Return to this results page once installed.</li>
+                                <li>Click the <strong>Puzzle Piece icon</strong> (Extensions) at the top right of your
+                                    browser.</li>
+                                <li>Find GoFullPage and click the <strong>Camera Icon</strong> to capture.</li>
+                                <li>Wait for it to scan, then click the <strong>PDF icon</strong> to download.</li>
+                            </ol>
+
+                            <p class="warning-text mt-6 text-black font-bold text-left bg-yellow-100 p-3 rounded">
+                                <i class="fa-solid fa-triangle-exclamation mr-2 text-yellow-600"></i> DONT CLOSE OR
+                                REFRESH THIS PAGE.
+                                <span class="block mt-1 font-normal opacity-90">Your results are generated dynamically.
+                                    If you leave now, they will be permanently lost and you may have to pay
+                                    again.</span>
+                            </p>
+                        </div>
+                    </button>
+                </div>
+
+                <div id="pdfContentArea">
+                    <h1 class="text-5xl font-black text-center mb-10 text-gold-main tracking-tight">Full Leadership
+                        Intelligence Report</h1>
+
+                    <!-- INTRODUCTORY REPORT SECTIONS -->
+                    <div id="introReportContent"></div>
+
+                    <div id="pdf-page-2-consolidated" class="pdf-section-block">
+                        <div id="participant-info-container" class="report-card text-lg mb-8"
+                            style="display: block !important; gap: 0 !important;">
+                        </div>
+
+                        <div id="score-chart" class="chart-container">
+                            <h3 class="text-3xl font-bold text-aubergine mb-8 text-center">Your Enneagram Score
+                                Distribution
+                            </h3>
+                            <div id="barChart" class="bar-chart"></div>
+                            <!-- Reference Guide will be inserted here dynamically -->
+                        </div>
+                    </div>
+
+                    <div id="type-map" class="circular-diagram-container avoid-slice">
+                        <h3 class="text-3xl font-bold text-aubergine mb-8 text-center">Interconnected Type Map</h3>
+                        <svg id="enneagramCircleSvg" viewBox="0 0 1000 600" class="mx-auto w-full max-w-3xl h-auto"
+                            style="overflow: visible;"></svg>
+                        <div class="mt-6 flex justify-center gap-8 text-sm font-bold">
+                            <span class="flex items-center"><span class="w-4 h-4 bg-[#22C55E] rounded-full mr-2"></span>
+                                Growth Path</span>
+                            <span class="flex items-center"><span class="w-4 h-4 bg-[#EF4444] rounded-full mr-2"></span>
+                                Stress Path</span>
+                            <span class="flex items-center"><span class="w-4 h-4 bg-[#ADFF2F] rounded-full mr-2"></span>
+                                Wings</span>
+                        </div>
+                    </div>
+
+                    <!-- MOVED SECTIONS WILL APPEAR HERE -->
+                    <div id="movedSectionsContainer"></div>
+
+                    <div id="detailedReport" class="space-y-8"></div>
+                </div>
+
+
+
+                <div class="flex flex-col items-center gap-4 mt-12 no-print">
+                    <button id="saveImageButton" onclick="saveAsImage()"
+                        class="w-full md:w-auto bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-white font-black py-4 px-10 rounded-2xl shadow-xl transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-camera-retro text-xl"></i>
+                        SAVE RESULT TO PHONE (PNG)
+                    </button>
+
+                    <div class="flex flex-col items-center gap-4 mt-12 no-print">
+                        <button id="saveImageButton" onclick="saveAsImage()"
+                            class="w-full md:w-auto bg-[#4A148C] text-[#FFD700] hover:bg-[#380f6b] font-black py-4 px-10 rounded-2xl shadow-xl transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3 border-2 border-[#FFD700]">
+                            <i class="fa-solid fa-camera-retro text-xl"></i>
+                            SAVE RESULT TO PHONE (PNG)
+                        </button>
+                        <button onclick="window.location.href='/'"
+                            class="btn btn-secondary w-full md:w-auto py-4 px-10 text-lg shadow-xl">Return to
+                            Website</button>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <!-- GoFullPage Initial Popup -->
+        <div x-show="showGoFullPagePopup && !showDetailedInstructions" x-transition
+            class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[1000] w-[95%] max-w-2xl">
+            <div
+                class="bg-black/95 backdrop-blur-xl border-2 border-yellow-500/50 rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
+                <div class="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-transparent pointer-events-none">
+                </div>
+                <div class="flex items-center gap-4 relative z-10 text-center md:text-left">
+                    <div
+                        class="hidden md:flex w-12 h-12 bg-yellow-500/20 rounded-full items-center justify-center shrink-0">
+                        <i class="fa-solid fa-triangle-exclamation text-yellow-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-white font-bold text-lg leading-tight">Results are live! Click 'Email Report
+                            Link' below to send this private link to your inbox.</p>
+                        <p class="text-yellow-500/80 text-sm mt-1">Open it on a Desktop Chrome browser to download the
+                            professional 16-page PDF using GoFullPage.</p>
+                    </div>
+                </div>
+                <button onclick="emailReportLink(event)"
+                    class="bg-orange-600 hover:bg-orange-500 text-white px-8 py-3 rounded-full font-black text-sm uppercase tracking-wider transition-all hover:scale-105 active:scale-95 whitespace-nowrap relative z-10 shadow-[0_0_20px_rgba(234,88,12,0.4)]">
+                    📧 Email Report Link to My Desktop
+                </button>
+                <button @click="showGoFullPagePopup = false"
+                    class="absolute top-2 right-4 text-white/30 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- GoFullPage Detailed Instructions Modal -->
+        <div x-show="showDetailedInstructions" x-cloak
+            class="fixed inset-0 z-[2000] flex items-center justify-center p-4">
+            <div @click="showDetailedInstructions = false"
+                class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm transition-opacity"></div>
+
+            <div
+                class="bg-white rounded-[2rem] shadow-2xl relative z-10 w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-slate-900 to-slate-800 p-8 text-white relative">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-yellow-500/10 rounded-full blur-3xl"></div>
+                    <div class="flex justify-between items-start relative z-10">
+                        <div>
+                            <span
+                                class="inline-block px-3 py-1 bg-yellow-500 text-black text-[10px] font-black uppercase tracking-widest rounded-full mb-3">Save
+                                Instructions</span>
+                            <h3 class="text-3xl font-black">How to Save Your Report</h3>
+                            <p class="text-white/60 mt-2 font-medium italic">Follow these steps carefully to ensure 100%
+                                resolution.</p>
+                        </div>
+                        <button @click="showDetailedInstructions = false"
+                            class="text-white/40 hover:text-white transition-colors">
+                            <i class="fa-solid fa-circle-xmark text-3xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Steps -->
+                <div class="p-8 space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 items-start">
+                            <div
+                                class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center shrink-0 font-black">
+                                1</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Open a NEW TAB</h4>
+                                <p class="text-slate-500 text-xs mt-1">In Google Chrome. <span
+                                        class="text-red-500 font-bold">Do not close this page.</span></p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 items-start">
+                            <div
+                                class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center shrink-0 font-black">
+                                2</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Install Extension</h4>
+                                <p class="text-slate-500 text-xs mt-1">Search/Install free <span
+                                        class="font-bold underline">"GoFullPage"</span> extension.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 items-start">
+                            <div
+                                class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center shrink-0 font-black">
+                                3</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Find Camera Icon</h4>
+                                <p class="text-slate-500 text-xs mt-1">Click the extension (camera) while on this page.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 items-start">
+                            <div
+                                class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center shrink-0 font-black">
+                                4</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Download PDF</h4>
+                                <p class="text-slate-500 text-xs mt-1">Wait for scan, then click the PDF icon to save.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-6 flex flex-col md:flex-row items-center gap-6">
+                        <div class="shrink-0">
+                            <i class="fa-solid fa-shield-halved text-yellow-600 text-4xl"></i>
+                        </div>
+                        <div class="text-center md:text-left">
+                            <p class="text-yellow-950 font-black text-sm uppercase tracking-tight">Security Check
+                                Required</p>
+                            <p class="text-yellow-800 text-xs mt-1 leading-relaxed">
+                                Because your results are generated in real-time on your computer, closing this page
+                                clears the data.
+                                <span class="font-bold">Using GoFullPage is the only way to capture the high-resolution
+                                    charts.</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <button @click="showDetailedInstructions = false"
+                        class="w-full bg-slate-900 hover:bg-black text-white py-5 rounded-2xl font-black text-lg transition-transform hover:scale-[1.02] shadow-xl">
+                        I Understand, Take Me Back to My Report
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GoFullPage Initial Popup -->
+        <div x-show="showGoFullPagePopup && !showDetailedInstructions" x-transition
+            class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[1000] w-[95%] max-w-2xl">
+            <div
+                class="bg-black/95 backdrop-blur-xl border-2 border-yellow-500/50 rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
+                <div class="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-transparent pointer-events-none">
+                </div>
+                <div class="flex items-center gap-4 relative z-10 text-center md:text-left">
+                    <div
+                        class="hidden md:flex w-12 h-12 bg-yellow-500/20 rounded-full items-center justify-center shrink-0">
+                        <i class="fa-solid fa-triangle-exclamation text-yellow-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-white font-bold text-lg leading-tight">Results are live! Click 'Email Report
+                            Link' below to send this private link to your inbox.</p>
+                        <p class="text-yellow-500/80 text-sm mt-1">Open it on a Desktop Chrome browser to download the
+                            professional 16-page PDF using GoFullPage.</p>
+                    </div>
+                </div>
+                <button onclick="emailReportLink(event)"
+                    class="bg-orange-600 hover:bg-orange-500 text-white px-8 py-3 rounded-full font-black text-sm uppercase tracking-wider transition-all hover:scale-105 active:scale-95 whitespace-nowrap relative z-10 shadow-[0_0_20px_rgba(234,88,12,0.4)]">
+                    📧 Email Report Link to My Desktop
+                </button>
+                <button @click="showGoFullPagePopup = false"
+                    class="absolute top-2 right-4 text-white/30 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- GoFullPage Detailed Instructions Modal -->
+        <div x-show="showDetailedInstructions" x-cloak
+            class="fixed inset-0 z-[2000] flex items-center justify-center p-4">
+            <div @click="showDetailedInstructions = false"
+                class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm transition-opacity"></div>
+
+            <div
+                class="bg-white rounded-[2rem] shadow-2xl relative z-10 w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-slate-900 to-slate-800 p-8 text-white relative">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-yellow-500/10 rounded-full blur-3xl"></div>
+                    <div class="flex justify-between items-start relative z-10">
+                        <div>
+                            <span
+                                class="inline-block px-3 py-1 bg-yellow-500 text-black text-[10px] font-black uppercase tracking-widest rounded-full mb-3">Save
+                                Instructions</span>
+                            <h3 class="text-3xl font-black">How to Save Your Report</h3>
+                            <p class="text-white/60 mt-2 font-medium italic">Follow these steps carefully to ensure 100%
+                                resolution.</p>
+                        </div>
+                        <button @click="showDetailedInstructions = false"
+                            class="text-white/40 hover:text-white transition-colors">
+                            <i class="fa-solid fa-circle-xmark text-3xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Steps -->
+                <div class="p-8 space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 items-start">
+                            <div
+                                class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center shrink-0 font-black">
+                                1</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Open a NEW TAB</h4>
+                                <p class="text-slate-500 text-xs mt-1">In Google Chrome. <span
+                                        class="text-red-500 font-bold">Do not close this page.</span></p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 items-start">
+                            <div
+                                class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center shrink-0 font-black">
+                                2</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Install Extension</h4>
+                                <p class="text-slate-500 text-xs mt-1">Search/Install free <span
+                                        class="font-bold underline">"GoFullPage"</span> extension.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 items-start">
+                            <div
+                                class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center shrink-0 font-black">
+                                3</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Find Camera Icon</h4>
+                                <p class="text-slate-500 text-xs mt-1">Click the extension (camera) while on this page.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 items-start">
+                            <div
+                                class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center shrink-0 font-black">
+                                4</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Download PDF</h4>
+                                <p class="text-slate-500 text-xs mt-1">Wait for scan, then click the PDF icon to save.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-6 flex flex-col md:flex-row items-center gap-6">
+                        <div class="shrink-0">
+                            <i class="fa-solid fa-shield-halved text-yellow-600 text-4xl"></i>
+                        </div>
+                        <div class="text-center md:text-left">
+                            <p class="text-yellow-950 font-black text-sm uppercase tracking-tight">Security Check
+                                Required</p>
+                            <p class="text-yellow-800 text-xs mt-1 leading-relaxed">
+                                Because your results are generated in real-time on your computer, closing this page
+                                clears the data.
+                                <span class="font-bold">Using GoFullPage is the only way to capture the high-resolution
+                                    charts.</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <button @click="showDetailedInstructions = false"
+                        class="w-full bg-slate-900 hover:bg-black text-white py-5 rounded-2xl font-black text-lg transition-transform hover:scale-[1.02] shadow-xl">
+                        I Understand, Take Me Back to My Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="messageBoxOverlay" class="message-box-overlay hidden">
+        <div class="message-box-content">
+            <p id="messageBoxText" class="font-bold text-xl mb-6"></p>
+            <button id="messageBoxCloseButton" class="btn btn-primary px-8 py-3">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. GATEKEEPER LOGIC ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const access = urlParams.get('access');
+            // Check for access=enneagram or token or localhost
+            if (access === 'enneagram' || token || window.location.hostname === 'localhost' || window.location.hostname.includes('antigravity') || urlParams.get('test') === 'true') {
+                document.getElementById('accessDeniedOverlay').classList.add('hidden');
+                document.getElementById('appContent').classList.remove('hidden');
+            }
+        });
+
+        // --- 2. PDF GENERATION LOGIC ---
+        // (Delegated to Premium Engine V124)
+    </script>
+
+
+    <button id="saveImageButton" onclick="saveAsImage()"
+        style="background:#4b0082; color:#FFD700; padding:20px; width:100%; border-radius:10px; font-weight:bold; margin-top:30px; cursor:pointer; border:none;">SAVE
+        FULL REPORT TO PHONE (PNG)</button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+    <script src="mobile-save.js"></script>
+</body>
+
+</html>

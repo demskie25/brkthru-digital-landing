@@ -1,0 +1,21 @@
+--- DEPLOY START ---
+warning: in the working copy of 'deploy.bat', LF will be replaced by CRLF the next time Git touches it
+[main 4eeb5ec] fix: V76 implement unique URL handover for mobile users
+ 20 files changed, 940 insertions(+), 249 deletions(-)
+ create mode 100644 branch.txt
+ create mode 100644 debug_encoding.py
+ create mode 100644 deploy_final.txt
+ create mode 100644 deploy_log_new.txt
+ create mode 100644 edit_assessment.py
+ create mode 100644 git_output_utf8.txt
+ create mode 100644 netlify/functions/render-pdf.js
+ create mode 100644 remove_legacy.py
+ create mode 100644 replace.js
+ create mode 100644 update_asmt.py
+ delete mode 100644 update_assessments.js
+ create mode 100644 update_gofullpage.py
+ create mode 100644 update_gofullpage_exact.py
+ create mode 100644 update_start.py
+To https://github.com/demskie25/brkthru-digital-landing.git
+   a5ecda3..4eeb5ec  main -> main
+--- DEPLOY END ---

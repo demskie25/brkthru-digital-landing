@@ -1,0 +1,2 @@
+origin	https://github.com/demskie25/brkthru-digital-landing.git (fetch)
+origin	https://github.com/demskie25/brkthru-digital-landing.git (push)

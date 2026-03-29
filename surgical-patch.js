@@ -1,10 +1,7 @@
 const fs = require('fs');
+const path = 'assessments.html';
 
-const filePath = 'assessments.html';
-
-const cdnTag = '<script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>';
-const dataTag = '<script src="enneagram-data.js"></script>';
-const saveButton = `
+const saveAsImageButton = `
                 <div class="flex flex-col items-center gap-4 mt-12 no-print">
                     <button id="saveImageButton" onclick="saveAsImage()" 
                         class="w-full md:w-auto bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-white font-black py-4 px-10 rounded-2xl shadow-xl transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3">
@@ -15,7 +12,8 @@ const saveButton = `
                         class="btn btn-secondary w-full md:w-auto py-4 px-10 text-lg shadow-xl">Return to Website</button>
                 </div>
 `;
-const saveScript = `
+
+const saveAsImageScript = `
     <!-- MOBILE IMAGE SAVING LOGIC -->
     <script>
         async function saveAsImage() {
@@ -73,61 +71,27 @@ const saveScript = `
     </script>
 `;
 
-// Explicitly handle all possible encodings
-const encodings = ['utf8', 'utf16le', 'latin1'];
+let content = fs.readFileSync(path, 'utf8');
 
-let success = false;
-for (const enc of encodings) {
-    try {
-        let content = fs.readFileSync(filePath, enc);
-        console.log(`Checking ${enc}... length:`, content.length);
+// 1. Remove the bulky data blocks to reduce file size significantly
+// We've already modularized them into enneagram-data.js (hopefully)
+const dataTag = '<script src="enneagram-data.js"></script>';
+const centersDataRegex = /const centersData = \{[\s\S]*?const questions = \[[\s\S]*?\];/;
 
-        if (content.includes('centersData') || content.includes('returnButton')) {
-            console.log(`Bingo! Detected content with encoding ${enc}`);
-            
-            // 1. Inject CDN (if not there)
-            if (!content.includes('html-to-image')) {
-                content = content.replace('<head>', '<head>\n    ' + cdnTag);
-                console.log('Injected CDN.');
-            }
-
-            // 2. Modularize Data
-            const dataStart = 'const centersData =';
-            const dataEnd = '];'; // end of questions array
-            const startIndex = content.indexOf(dataStart);
-            if (startIndex !== -1) {
-                const endIndex = content.indexOf(dataEnd, startIndex) + 2;
-                content = content.substring(0, startIndex) + dataTag + content.substring(endIndex);
-                console.log('Modularized data.');
-            }
-
-            // 3. Inject Button
-            const buttonTarget = 'id="returnButton"';
-            const buttonIndex = content.indexOf(buttonTarget);
-            if (buttonIndex !== -1) {
-                const divStart = content.lastIndexOf('<div', buttonIndex);
-                const divEnd = content.indexOf('</div>', buttonIndex) + 6;
-                content = content.substring(0, divStart) + saveButton + content.substring(divEnd);
-                console.log('Injected button.');
-            }
-
-            // 4. Inject Script
-            if (!content.includes('saveAsImage')) {
-                content = content.replace('</body>', saveScript + '\n</body>');
-                console.log('Injected script.');
-            }
-
-            fs.writeFileSync(filePath, content, 'utf8');
-            console.log('Wrote file successfully as UTF-8.');
-            success = true;
-            break;
-        }
-    } catch (err) {
-        console.error(`Error with ${enc}:`, err.message);
-    }
+if (centersDataRegex.test(content)) {
+    content = content.replace(centersDataRegex, dataTag);
 }
 
-if (!success) {
-    console.error('Failed to detect content in any encoding.');
-    process.exit(1);
+// 2. Add the button
+const returnButtonDivRegex = /<div class="flex justify-center mt-12"><button id="returnButton"[\s\S]*?<\/button>\s*<\/div>/;
+if (returnButtonDivRegex.test(content)) {
+    content = content.replace(returnButtonDivRegex, saveAsImageButton);
 }
+
+// 3. Add the script
+if (content.includes('</body>')) {
+    content = content.replace('</body>', saveAsImageScript + '\n</body>');
+}
+
+fs.writeFileSync(path, content, 'utf8');
+console.log('Patch Applied Successfully.');
