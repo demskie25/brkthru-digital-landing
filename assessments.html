@@ -5,110 +5,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enneagram Assessment for Leaders</title>
-    <link rel="stylesheet" href="universal-header.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <style>
-        :root {
-            --aubergine: #4A148C;
-            --gold-main: #FFD700;
-            --royal-navy: #000080;
-        }
-
-        [x-cloak] {
-            display: none !important;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #fdfbf6;
-        }
-
-        .assessment-container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 2.5rem;
-            background-color: var(--aubergine);
-            color: white;
-            border-radius: 1rem;
-            border: 3px solid #B8860B;
-        }
-
-        .results-card {
-            background: white;
-            color: #1e293b;
-            padding: 2rem;
-            border-radius: 1rem;
-            margin-top: 2rem;
-        }
-    </style>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body x-data="{ enneagramUnlocked: true, hasFinished: false, currentStep: 'intro' }">
+<body class="bg-[#fdfbf6] text-slate-900">
+    <div class="max-w-4xl mx-auto mt-20 p-10 bg-[#4A148C] rounded-3xl shadow-2xl border-4 border-[#B8860B]">
+        <div x-data="{ hasFinished: false }">
 
-    <div class="assessment-container">
-        <div x-show="currentStep === 'intro' && !hasFinished">
-            <h1 class="text-4xl font-black text-center text-[#FFD700] mb-8">Leadership Intelligence Assessment</h1>
-            <p class="text-lg mb-6">Enter your details to reveal your core leadership type.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                <input type="text" placeholder="First Name" class="p-4 rounded text-black">
-                <input type="text" placeholder="Family Name" class="p-4 rounded text-black">
-                <input type="email" id="userEmail" placeholder="Email for Results"
-                    class="p-4 rounded text-black md:col-span-2">
-            </div>
-            <button @click="currentStep = 'quiz'"
-                class="w-full bg-[#ADFF2F] text-[#000080] font-black py-6 rounded-xl text-2xl shadow-2xl">BEGIN
-                ASSESSMENT</button>
-        </div>
+            <div x-show="!hasFinished" class="text-center">
+                <h1 class="text-5xl font-black text-[#FFD700] mb-6 uppercase tracking-tighter">Leader Intelligence</h1>
+                <p class="text-white text-xl mb-10 opacity-80 font-medium italic">"The quality of your leadership is
+                    limited by the quality of your self-awareness."</p>
 
-        <div x-show="currentStep === 'quiz' && !hasFinished" x-cloak class="text-center py-20">
-            <h2 class="text-3xl font-bold mb-8">Assessment in Progress...</h2>
-            <button @click="hasFinished = true" class="bg-white/10 p-4 rounded border border-white/20">Simulate Finish
-                (Click to see fix)</button>
-        </div>
+                <div class="bg-white/5 p-8 rounded-2xl border border-white/10 mb-10 text-left">
+                    <p class="text-white text-lg leading-relaxed">This 16-page diagnostic reveals your core cognitive
+                        style. Please allow 15 minutes of quiet focus.</p>
+                </div>
 
-        <div x-show="hasFinished" x-cloak class="results-card shadow-2xl">
-            <h1 class="text-4xl font-black text-center text-[#4A148C] mb-4">Report Ready!</h1>
-            <p class="text-center text-slate-500 mb-10">Your 16-page Leadership Profile is generated.</p>
-
-            <div class="flex flex-col gap-6">
-                <button onclick="sendInstantEmail()"
-                    class="w-full bg-orange-600 hover:bg-orange-500 text-white font-black py-6 rounded-2xl shadow-xl flex items-center justify-center gap-4 text-xl transition-transform hover:scale-[1.02]">
-                    <i class="fa-solid fa-envelope"></i>
-                    EMAIL LINK TO MY DESKTOP
+                <button @click="hasFinished = true"
+                    class="w-full bg-[#ADFF2F] text-[#000080] font-black py-8 rounded-2xl text-3xl shadow-[0_20px_50px_rgba(173,255,47,0.3)] hover:scale-[1.02] transition-transform">
+                    BEGIN ASSESSMENT
                 </button>
-
-                <button onclick="saveAsImage()"
-                    class="w-full bg-[#4A148C] text-[#FFD700] font-black py-6 rounded-2xl shadow-xl flex items-center justify-center gap-4 text-xl border-2 border-[#FFD700]">
-                    <i class="fa-solid fa-camera"></i>
-                    SAVE TO PHONE (PNG)
-                </button>
-
-                <a href="/" class="text-center text-slate-400 font-bold underline mt-4">Return to Home</a>
             </div>
+
+            <div x-show="hasFinished" x-cloak class="bg-white p-10 rounded-2xl shadow-inner">
+                <h2 class="text-4xl font-black text-[#4A148C] mb-2 text-center">Report Ready!</h2>
+                <p class="text-center text-slate-400 mb-10">Your full leadership profile has been generated.</p>
+
+                <div class="flex flex-col gap-6">
+                    <a href="mailto:?subject=My Leadership Report&body=Link to my report: "
+                        class="w-full bg-orange-600 text-white font-black py-6 rounded-2xl text-center text-xl shadow-lg flex items-center justify-center gap-3">
+                        📧 EMAIL LINK TO MY DESKTOP
+                    </a>
+
+                    <button onclick="alert('Saving image...')"
+                        class="w-full border-2 border-[#4A148C] text-[#4A148C] font-black py-6 rounded-2xl text-xl">
+                        📸 SAVE TO PHONE (PNG)
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
-
-    <script>
-        function sendInstantEmail() {
-            const email = document.getElementById('userEmail').value || 'Leader';
-            const subject = encodeURIComponent("My Leadership Intelligence Report Link");
-            const body = encodeURIComponent("Hello,\n\nYour Leadership Intelligence Report is ready to view at the private link below. Please open this on a Desktop computer to download the professional 16-page PDF.\n\nLink: " + window.location.href);
-            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-        }
-
-        function saveAsImage() {
-            const node = document.querySelector('.results-card');
-            htmlToImage.toPng(node).then(dataUrl => {
-                const link = document.createElement('a');
-                link.download = 'Brkthru-Report.png';
-                link.href = dataUrl;
-                link.click();
-            });
-        }
-    </script>
 </body>
 
 </html>
