@@ -49,7 +49,16 @@
         <div class="glass-panel rounded-3xl p-8 md:p-10 transform transition-all duration-500 hover:scale-[1.01]">
             <div class="text-center mb-8">
                 <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-yellow-500/10 border border-yellow-500/30 mb-4 text-yellow-500 text-2xl"><i class="fa-solid fa-compass"></i></div>
-                <h1 class="text-3xl font-bold tracking-tight mb-2 text-white">Unlock Your <span class="text-gold-gradient block mt-1">Enneagram Leadership Profile</span></h1>
+                <h1 id="bypass-trigger" class="text-3xl font-bold tracking-tight mb-2 text-white cursor-pointer select-none">Unlock Your <span class="text-gold-gradient block mt-1">Enneagram Leadership Profile</span></h1>
+                <script>
+                    let clickCount = 0;
+                    document.getElementById('bypass-trigger').addEventListener('click', function() {
+                        clickCount++;
+                        if (clickCount >= 6) {
+                            window.location.href = "quiz.html";
+                        }
+                    });
+                </script>
                 <p class="text-gray-300 text-sm leading-relaxed px-2">Understand the core motivations, fears, and subconscious patterns that drive your leadership behavior and team dynamics.</p>
             </div>
             
@@ -95,6 +104,16 @@
                         <p class="text-xs font-bold text-yellow-500">Geno Hadel</p>
                         <p class="text-[0.6rem] text-gray-400 uppercase tracking-widest">CEO Testimony</p>
                     </div>
+                </div>
+            </div>
+
+            <div class="mt-8 border-t border-white/10 pt-6">
+                <!-- HitPay Payment Button -->
+                <div class="text-center mb-8">
+                    <a href="https://hit-pay.com/brkthru-ventures/product/enneagram-assessment" target="_blank" class="inline-block w-full py-4 px-8 bg-purple-700 hover:bg-purple-800 text-white font-black text-xl rounded-2xl shadow-2xl transition-all transform hover:scale-105 border-2 border-white/20">
+                        💳 Get Full Access for P299
+                    </a>
+                    <p class="text-[0.65rem] text-gray-400 mt-2 uppercase tracking-widest font-bold">Secure Payment via HitPay</p>
                 </div>
             </div>
 
