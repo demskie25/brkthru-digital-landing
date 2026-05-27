@@ -52,7 +52,7 @@ const GOLD_STANDARD_HEADER = `
                 <div class="univ-currency">
                     <span class="active">USD</span> | <span>PHP</span>
                 </div>
-                <a href="tour.html" class="univ-btn-tour">TOUR 2026</a>
+                <a href="tour.html" class="univ-btn-tour">TOUR 2027</a>
             </div>
         </div>
     </nav>

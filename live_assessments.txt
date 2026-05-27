@@ -361,7 +361,7 @@
                 <a class='univ-nav-item' href='/shop'>SHOP</a>
             </div>
             <div class="univ-utility">
-                <a class='univ-btn-tour' href='/#tour'>TOUR 2026</a>
+                <a class='univ-btn-tour' href='/#tour'>TOUR 2027</a>
             </div>
         </div>
     </nav>

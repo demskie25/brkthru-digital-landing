@@ -331,7 +331,7 @@ try {
                     <a href="shop.html" class="univ-nav-item">SHOP</a>
                 </div>
                 <div class="univ-utility">
-                    <a href="index.html#tour" class="univ-btn-tour">TOUR 2026</a>
+                    <a href="index.html#tour" class="univ-btn-tour">TOUR 2027</a>
                 </div>
             </div>
         </nav>

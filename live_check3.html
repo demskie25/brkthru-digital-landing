@@ -410,6 +410,12 @@
             padding-bottom: 0.5rem;
         }
     </style>
+
+<style>
+/* Auto-generated styles from inline replacements */
+.auto-style-442 { background-image: url('images/enneagram logo.jpg'); }
+</style>
+
 </head>
 <body x-data="{ enneagramUnlocked: new URLSearchParams(window.location.search).get('status') === 'completed', backdoorClicks: 0 }">
         <div x-show="enneagramUnlocked" x-cloak class="backdoor-indicator uppercase tracking-widest">Master Access: Assessment Unlocked</div>
@@ -429,7 +435,7 @@
                     <a class='univ-nav-item' href='/shop'>SHOP</a>
                 </div>
                 <div class="univ-utility">
-                    <a class='univ-btn-tour' href='/#tour'>TOUR 2026</a>
+                    <a class='univ-btn-tour' href='/#tour'>TOUR 2027</a>
                 </div>
             </div>
         </nav>
@@ -439,7 +445,7 @@
     <!-- 1. PREMIUM GATEKEEPER OVERLAY -->
     <div id="accessDeniedOverlay" x-show="!enneagramUnlocked" x-cloak class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden">
         <!-- Premium Background -->
-        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('images/enneagram logo.jpg');"></div>
+        <div class="auto-style-442 absolute inset-0 bg-cover bg-center"></div>
         <div class="absolute inset-0 bg-gradient-to-br from-slate-900/40 to-slate-900/90 backdrop-blur-md"></div>
         
         <!-- Premium Card -->

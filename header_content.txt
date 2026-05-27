@@ -159,7 +159,7 @@
 172:            <span class="h-px w-8 bg-brand-amber"></span>
 173:            <span
 174:              class="text-xs md:text-sm font-bold uppercase tracking-[0.6em] font-sans"
-175:              >The 2026 Transformation Tour</span
+175:              >The 2027 Transformation Tour</span
 176:            >
 177:            <span class="h-px w-8 bg-brand-amber"></span>
 178:          </div>
@@ -217,7 +217,7 @@
 235:          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12 px-6 text-left">
 236:            <!-- Event 1: Parenting Manila -->
 237:            <div class="glass p-8 rounded-3xl border-brand-amber/20 hover:border-brand-amber/50 transition-all flex flex-col">
-238:              <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Oct 24, 2026 (Saturday)</h4>
+238:              <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Jul 10, 2027 (Saturday)</h4>
 239:              <a href="#parenting" class="block text-white font-serif font-bold text-xl mb-4 hover:text-brand-amber transition-colors">Impactful Parenting & Educating Style</a>
 240:              <div class="space-y-2 text-sm text-slate-400 mb-6">
 241:                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber"></i> Manila</p>
@@ -230,7 +230,7 @@
 248:            </div>
 250:            <!-- Event 2: 5-Minute Manager -->
 251:            <div class="glass p-8 rounded-3xl border-brand-amber/20 hover:border-brand-amber/50 transition-all flex flex-col">
-252:              <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Oct 26-29, 2026 (Mon-Thur)</h4>
+252:              <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Jul 12-15, 2027 (Mon-Thur)</h4>
 253:              <a href="#5mm" class="block text-white font-serif font-bold text-xl mb-4 hover:text-brand-amber transition-colors">The 5-Minute Manager</a>
 254:              <div class="space-y-2 text-sm text-slate-400 mb-6">
 255:                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber"></i> Manila</p>
@@ -243,7 +243,7 @@
 262:            </div>
 264:            <!-- Event 3: Productive Thinking -->
 265:            <div class="glass p-8 rounded-3xl border-brand-amber/20 hover:border-brand-amber/50 transition-all flex flex-col">
-266:              <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Oct 21-23, 2026 (Wed-Fri)</h4>
+266:              <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Jul 7-9, 2027 (Wed-Fri)</h4>
 267:              <a href="#productive-thinking" class="block text-white font-serif font-bold text-xl mb-4 hover:text-brand-amber transition-colors">Productive Thinking: Leading In High-Performance</a>
 268:              <div class="space-y-2 text-sm text-slate-400 mb-6">
 269:                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber"></i> Manila</p>
@@ -256,7 +256,7 @@
 276:            </div>
 278:            <!-- Event 4: Parenting Bacolod -->
 279:            <div class="glass p-8 rounded-3xl border-brand-amber/20 hover:border-brand-amber/50 transition-all flex flex-col">
-280:              <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Nov 7, 2026 (Saturday)</h4>
+280:              <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Jul 24, 2027 (Saturday)</h4>
 281:              <a href="#parenting" class="block text-white font-serif font-bold text-xl mb-4 hover:text-brand-amber transition-colors">Impactful Parenting & Educating Style</a>
 282:              <div class="space-y-2 text-sm text-slate-400 mb-6">
 283:                <p><i class="fa-solid fa-location-dot mr-2 text-brand-amber"></i> Bacolod</p>
@@ -289,7 +289,7 @@
 311:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Leslies</span>
 312:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">GSIS</span>
 313:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Citibank</span>
-314:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Nestlé</span>
+314:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Nestlï¿½</span>
 315:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Shell</span>
 316:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Microsoft</span>
 317:            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-400">Ateneo de Manila</span>
@@ -408,14 +408,14 @@
 434:          </div>
 435:        </div>
 436:      </section>
-438:      <!-- 3. TOUR 2026: THE INVESTMENT MATRIX -->
+438:      <!-- 3. TOUR 2027: THE INVESTMENT MATRIX -->
 439:      <!-- RENAMED TO COURSES TO PRESERVE CONTENT -->
 440:      <section id="courses" class="max-w-7xl mx-auto px-6 mb-20 mt-[120px]">
 441:        <div class="text-center space-y-8 mb-20">
 442:          <div
 443:            class="text-xs md:text-sm font-bold text-slate-500 uppercase tracking-[0.5em] font-sans"
 444:          >
-445:            The 2026 Transformation Tour
+445:            The 2027 Transformation Tour
 446:          </div>
 447:          <h2
 448:            class="text-4xl md:text-8xl font-serif font-bold text-white leading-tight"
@@ -486,16 +486,16 @@
 517:                <div class="bg-white/5 p-6 rounded-3xl border border-white/5">
 518:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Why it's worth it</h4>
 519:                    <p class="text-slate-300 text-sm leading-relaxed">
-520:                        This is a "clean-out" for your mental operating system. You will learn to think faster, see through vague language, and make decisions with a quiet confidence. Instead of being a victim of your thoughts, you’ll learn to direct them. It’s the difference between being overwhelmed by life and being the architect of your own solutions.
+520:                        This is a "clean-out" for your mental operating system. You will learn to think faster, see through vague language, and make decisions with a quiet confidence. Instead of being a victim of your thoughts, youï¿½ll learn to direct them. Itï¿½s the difference between being overwhelmed by life and being the architect of your own solutions.
 521:                    </p>
 522:                </div>
 524:                <div>
 525:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">What we'll cover</h4>
 526:                    <ul class="text-slate-400 space-y-2 text-sm">
-527:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">The Precision Funnel:</span> How to drill down to the actual facts in any conversation.</li>
-528:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">The 10 Cognitive Distortions:</span> Identifying the "glitches" in your brain that cause mistakes.</li>
-529:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">The Calm Mind:</span> Techniques to "step back" and look at your own thinking without getting triggered.</li>
-530:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">Mental Mapping:</span> How to build plans that actually survive contact with the real world.</li>
+527:                        <li class="flex gap-2"><span class="text-brand-amber">ï¿½</span> <span class="text-white font-bold">The Precision Funnel:</span> How to drill down to the actual facts in any conversation.</li>
+528:                        <li class="flex gap-2"><span class="text-brand-amber">ï¿½</span> <span class="text-white font-bold">The 10 Cognitive Distortions:</span> Identifying the "glitches" in your brain that cause mistakes.</li>
+529:                        <li class="flex gap-2"><span class="text-brand-amber">ï¿½</span> <span class="text-white font-bold">The Calm Mind:</span> Techniques to "step back" and look at your own thinking without getting triggered.</li>
+530:                        <li class="flex gap-2"><span class="text-brand-amber">ï¿½</span> <span class="text-white font-bold">Mental Mapping:</span> How to build plans that actually survive contact with the real world.</li>
 531:                    </ul>
 532:                </div>
 534:                <!-- IMAGE INJECTION -->
@@ -545,7 +545,7 @@
 580:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Target Audience</h4>
 581:                    <ul class="text-slate-400 space-y-2 text-sm">
 582:                        <li class="leading-relaxed"><span class="text-white font-bold">The "Babysitters":</span> Managers who spend all day solving their team's problems instead of their own.</li>
-583:                        <li class="leading-relaxed"><span class="text-white font-bold">Overwhelmed Supervisors:</span> Team leads who feel like they’re doing the work of three people.</li>
+583:                        <li class="leading-relaxed"><span class="text-white font-bold">Overwhelmed Supervisors:</span> Team leads who feel like theyï¿½re doing the work of three people.</li>
 584:                        <li class="leading-relaxed"><span class="text-white font-bold">Business Owners:</span> Leaders who want to delegate but feel they can't trust the results.</li>
 585:                        <li class="leading-relaxed"><span class="text-white font-bold">HR & Leaders:</span> Those looking for a way to drive performance that is both humane and highly effective.</li>
 586:                    </ul>
@@ -554,9 +554,9 @@
 590:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">The Reality Check (Pain Points)</h4>
 591:                    <ul class="text-slate-400 space-y-2 text-sm italic">
 592:                        <li><span class="text-slate-300 font-bold">Meeting Bloat:</span> Spending hours in syncs that yield zero accountability.</li>
-593:                        <li><span class="text-slate-300 font-bold">The Helper Trap:</span> You’re so busy "helping" that you’re staying late every night to finish your actual job.</li>
+593:                        <li><span class="text-slate-300 font-bold">The Helper Trap:</span> Youï¿½re so busy "helping" that youï¿½re staying late every night to finish your actual job.</li>
 594:                        <li><span class="text-slate-300 font-bold">Broken Records:</span> Having the same conversation about the same mistake for the third time this month.</li>
-595:                        <li><span class="text-slate-300 font-bold">Compliance vs. Commitment:</span> Your team does what they’re told, but they don't own the results.</li>
+595:                        <li><span class="text-slate-300 font-bold">Compliance vs. Commitment:</span> Your team does what theyï¿½re told, but they don't own the results.</li>
 596:                    </ul>
 597:                </div>
 598:              </div>
@@ -565,16 +565,16 @@
 602:                <div class="bg-white/5 p-6 rounded-3xl border border-white/5">
 603:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Why it's worth it</h4>
 604:                    <p class="text-slate-300 text-sm leading-relaxed">
-605:                        You will get at least 5 hours of your week back. You’ll stop "managing" people and start "facilitating" their performance. By learning to have surgical, 5-minute conversations, you force your team to think for themselves. You go from being the "solver" to being the leader who wins the minds and hearts of their people.
+605:                        You will get at least 5 hours of your week back. Youï¿½ll stop "managing" people and start "facilitating" their performance. By learning to have surgical, 5-minute conversations, you force your team to think for themselves. You go from being the "solver" to being the leader who wins the minds and hearts of their people.
 606:                    </p>
 607:                </div>
 609:                <div>
 610:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">What we'll cover</h4>
 611:                    <ul class="text-slate-400 space-y-2 text-sm">
-612:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">The 5-Minute Structure:</span> The exact script for a performance breakthrough conversation.</li>
-613:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">7 Meaning Detection Questions:</span> Probing the hidden reasons why people aren't performing.</li>
-614:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">Root Cause Diagnosis:</span> Learning to stop fixing symptoms and start fixing the real issue.</li>
-615:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">The Facilitation Shift:</span> Moving from "Command & Control" to "Performance Facilitator."</li>
+612:                        <li class="flex gap-2"><span class="text-brand-amber">ï¿½</span> <span class="text-white font-bold">The 5-Minute Structure:</span> The exact script for a performance breakthrough conversation.</li>
+613:                        <li class="flex gap-2"><span class="text-brand-amber">ï¿½</span> <span class="text-white font-bold">7 Meaning Detection Questions:</span> Probing the hidden reasons why people aren't performing.</li>
+614:                        <li class="flex gap-2"><span class="text-brand-amber">ï¿½</span> <span class="text-white font-bold">Root Cause Diagnosis:</span> Learning to stop fixing symptoms and start fixing the real issue.</li>
+615:                        <li class="flex gap-2"><span class="text-brand-amber">ï¿½</span> <span class="text-white font-bold">The Facilitation Shift:</span> Moving from "Command & Control" to "Performance Facilitator."</li>
 616:                    </ul>
 617:                </div>
 619:                <!-- IMAGE INJECTION -->
@@ -636,10 +636,10 @@
 678:                <div>
 679:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">The Reality Check (Pain Points)</h4>
 680:                    <ul class="text-slate-400 space-y-2 text-sm italic">
-681:                        <li><span class="text-slate-300 font-bold">The Shouting Match:</span> Every transition—from dinner to bedtime—feels like a full-blown battle of wills.</li>
+681:                        <li><span class="text-slate-300 font-bold">The Shouting Match:</span> Every transitionï¿½from dinner to bedtimeï¿½feels like a full-blown battle of wills.</li>
 682:                        <li><span class="text-slate-300 font-bold">The Digital Gap:</span> Feeling like you're losing your children to screens, social media, and hidden influences.</li>
 683:                        <li><span class="text-slate-300 font-bold">The Guilt Loop:</span> Losing your cool, feeling terrible afterward, then over-compensating with lax rules.</li>
-684:                        <li><span class="text-slate-300 font-bold">The Wall:</span> Talking to your child or teen and realizing they’ve totally tuned you out.</li>
+684:                        <li><span class="text-slate-300 font-bold">The Wall:</span> Talking to your child or teen and realizing theyï¿½ve totally tuned you out.</li>
 685:                    </ul>
 686:                </div>
 687:              </div>
@@ -648,16 +648,16 @@
 691:                <div class="bg-white/5 p-6 rounded-3xl border border-white/5">
 692:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">Why it's worth it</h4>
 693:                    <p class="text-slate-300 text-sm leading-relaxed">
-694:                        You’ll turn your house from a battlefield into a home. You will learn to build "psychological resilience" in your child so they can handle the world without breaking. Most importantly, you are building a relationship that will last for the next 40 years, based on respect and deep connection rather than just "getting them to obey."
+694:                        Youï¿½ll turn your house from a battlefield into a home. You will learn to build "psychological resilience" in your child so they can handle the world without breaking. Most importantly, you are building a relationship that will last for the next 40 years, based on respect and deep connection rather than just "getting them to obey."
 695:                    </p>
 696:                </div>
 698:                <div>
 699:                    <h4 class="text-brand-amber font-bold uppercase tracking-widest text-xs mb-4">What we'll cover</h4>
 700:                    <ul class="text-slate-400 space-y-2 text-sm">
-701:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">The Age Tracks:</span> Understanding the specific psychological needs from 0 to 18.</li>
-702:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">The Parent’s Circle of Excellence:</span> How to stay calm and resourceful when your kid is melting down.</li>
-703:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">Boundaries without Drama:</span> How to say "No" in a way that builds respect instead of resentment.</li>
-704:                        <li class="flex gap-2"><span class="text-brand-amber">•</span> <span class="text-white font-bold">Unleashing Genius:</span> Practical ways to build your child's self-esteem and love for learning.</li>
+701:                        <li class="flex gap-2"><span class="text-brand-amber">ï¿½</span> <span class="text-white font-bold">The Age Tracks:</span> Understanding the specific psychological needs from 0 to 18.</li>
+702:                        <li class="flex gap-2"><span class="text-brand-amber">ï¿½</span> <span class="text-white font-bold">The Parentï¿½s Circle of Excellence:</span> How to stay calm and resourceful when your kid is melting down.</li>
+703:                        <li class="flex gap-2"><span class="text-brand-amber">ï¿½</span> <span class="text-white font-bold">Boundaries without Drama:</span> How to say "No" in a way that builds respect instead of resentment.</li>
+704:                        <li class="flex gap-2"><span class="text-brand-amber">ï¿½</span> <span class="text-white font-bold">Unleashing Genius:</span> Practical ways to build your child's self-esteem and love for learning.</li>
 705:                    </ul>
 706:                </div>
 708:                <!-- IMAGE INJECTION (SIDE BY SIDE) -->
@@ -684,14 +684,14 @@
 731:-->
 733:<section id="tour" class="py-32 bg-[#0F172A] text-white">
 734:    <div class="container mx-auto px-10 text-center">
-735:        <p class="text-brand-amber font-bold text-xs uppercase tracking-[0.5em] mb-4">Transformation Tour 2026</p>
+735:        <p class="text-brand-amber font-bold text-xs uppercase tracking-[0.5em] mb-4">Transformation Tour 2027</p>
 736:        <h2 class="text-3xl md:text-5xl font-sans font-bold mb-10 text-white">Early Bird Tiers Payment Schedule</h2>
 737:        
 738:        <div class="grid lg:grid-cols-3 gap-10 text-left">
 739:            <!-- 1. PRODUCTIVE THINKING (18 Tiers) -->
 740:            <div class="glass p-10 rounded-[3rem] border-white/5 flex flex-col h-full">
 741:                <h3 class="text-2xl font-serif font-bold italic mb-2">Productive Thinking: Leading In High-Performance</h3>
-742:                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-6">Oct 21-23, 2026 • 9 AM - 5 PM • Manila</p>
+742:                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-6">Jul 7-9, 2027 ï¿½ 9 AM - 5 PM ï¿½ Manila</p>
 743:                <select class="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white font-bold text-sm mb-6" 
 744:                        onchange="this.parentElement.querySelector('.price-display').innerText = '?' + this.options[this.selectedIndex].getAttribute('data-price')">
 745:                    <optgroup label="Manila Track" class="bg-brand-navy">
@@ -736,7 +736,7 @@
 785:            <!-- 2. 5-MINUTE MANAGER (9 Tiers) -->
 786:            <div class="glass p-10 rounded-[3rem] border-white/5 flex flex-col h-full">
 787:                <h3 class="text-2xl font-serif font-bold italic mb-2">5 Minute Manager</h3>
-788:                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-6">Oct 26-29, 2026 • 9 AM - 5 PM • Manila</p>
+788:                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-6">Jul 12-15, 2027 ï¿½ 9 AM - 5 PM ï¿½ Manila</p>
 789:                <select class="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white font-bold text-sm mb-6" 
 790:                        onchange="this.parentElement.querySelector('.price-display').innerText = '?' + this.options[this.selectedIndex].getAttribute('data-price')">
 791:                    <optgroup label="Manila Track" class="bg-brand-navy">
@@ -770,7 +770,7 @@
 820:            <!-- 3. IMPACTFUL PARENTING (16 Tiers) -->
 821:            <div class="glass p-10 rounded-[3rem] border-white/5 flex flex-col h-full">
 822:                <h3 class="text-2xl font-serif font-bold italic mb-2">Impactful Parenting & Educating Style</h3>
-823:                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-6">Manila: Oct 24 • Bacolod: Nov 7 • 9 AM - 5 PM</p>
+823:                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-6">Manila: Oct 24 ï¿½ Bacolod: Nov 7 ï¿½ 9 AM - 5 PM</p>
 824:                <select class="w-full p-4 rounded-xl bg-white/5 border border-white/10 text-white font-bold text-sm mb-6" 
 825:                        onchange="this.parentElement.querySelector('.price-display').innerText = '?' + this.options[this.selectedIndex].getAttribute('data-price')">
 826:                    <optgroup label="Manila Track" class="bg-brand-navy">
@@ -962,9 +962,9 @@
 1020:        <div
 1021:          class="flex flex-col md:flex-row justify-between items-center gap-10 text-xs font-bold uppercase tracking-[0.6em] text-slate-700 font-sans"
 1022:        >
-1023:          <div>© 2026 BRKTHRU CO coaching & Consulting</div>
+1023:          <div>ï¿½ 2026 BRKTHRU CO coaching & Consulting</div>
 1024:          <div class="text-brand-amber/40">
-1025:            Visual Sovereignty Engine v1.0 • Static Hard-Wired
+1025:            Visual Sovereignty Engine v1.0 ï¿½ Static Hard-Wired
 1026:          </div>
 1027:        </div>
 1028:      </div>
@@ -973,7 +973,7 @@
 1034:    <script>
 1035:      // --- MODAL LOGIC: CLIENTS ---
 1036:      const allClients = [
-1037:          'Amazon Web Services', 'Ateneo de Manila', 'Citibank', 'DHL', 'DTI', 'Fujitsu', 'HP', 'Jollibee', "L'Oréal", 'Maersk', 'Metrobank', 'Microsoft', 'Nestlé', 'Pfizer', 'Shell', 'SM', 'Toyota', 'Unilever', 'Wyeth',
+1037:          'Amazon Web Services', 'Ateneo de Manila', 'Citibank', 'DHL', 'DTI', 'Fujitsu', 'HP', 'Jollibee', "L'Orï¿½al", 'Maersk', 'Metrobank', 'Microsoft', 'Nestlï¿½', 'Pfizer', 'Shell', 'SM', 'Toyota', 'Unilever', 'Wyeth',
 1038:          'Coca-Cola', 'PepsiCo', 'San Miguel Corp', 'Globe Telecom', 'Smart', 'BDO', 'BPI', 'Unionbank', 'Ayala Land', 'Megaworld', 'Robinsons Land', 'Shangri-La', 'Marriott', 'Accenture', 'IBM', 'Oracle', 'SAP', 'Salesforce', 'Google Philippines', 'Meta', 'Grab', 'Lazada', 'Shopee', 'Zalora', 'AirAsia', 'Cebu Pacific', 'PAL', 'Meralco', 'Maynilad', 'Petron', 'Phinma Properties', 'Leslies', 'GSIS', 'Pfizer Philippines', 'Thomson Reuters'
 1039:      ].sort();
 1041:      function openClientModal() {
@@ -999,7 +999,7 @@
 1063:          { name: 'Luzviminda Morales', role: 'HR Account Management, OD and Learning Talent Management', quote: "Aldem proposes Meta-Coaching as one of the effective and breakthrough interventions. Leaders, be ready for transformation that will benefit you and your team!", image: 'luzviminda morales.jpg' },
 1064:          { name: 'Angela Valenzuela', role: 'Talent and Acquisition Manager, Petron Corporation', quote: 'A great tool that develops bigger leaders and transforms organizations to reach their potentials. It is a pleasure partnering with you!', image: 'angela valenzuela.jpg' },
 1065:          { name: 'Marc V. Lopez', role: 'Vice President, University of Asia and the Pacific', quote: 'The world class coaching book of Aldem is so simple and practical - but powerful! We use it to coach both our elementary and high school students.', image: 'marc lopez.jpg' },
-1066:          { name: 'Marce Combe', role: 'HR Director, Manufacturing Corp', quote: 'Since we engaged Brkthru’s services we gained a business partner! ... Personally I am forever grateful I met Coach Aldem, Ms Vanessa and Ms. Virna.', image: 'marce combe.jpeg' },
+1066:          { name: 'Marce Combe', role: 'HR Director, Manufacturing Corp', quote: 'Since we engaged Brkthruï¿½s services we gained a business partner! ... Personally I am forever grateful I met Coach Aldem, Ms Vanessa and Ms. Virna.', image: 'marce combe.jpeg' },
 1067:          { name: 'Dan Gailo', role: 'National Sales Director, Distribution', quote: 'I would definitely highly recommend Brkthru because the discipline they adhere to is very structured and relevant.. They equip you with tools to deal with your daily real life challenges.', image: 'dan gailo.jpeg' },
 1068:          { name: 'Joy Cunita', role: "SVP, Gov't Sector", quote: 'Brkthru coaches are experts and show utmost love and passion for transforming organizations by creating breakthrough results.', image: 'joy cunita.jpeg' },
 1069:          { name: 'Jules Ganera', role: 'Client Partner', quote: "Brkthru goes out of its way to understand the org first... after hearing out the client, they align and collaborate.", image: 'jules ganera.png' },

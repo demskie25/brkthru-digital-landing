@@ -29,7 +29,7 @@
     <style>
       .glass {
         background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.05);
       }
     </style>
@@ -128,7 +128,7 @@
                 <div class="univ-currency">
                     <span class="active">USD</span> | <span>PHP</span>
                 </div>
-                <a href="index.html#tour" class="univ-btn-tour">TOUR 2026</a>
+                <a href="index.html#tour" class="univ-btn-tour">TOUR 2027</a>
             </div>
         </div>
     </nav>
@@ -167,7 +167,7 @@
 
     <div class="text-center space-y-4 mb-12">
         <h1 class="text-4xl md:text-5xl font-serif font-bold text-white italic">Reserve Your Seat</h1>
-        <p class="text-slate-400">Secure your spot for the 2026 Transformation Tour.</p>
+        <p class="text-slate-400">Secure your spot for the 2027 Transformation Tour.</p>
     </div>
 
     <div class="glass w-full max-w-2xl p-8 md:p-12 rounded-[3rem] shadow-2xl relative overflow-hidden">
@@ -220,7 +220,7 @@
             <div>
                 <label class="block text-xs font-bold uppercase tracking-widest text-brand-amber mb-2">Target Early Bird Deadline</label>
                 <p class="text-xs text-slate-500 mb-3">When do you intend to pay? We will remind you 1 week before, 4 days before, and on the day.</p>
-                <select name="targetDate" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-brand-amber transition-colors">
+                <select title="Select an option" name="targetDate" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-brand-amber transition-colors">
                     <option value="2026-02-15">Super Early Bird (Feb 15, 2026)</option>
                     <option value="2026-04-15">Early Bird 1 (Apr 15, 2026)</option>
                     <option value="2026-06-15">Early Bird 2 (Jun 15, 2026)</option>

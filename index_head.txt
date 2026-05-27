@@ -172,7 +172,7 @@
             <span class="h-px w-8 bg-brand-amber"></span>
             <span
               class="text-xs md:text-sm font-bold uppercase tracking-[0.6em] font-sans"
-              >The 2026 Transformation Tour</span
+              >The 2027 Transformation Tour</span
             >
             <span class="h-px w-8 bg-brand-amber"></span>
           </div>

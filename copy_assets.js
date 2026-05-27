@@ -21,8 +21,8 @@ const files = [
     "timeline_resilience_2020_pivot.png",
   ],
   [
-    "timeline_mountain_summit_2026_1768228745630.png",
-    "timeline_mountain_summit_2026.png",
+    "timeline_mountain_summit_2027_1768228745630.png",
+    "timeline_mountain_summit_2027.png",
   ],
 ];
 

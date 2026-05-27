@@ -55,7 +55,7 @@ const HEADER_TEMPLATE = `
                 <div class="univ-currency">
                     <span class="active">USD</span> | <span>PHP</span>
                 </div>
-                <a href="index.html#tour" class="univ-btn-tour">TOUR 2026</a>
+                <a href="index.html#tour" class="univ-btn-tour">TOUR 2027</a>
             </div>
         </div>
     </nav>
