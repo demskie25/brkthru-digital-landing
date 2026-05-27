@@ -52,37 +52,37 @@ import {
 const PRICING_DATA = {
     'tfh-mnl': {
         local: [
-            { label: 'Super Early Bird', price: 25000, deadline: '2026-03-31' },
-            { label: 'Early Bird 2', price: 28250, deadline: '2026-05-31' },
-            { label: 'Early Bird 3', price: 31500, deadline: '2026-07-31' },
-            { label: 'Early Bird 4', price: 34750, deadline: '2026-08-30' },
-            { label: 'Advance Rate', price: 36000, deadline: '2026-10-15' },
-            { label: 'Walk-in Rate', price: 38545, deadline: '2026-12-31' },
+            { label: 'Super Early Bird', price: 25000, deadline: '2027-03-31' },
+            { label: 'Early Bird 2', price: 28250, deadline: '2027-05-31' },
+            { label: 'Early Bird 3', price: 31500, deadline: '2027-07-31' },
+            { label: 'Early Bird 4', price: 34750, deadline: '2027-08-30' },
+            { label: 'Advance Rate', price: 36000, deadline: '2027-10-15' },
+            { label: 'Walk-in Rate', price: 38545, deadline: '2027-12-31' },
         ],
         intl: [
-            { label: 'Super Early Bird (USD)', price: 530, deadline: '2026-03-31' },
-            { label: 'Walk-in Rate (USD)', price: 815, deadline: '2026-12-31' },
+            { label: 'Super Early Bird (USD)', price: 530, deadline: '2027-03-31' },
+            { label: 'Walk-in Rate (USD)', price: 815, deadline: '2027-12-31' },
         ],
     },
     '5mm-mnl': {
         local: [
-            { label: 'Super Early Bird', price: 44000, deadline: '2026-03-31' },
-            { label: 'Regular Rate', price: 68000, deadline: '2026-12-31' },
+            { label: 'Super Early Bird', price: 44000, deadline: '2027-03-31' },
+            { label: 'Regular Rate', price: 68000, deadline: '2027-12-31' },
         ],
     },
     'coaching-bcd': {
-        local: [{ label: 'Flat Rate', price: 2000, deadline: '2026-12-31' }],
+        local: [{ label: 'Flat Rate', price: 2000, deadline: '2027-12-31' }],
     },
     'parenting-mnl': {
         local: [
-            { label: 'Super Early Bird', price: 1600, deadline: '2026-03-31' },
-            { label: 'Regular Rate', price: 2500, deadline: '2026-12-31' },
+            { label: 'Super Early Bird', price: 1600, deadline: '2027-03-31' },
+            { label: 'Regular Rate', price: 2500, deadline: '2027-12-31' },
         ],
     },
     'parenting-bcd': {
         local: [
-            { label: 'Super Early Bird', price: 1000, deadline: '2026-03-31' },
-            { label: 'Regular Rate', price: 1600, deadline: '2026-12-31' },
+            { label: 'Super Early Bird', price: 1000, deadline: '2027-03-31' },
+            { label: 'Regular Rate', price: 1600, deadline: '2027-12-31' },
         ],
     },
 };
@@ -132,7 +132,7 @@ const WORKSHOPS = [
         id: '5mm-mnl',
         title: 'The 5-Minute Manager',
         city: 'Manila',
-        date: 'Oct 26-29, 2026',
+        date: 'Jul 12-15, 2027',
         duration: '4 Days',
         icon: <Briefcase className="text-emerald-600" />,
         image: '5mm.jpg',
@@ -162,7 +162,7 @@ const WORKSHOPS = [
         id: 'parenting-mnl',
         title: 'Impactful Parenting for Leaders',
         city: 'Manila',
-        date: 'Oct 24, 2026',
+        date: 'Jul 10, 2027',
         duration: '1 Day',
         icon: <Heart className="text-pink-500" />,
         image: 'parenting.jpg',
@@ -173,7 +173,7 @@ const WORKSHOPS = [
         id: 'parenting-bcd',
         title: 'Impactful Parenting for Leaders',
         city: 'Bacolod',
-        date: 'Nov 7, 2026',
+        date: 'Jul 24, 2027',
         duration: '1 Day',
         icon: <Heart className="text-pink-600" />,
         image: 'parenting.jpg',
@@ -275,7 +275,7 @@ const TIMELINE_ERAS = [
         year: '2026',
         tag: 'The Transformation Tour',
         desc: 'Dr. L. Michael Hall joins for a 3-hub tour in Bacolod, Manila, and the Metaverse.',
-        image: 'timeline_mountain_summit_2026.png',
+        image: 'timeline_mountain_summit_2027.png',
         reverse: false,
     },
 ];
@@ -421,7 +421,7 @@ const DashboardView = ({ navigate }) => {
                         <div className="flex items-center gap-6 text-amber-500">
                             <Activity size={20} />
                             <span className="text-[12px] font-bold uppercase tracking-[0.6em] font-sans">
-                                The 2026 Transformation Tour
+                                The 2027 Transformation Tour
                             </span>
                         </div>
                         <h1 className="text-6xl md:text-9xl font-serif font-bold leading-[0.85] pr-12">
@@ -1023,7 +1023,7 @@ export default function App() {
                                 onClick={() => setDropdownOpen(!dropdownOpen)}
                                 className={`flex items-center gap-4 transition-all hover:text-amber-600 ${currentView?.includes('workshop') ? 'text-amber-600' : 'text-slate-400'}`}
                             >
-                                Tour 2026 <ChevronDown size={14} />
+                                Tour 2027 <ChevronDown size={14} />
                             </button>
                             {dropdownOpen && (
                                 <div className="absolute top-full right-0 w-96 bg-white shadow-3xl rounded-[4rem] p-10 mt-8 border border-slate-100 animate-in fade-in zoom-in duration-200 z-[300]">
@@ -1124,7 +1124,7 @@ export default function App() {
                                         Digital Shop
                                     </button>
                                     <button onClick={() => navigate('home')} className="hover:text-amber-500 text-left">
-                                        Tour 2026
+                                        Tour 2027
                                     </button>
                                 </div>
                             </div>
@@ -1148,7 +1148,7 @@ export default function App() {
                     </div>
 
                     <div className="flex flex-col md:flex-row justify-between items-center gap-10 text-xs font-black uppercase tracking-[0.4em] text-slate-600 font-sans">
-                        <div>© 2026 BRKTHRU CO coaching & Consulting</div>
+                        <div>© 2027 BRKTHRU CO coaching & Consulting</div>
                         <div className="flex gap-12">
                             <span>Privacy Policy</span>
                             <span>Direct Secure Gateway</span>

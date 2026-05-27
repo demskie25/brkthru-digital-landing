@@ -51,22 +51,22 @@ const PRICING_MATRIX = {
         local: {
             currency: 'PHP',
             tiers: [
-                { price: 25000, deadline: '2026-03-31', label: 'Mar 31' },
-                { price: 28250, deadline: '2026-05-31', label: 'May 31' },
-                { price: 31500, deadline: '2026-07-31', label: 'Jul 31' },
-                { price: 34750, deadline: '2026-08-30', label: 'Aug 30' },
-                { price: 36000, deadline: '2026-10-15', label: 'Oct 15' },
+                { price: 25000, deadline: '2027-03-31', label: 'Mar 31' },
+                { price: 28250, deadline: '2027-05-31', label: 'May 31' },
+                { price: 31500, deadline: '2027-07-31', label: 'Jul 31' },
+                { price: 34750, deadline: '2027-08-30', label: 'Aug 30' },
+                { price: 36000, deadline: '2027-10-15', label: 'Oct 15' },
             ],
             walkIn: 38545,
         },
         international: {
             currency: 'USD',
             tiers: [
-                { price: 530, deadline: '2026-03-31', label: 'Mar 31' },
-                { price: 600, deadline: '2026-05-31', label: 'May 31' },
-                { price: 665, deadline: '2026-07-31', label: 'Jul 31' },
-                { price: 735, deadline: '2026-08-30', label: 'Aug 30' },
-                { price: 760, deadline: '2026-10-15', label: 'Oct 15' },
+                { price: 530, deadline: '2027-03-31', label: 'Mar 31' },
+                { price: 600, deadline: '2027-05-31', label: 'May 31' },
+                { price: 665, deadline: '2027-07-31', label: 'Jul 31' },
+                { price: 735, deadline: '2027-08-30', label: 'Aug 30' },
+                { price: 760, deadline: '2027-10-15', label: 'Oct 15' },
             ],
             walkIn: 815,
         },
@@ -80,22 +80,22 @@ const PRICING_MATRIX = {
         local: {
             currency: 'PHP',
             tiers: [
-                { price: 44000, deadline: '2026-03-31', label: 'Mar 31' },
-                { price: 49900, deadline: '2026-05-31', label: 'May 31' },
-                { price: 55500, deadline: '2026-07-31', label: 'Jul 31' },
-                { price: 61250, deadline: '2026-08-30', label: 'Aug 30' },
-                { price: 63500, deadline: '2026-10-15', label: 'Oct 15' },
+                { price: 44000, deadline: '2027-03-31', label: 'Mar 31' },
+                { price: 49900, deadline: '2027-05-31', label: 'May 31' },
+                { price: 55500, deadline: '2027-07-31', label: 'Jul 31' },
+                { price: 61250, deadline: '2027-08-30', label: 'Aug 30' },
+                { price: 63500, deadline: '2027-10-15', label: 'Oct 15' },
             ],
             walkIn: 68000,
         },
         international: {
             currency: 'USD',
             tiers: [
-                { price: 790, deadline: '2026-03-31', label: 'Mar 31' },
-                { price: 890, deadline: '2026-05-31', label: 'May 31' },
-                { price: 990, deadline: '2026-07-31', label: 'Jul 31' },
-                { price: 1090, deadline: '2026-08-30', label: 'Aug 30' },
-                { price: 1135, deadline: '2026-10-15', label: 'Oct 15' },
+                { price: 790, deadline: '2027-03-31', label: 'Mar 31' },
+                { price: 890, deadline: '2027-05-31', label: 'May 31' },
+                { price: 990, deadline: '2027-07-31', label: 'Jul 31' },
+                { price: 1090, deadline: '2027-08-30', label: 'Aug 30' },
+                { price: 1135, deadline: '2027-10-15', label: 'Oct 15' },
             ],
             walkIn: 1215,
         },
@@ -104,9 +104,9 @@ const PRICING_MATRIX = {
         local: {
             currency: 'PHP',
             tiers: [
-                { price: 1600, deadline: '2026-03-31', label: 'Mar 31' },
-                { price: 1800, deadline: '2026-05-31', label: 'May 31' },
-                { price: 2000, deadline: '2026-07-31', label: 'Jul 31' },
+                { price: 1600, deadline: '2027-03-31', label: 'Mar 31' },
+                { price: 1800, deadline: '2027-05-31', label: 'May 31' },
+                { price: 2000, deadline: '2027-07-31', label: 'Jul 31' },
                 { price: 2300, deadline: '2026-09-15', label: 'Sep 15' },
                 { price: 2500, deadline: '2026-10-24', label: 'Oct 24' },
             ],
@@ -117,9 +117,9 @@ const PRICING_MATRIX = {
         local: {
             currency: 'PHP',
             tiers: [
-                { price: 1000, deadline: '2026-03-31', label: 'Mar 31' },
-                { price: 1150, deadline: '2026-05-31', label: 'May 31' },
-                { price: 1300, deadline: '2026-07-31', label: 'Jul 31' },
+                { price: 1000, deadline: '2027-03-31', label: 'Mar 31' },
+                { price: 1150, deadline: '2027-05-31', label: 'May 31' },
+                { price: 1300, deadline: '2027-07-31', label: 'Jul 31' },
                 { price: 1450, deadline: '2026-09-15', label: 'Sep 15' },
                 { price: 1600, deadline: '2026-11-07', label: 'Nov 07' },
             ],
@@ -152,7 +152,7 @@ const WORKSHOPS = [
     {
         id: 'parenting-mnl',
         title: 'Impactful Parenting (Manila)',
-        date: 'OCTOBER 24, 2026',
+        date: 'July 10, 2027',
         location: 'QUEZON CITY',
         type: 'Family',
         img: 'parenting_hero.png',
@@ -162,7 +162,7 @@ const WORKSHOPS = [
     {
         id: 'parenting-bcd',
         title: 'Impactful Parenting (Bacolod)',
-        date: 'NOVEMBER 7, 2026',
+        date: 'July 24, 2027',
         location: 'BACOLOD CITY',
         type: 'Family',
         img: 'parenting_hero_bcd.png',
@@ -478,7 +478,7 @@ export default function App() {
                         <img src="brkthru logo.png" alt="Brkthru" className="h-10 w-auto" />
                         <div className="h-8 w-px bg-white/10 hidden sm:block"></div>
                         <span className="text-[11px] font-black uppercase tracking-[0.5em] text-amber-500 hidden sm:block">
-                            Tour 2026
+                            Tour 2027
                         </span>
                     </div>
 
@@ -553,7 +553,7 @@ export default function App() {
                                     <div className="inline-flex items-center gap-4 px-10 py-4 rounded-full bg-slate-900 border border-white/10 backdrop-blur-3xl shadow-2xl">
                                         <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
                                         <span className="text-[10px] font-black uppercase tracking-[0.8em] text-amber-500">
-                                            Dr. Michael Hall • Philippine 2026 Tour
+                                            Dr. Michael Hall • Philippine 2027 Tour
                                         </span>
                                     </div>
                                 </div>
@@ -958,7 +958,7 @@ export default function App() {
                     <div className="pt-20 border-t border-white/5 flex flex-col lg:flex-row justify-between items-center gap-16">
                         <div className="flex items-center gap-12">
                             <p className="text-[11px] font-black text-white/10 uppercase tracking-[0.6em]">
-                                © 2026 Brkthru Ventures Inc.
+                                © 2027 Brkthru Ventures Inc.
                             </p>
                             <div className="hidden lg:block h-6 w-px bg-white/5"></div>
                             <p className="text-[10px] font-black text-white/5 uppercase tracking-[0.8em]">

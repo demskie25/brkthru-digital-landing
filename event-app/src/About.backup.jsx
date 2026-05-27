@@ -20,40 +20,40 @@ const HITPAY_KEY = "live_a100d3b939e8aa5517ff5ea077e6051e397f1d889ee417589b4e757
 const PRICING_TIERS = {
   'tfh-mnl': {
     local: [
-      { price: 25000, deadline: '2026-03-31', label: 'Super Early Bird' },
-      { price: 28250, deadline: '2026-05-31', label: 'Early Bird 2' },
-      { price: 31500, deadline: '2026-07-31', label: 'Early Bird 3' },
-      { price: 34750, deadline: '2026-08-30', label: 'Early Bird 4' },
-      { price: 36000, deadline: '2026-10-15', label: 'Advance Rate' },
-      { price: 38545, deadline: '2026-12-31', label: 'Walk-in Rate' }
+      { price: 25000, deadline: '2027-03-31', label: 'Super Early Bird' },
+      { price: 28250, deadline: '2027-05-31', label: 'Early Bird 2' },
+      { price: 31500, deadline: '2027-07-31', label: 'Early Bird 3' },
+      { price: 34750, deadline: '2027-08-30', label: 'Early Bird 4' },
+      { price: 36000, deadline: '2027-10-15', label: 'Advance Rate' },
+      { price: 38545, deadline: '2027-12-31', label: 'Walk-in Rate' }
     ],
     intl: [
-      { price: 530, deadline: '2026-03-31', label: 'Super Early Bird' },
-      { price: 600, deadline: '2026-05-31', label: 'Early Bird 2' },
-      { price: 665, deadline: '2026-07-31', label: 'Early Bird 3' },
-      { price: 735, deadline: '2026-08-30', label: 'Early Bird 4' },
-      { price: 760, deadline: '2026-10-15', label: 'Advance Rate' },
-      { price: 815, deadline: '2026-12-31', label: 'Walk-in Rate' }
+      { price: 530, deadline: '2027-03-31', label: 'Super Early Bird' },
+      { price: 600, deadline: '2027-05-31', label: 'Early Bird 2' },
+      { price: 665, deadline: '2027-07-31', label: 'Early Bird 3' },
+      { price: 735, deadline: '2027-08-30', label: 'Early Bird 4' },
+      { price: 760, deadline: '2027-10-15', label: 'Advance Rate' },
+      { price: 815, deadline: '2027-12-31', label: 'Walk-in Rate' }
     ],
     ns: [{ price: 18000, label: 'NS Registered PH 2026' }, { price: 20000, label: 'NS Non-Registered PH' }]
   },
   '5mm-mnl': {
     local: [
-      { price: 44000, deadline: '2026-03-31', label: 'Super Early Bird' },
-      { price: 49900, deadline: '2026-05-31', label: 'Early Bird 2' },
-      { price: 68000, deadline: '2026-12-31', label: 'Walk-in Rate' }
+      { price: 44000, deadline: '2027-03-31', label: 'Super Early Bird' },
+      { price: 49900, deadline: '2027-05-31', label: 'Early Bird 2' },
+      { price: 68000, deadline: '2027-12-31', label: 'Walk-in Rate' }
     ],
     intl: [
-      { price: 790, deadline: '2026-03-31', label: 'Super Early Bird' },
-      { price: 890, deadline: '2026-05-31', label: 'Early Bird 2' },
-      { price: 1215, deadline: '2026-12-31', label: 'Walk-in Rate' }
+      { price: 790, deadline: '2027-03-31', label: 'Super Early Bird' },
+      { price: 890, deadline: '2027-05-31', label: 'Early Bird 2' },
+      { price: 1215, deadline: '2027-12-31', label: 'Walk-in Rate' }
     ]
   },
   'parenting-mnl': {
-    local: [{ price: 1600, deadline: '2026-03-31', label: 'Super Early Bird' }, { price: 2500, label: 'Walk-in Rate' }]
+    local: [{ price: 1600, deadline: '2027-03-31', label: 'Super Early Bird' }, { price: 2500, label: 'Walk-in Rate' }]
   },
   'parenting-bcd': {
-    local: [{ price: 1000, deadline: '2026-03-31', label: 'Super Early Bird' }, { price: 1600, label: 'Walk-in Rate' }]
+    local: [{ price: 1000, deadline: '2027-03-31', label: 'Super Early Bird' }, { price: 1600, label: 'Walk-in Rate' }]
   },
   'coaching-bcd': {
     local: [{ price: 2000, label: 'Flat Rate' }]
@@ -87,7 +87,7 @@ const WORKSHOPS = [
     id: '5mm-mnl', 
     title: "The 5-Minute Manager", 
     city: "Manila", 
-    date: "Oct 26-29, 2026", 
+    date: "Jul 12-15, 2027", 
     duration: "4 Days", 
     icon: <Briefcase className="text-emerald-600" />, 
     hook: "Managing People, Not Just Tasks.",
@@ -104,7 +104,7 @@ const WORKSHOPS = [
     id: 'parenting-mnl', 
     title: "Impactful Parenting for Leaders (Manila)", 
     city: "Manila", 
-    date: "Oct 24, 2026", 
+    date: "Jul 10, 2027", 
     duration: "1 Day", 
     icon: <Heart className="text-pink-500" />, 
     hook: "Leadership that Starts at Home.",
@@ -120,7 +120,7 @@ const WORKSHOPS = [
     id: 'parenting-bcd', 
     title: "Impactful Parenting for Leaders (Bacolod)", 
     city: "Bacolod", 
-    date: "Nov 7, 2026", 
+    date: "Jul 24, 2027", 
     duration: "1 Day", 
     icon: <Heart className="text-pink-600" />, 
     hook: "Empower Your Family Legacy in the City of Smiles.",
@@ -257,7 +257,7 @@ const AboutView = ({ navigate }) => (
             { year: '1999', tag: 'The DNA Build', byline: '"SLTC Founding"', desc: 'Integrating the wisdom of Covey and Maxwell into a managerial architecture for local businesses.', img: 'timeline_dna_build_1999.png', reverse: true },
             { year: '2013-18', tag: 'The Precision Era', byline: '"Mastering Performance"', desc: 'A 5-year partnership to certify the highest standard of international coaching in Southeast Asia.', img: 'timeline_integration_2014_2018.png' },
             { year: '2020', tag: 'The Digital Pivot', byline: '"Resilience"', desc: 'Scaling high-performance thinking to digital landscapes during the global shift.', img: 'timeline_resilience_2020_pivot.png', reverse: true },
-            { year: '2026', tag: 'The Next Horizon', byline: '"MasterClass Philippines"', desc: 'The 2026 Transformation Tour bringing world-class behavioral precision to major hubs.', img: 'timeline_mountain_summit_2026.png' }
+            { year: '2026', tag: 'The Next Horizon', byline: '"MasterClass Philippines"', desc: 'The 2027 Transformation Tour bringing world-class behavioral precision to major hubs.', img: 'timeline_mountain_summit_2027.png' }
           ].map((m, i) => (
             <div key={i} className={`grid lg:grid-cols-2 gap-20 items-center relative z-10 ${m.reverse ? 'lg:flex-row-reverse' : ''}`}>
                <div className={`rounded-[3rem] overflow-hidden shadow-2xl aspect-video relative group border border-slate-100 ${m.reverse ? 'lg:order-2' : ''}`}>
@@ -369,7 +369,7 @@ const ResourcesView = ({ onNavigate }) => (
         <div className="bg-slate-900 text-white p-12 rounded-[4rem] space-y-6 shadow-xl">
            <Zap className="text-amber-500" size={40} />
            <h3 className="text-3xl font-serif font-bold text-white">Client Portal Access</h3>
-           <p className="text-slate-400 leading-relaxed font-serif text-lg">Secure access for organizations currently undergoing the 2026 Transformation cycle.</p>
+           <p className="text-slate-400 leading-relaxed font-serif text-lg">Secure access for organizations currently undergoing the 2027 Transformation cycle.</p>
            <Button variant="accent" onClick={() => window.open('mailto:brkthrucares@gmail.com?subject=Portal Access Request', '_blank')}>Submit Access Request</Button>
         </div>
       </div>
@@ -579,7 +579,7 @@ export default function App() {
             
             <div className="relative font-sans font-bold">
               <button onClick={() => setDropdownOpen(!dropdownOpen)} className={`text-[11px] font-black uppercase tracking-[0.4em] flex items-center gap-3 ${currentView.includes('workshop') ? 'text-amber-600' : 'text-slate-400'}`}>
-                Tour 2026 <ChevronDown size={14} className={`transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                Tour 2027 <ChevronDown size={14} className={`transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               {dropdownOpen && (
                 <div className="absolute top-full left-0 w-96 bg-white shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] rounded-[3rem] p-8 mt-6 border border-slate-100 animate-in fade-in zoom-in duration-200 z-[200]">
@@ -628,7 +628,7 @@ export default function App() {
                <a href="https://facebook.com/brkthrucentre" target="_blank" className="hover:text-amber-500 transition-colors">fb/brkthrucentre</a>
              </div>
              <div className="text-right space-y-3 text-slate-600 font-bold uppercase tracking-widest font-sans">
-               © 2026 BRKTHRU CO coaching & Consulting <br/>
+               © 2027 BRKTHRU CO coaching & Consulting <br/>
                Bacolod • Manila • International
              </div>
           </div>
