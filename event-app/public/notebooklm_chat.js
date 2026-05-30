@@ -14,7 +14,7 @@ document.addEventListener('alpine:init', () => {
         sources: [
             { id: 1, name: 'meta-coaching', active: true, url: '#' },
             { id: 2, name: 'Neuro-Semantics', active: true, url: '#' },
-            { id: 3, name: 'hall workshops 2026', active: true, url: '#' },
+            { id: 3, name: 'hall workshops 2027', active: true, url: '#' },
             { id: 4, name: 'digital business', active: true, url: '#' }
         ],
         selectedNotebook: 'meta-coaching',

@@ -105,7 +105,7 @@ const WORKSHOPS = [
         id: 'tfh-mnl',
         title: 'Brain Camp: High-Performance Thinking',
         city: 'Manila',
-        date: 'Nov 3-5, 2026',
+        date: 'Jul 7-9, 2027',
         duration: '3 Days',
         icon: <Brain className="text-purple-500" />,
         image: 'thinking.jpg',
@@ -150,7 +150,7 @@ const WORKSHOPS = [
         id: 'coaching-bcd',
         title: 'Executive Facilitation Overview',
         city: 'Bacolod',
-        date: 'Oct 22, 2026',
+        date: 'Oct 22, 2027',
         duration: '4 Hours (Dinner Session)',
         icon: <Target className="text-blue-500" />,
         image: 'thinking.jpg',
@@ -272,7 +272,7 @@ const TIMELINE_ERAS = [
         reverse: true,
     },
     {
-        year: '2026',
+        year: '2027',
         tag: 'The Transformation Tour',
         desc: 'Dr. L. Michael Hall joins for a 3-hub tour in Bacolod, Manila, and the Metaverse.',
         image: 'timeline_mountain_summit_2027.png',
@@ -511,7 +511,7 @@ const DashboardView = ({ navigate }) => {
             <div className="space-y-16">
                 <div className="flex justify-between items-end border-b border-slate-100 pb-12">
                     <div className="space-y-4">
-                        <h2 className="text-5xl font-serif font-bold text-slate-900">Tour Itinerary 2026</h2>
+                        <h2 className="text-5xl font-serif font-bold text-slate-900">Tour Itinerary 2027</h2>
                         <p className="text-slate-400 font-sans font-bold uppercase tracking-widest text-xs">
                             Direct static mapping • Zero redirection errors
                         </p>
