@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Leading Change Leadership Profile Assessment | Breakthrough Coaching</title>
+
+<!-- html2pdf.js CDN for client-side PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+  :root {
+    --primary: #0f2c59;
+    --primary-light: #1e56a0;
+    --accent: #d97706;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --success: #15803d;
+    --warn: #b45309;
+    --danger: #b91c1c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
+  body { background: var(--bg); color: var(--text); padding: 24px 16px; line-height: 1.5; }
+  .container { max-width: 820px; margin: 0 auto; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 32px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 24px; }
+  
+  .header-brand { font-size: 0.85rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  h1 { font-size: 1.65rem; color: var(--primary); margin-bottom: 6px; }
+  p.subtitle { color: var(--text-muted); margin-bottom: 24px; font-size: 0.95rem; }
+  
+  .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  @media (max-width: 600px) { .profile-grid { grid-template-columns: 1fr; } }
+  .form-group { display: flex; flex-direction: column; }
+  .form-group label { font-size: 0.85rem; font-weight: 600; color: var(--primary); margin-bottom: 6px; }
+  .form-group input { padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; outline: none; }
+  .form-group input:focus { border-color: var(--primary-light); box-shadow: 0 0 0 2px rgba(30, 86, 160, 0.15); }
+
+  .mode-selector { background: #f1f5f9; padding: 16px; border-radius: 8px; margin-bottom: 24px; border: 1px solid var(--border); }
+  .mode-selector label.title { font-weight: 700; color: var(--primary); display: block; margin-bottom: 8px; font-size: 0.9rem; }
+  .mode-options { display: flex; gap: 12px; }
+  @media (max-width: 600px) { .mode-options { flex-direction: column; gap: 8px; } }
+  .mode-option { flex: 1; display: flex; align-items: center; gap: 8px; background: #fff; padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+  .mode-option input { cursor: pointer; }
+
+  .progress-bar-container { background: var(--border); height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 24px; }
+  .progress-bar { background: var(--primary-light); height: 100%; width: 0%; transition: width 0.3s ease; }
+  
+  .question-item { margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid #f1f5f9; }
+  .question-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .question-text { font-size: 0.98rem; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+  
+  .options-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .option-btn { border: 1px solid var(--border); background: #f8fafc; padding: 10px 4px; text-align: center; border-radius: 8px; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; }
+  .option-btn:hover { background: #e2e8f0; }
+  .option-btn.selected { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+  
+  .btn-submit { width: 100%; background: var(--primary); color: white; border: none; padding: 14px 20px; font-size: 1.05rem; font-weight: 600; border-radius: 8px; cursor: pointer; margin-top: 24px; transition: background 0.2s; }
+  .btn-submit:hover { background: var(--primary-light); }
+  
+  .hidden { display: none; }
+  
+  .badge { display: inline-block; padding: 4px 12px; border-radius: 9999px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+  .badge-master { background: #dcfce7; color: var(--success); }
+  .badge-leader { background: #dbeafe; color: var(--primary-light); }
+  .badge-agent { background: #fef3c7; color: var(--warn); }
+  .badge-routine { background: #fee2e2; color: var(--danger); }
+  .badge-theory { background: #f3e8ff; color: #6b21a8; }
+  
+  .kotter-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 0.88rem; }
+  .kotter-table th, .kotter-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  .kotter-table th { background: #f8fafc; font-weight: 600; color: var(--text); }
+  
+  .status-tag { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
+  .status-strength { background: #dcfce7; color: #166534; }
+  .status-focus { background: #fee2e2; color: #991b1b; }
+  .status-moderate { background: #fef3c7; color: #854d0e; }
+  
+  .recommendation-box { background: #f8fafc; border-left: 4px solid var(--primary-light); padding: 16px; border-radius: 0 8px 8px 0; margin-top: 20px; }
+  .recommendation-box h4 { font-size: 1rem; color: var(--primary); margin-bottom: 8px; }
+  .recommendation-box ul { padding-left: 20px; font-size: 0.9rem; color: var(--text); }
+  .recommendation-box li { margin-bottom: 6px; }
+  
+  .actions-container { display: flex; gap: 12px; margin-top: 24px; }
+  .btn-pdf { flex: 2; background: var(--success); color: white; border: none; padding: 12px 20px; font-size: 0.95rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
+  .btn-pdf:hover { background: #166534; }
+  .btn-restart { flex: 1; background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 12px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+  .btn-restart:hover { background: #f1f5f9; }
+
+  .pdf-header { display: none; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Assessment Suite Sub-Category Navigation Header -->
+  <div class="assessment-header-bar" style="background:#ffffff; border:1px solid var(--border); border-radius:12px; padding:16px 24px; margin-bottom:20px; box-shadow:0 2px 4px rgba(0,0,0,0.03);">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+      <div>
+        <span style="font-size:0.75rem; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.05em;">Breakthrough Assessment Suite</span>
+        <h2 style="font-size:1.15rem; color:var(--primary); font-weight:700; margin-top:2px;">Executive & Organizational Diagnostics</h2>
+      </div>
+      <div class="subcategories-nav" style="display:flex; gap:8px; flex-wrap:wrap;">
+        <span style="padding:6px 14px; border-radius:20px; font-size:0.8rem; font-weight:600; background:#f1f5f9; color:var(--text-muted);">Enneagram & Personality</span>
+        <span style="padding:6px 14px; border-radius:20px; font-size:0.8rem; font-weight:700; background:var(--primary); color:#ffffff;">Change Leadership & Transformation</span>
+        <span style="padding:6px 14px; border-radius:20px; font-size:0.8rem; font-weight:600; background:#f1f5f9; color:var(--text-muted);">Coaching & NLP Diagnostics</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Questionnaire View -->
+  <div class="card" id="quizCard">
+    <div class="header-brand">Breakthrough Coaching & Consulting</div>
+    <h1>Change Leadership Profile Diagnostic</h1>
+    <p class="subtitle">An evidence-based diagnostic evaluating individual and project-level change capability based on Kotter's 8-Step Framework.</p>
+    
+    <div class="profile-grid">
+      <div class="form-group">
+        <label for="userName">Participant Full Name *</label>
+        <input type="text" id="userName" placeholder="e.g. Maria Santos" required />
+      </div>
+      <div class="form-group">
+        <label for="userRole">Designation / Bureau / Division *</label>
+        <input type="text" id="userRole" placeholder="e.g. Division Chief, DTI Region VI" required />
+      </div>
+    </div>
+
+    <div class="mode-selector">
+      <label class="title">Select Diagnostic Evaluation Context:</label>
+      <div class="mode-options">
+        <label class="mode-option">
+          <input type="radio" name="evalMode" value="project" checked>
+          In-Flight Change Project / Initiative
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="evalMode" value="general">
+          General Change Leadership Profile
+        </label>
+      </div>
+    </div>
+
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
+    <div id="questionsContainer"></div>
+    <button class="btn-submit" id="submitBtn" onclick="calculateResults()">Generate My Leadership Diagnostic</button>
+  </div>
+
+  <!-- Diagnostic Results View -->
+  <div class="card hidden" id="resultsCard">
+    <div id="pdfContent">
+      <div class="pdf-header" id="pdfHeader">
+        <h2 style="color: var(--primary); font-size: 1.3rem;">Breakthrough Coaching & Consulting</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Executive Assessment & Organizational Development Services</p>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+        <div>
+          <h2 id="outName" style="color: var(--primary); font-size: 1.3rem;"></h2>
+          <p id="outRole" style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600;"></p>
+        </div>
+        <div style="text-align: right;">
+          <p id="outDate" style="font-size: 0.8rem; color: var(--text-muted);"></p>
+          <p id="outContext" style="font-size: 0.8rem; font-weight: 700; color: var(--accent);"></p>
+        </div>
+      </div>
+
+      <div id="tierBadge"></div>
+      <h1 id="tierTitle"></h1>
+      <p id="tierDescription" style="margin-bottom: 20px; font-size: 0.95rem; color: var(--text);"></p>
+
+      <!-- Next Level Recommendations -->
+      <div class="recommendation-box" id="nextLevelBox">
+        <h4 id="recHeader">Next-Level Growth Roadmap</h4>
+        <ul id="recList"></ul>
+      </div>
+
+      <!-- Kotter 8-Step Breakdown -->
+      <h3 style="margin-top: 28px; font-size: 1.1rem; color: var(--primary);">Kotter's 8-Step Proficiency & Priority Breakdown</h3>
+      <p style="font-size: 0.82rem; color: var(--text-muted);">Scores are rated from 1.0 to 5.0 to identify operational strengths versus systemic blind spots.</p>
+      
+      <table class="kotter-table">
+        <thead>
+          <tr>
+            <th>Kotter Step</th>
+            <th>Score</th>
+            <th>Diagnostic Focus</th>
+          </tr>
+        </thead>
+        <tbody id="kotterTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="actions-container">
+      <button class="btn-pdf" onclick="downloadPDF()">Download / Save PDF Report</button>
+      <button class="btn-restart" onclick="restartQuiz()">Retake Assessment</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  // Tier 1: Change Agent (Steps 1 & 2)
+  { id: 1, step: 1, tier: 1, text: "I willingly adjust my daily routines and step out of comfort zones to adapt to operational changes." },
+  { id: 2, step: 1, tier: 1, text: "I openly identify and communicate practical workflow risks and service bottlenecks to my team." },
+  { id: 3, step: 2, tier: 1, text: "I actively cooperate and build mutual trust with colleagues across units during trial rollouts." },
+  { id: 4, step: 2, tier: 1, text: "I step up as an active champion of public service improvements rather than waiting for top mandates." },
+
+  // Tier 2: Change Leader (Steps 3, 4, 5, 6)
+  { id: 5, step: 3, tier: 2, text: "I translate high-level agency directives into clear, realistic weekly work plans for my unit." },
+  { id: 6, step: 3, tier: 2, text: "I explain the practical benefits of transformation to staff and external clients to secure buy-in." },
+  { id: 7, step: 4, tier: 2, text: "I maintain active communication across multiple channels to resolve doubts and encourage participation." },
+  { id: 8, step: 4, tier: 2, text: "I appeal to both public service purpose (heart) and operational logic (head) to mobilize peers." },
+  { id: 9, step: 5, tier: 2, text: "I identify and recommend removing obsolete bureaucratic rules and procedural roadblocks." },
+  { id: 10, step: 5, tier: 2, text: "I coach hesitant employees through transition anxiety and assist them in mastering new skills." },
+  { id: 11, step: 6, tier: 2, text: "I deliberately structure and track early, quick-win milestones to demonstrate visible progress." },
+  { id: 12, step: 6, tier: 2, text: "I leverage short-term wins to address resistance and build momentum across the office." },
+
+  // Tier 3: Change Master (Steps 7 & 8)
+  { id: 13, step: 7, tier: 3, text: "I sustain long-term execution focus, preventing complacency and avoiding declaring victory prematurely." },
+  { id: 14, step: 7, tier: 3, text: "I strategically align budgets, staffing, and regional resources to support large-scale rollouts." },
+  { id: 15, step: 8, tier: 3, text: "I establish reward, recognition, and governance mechanisms to institutionalize changes in organizational culture." },
+  { id: 16, step: 8, tier: 3, text: "I codify successful improvements into standard operating manuals, policies, and Citizen's Charters." }
+];
+
+const kotterStepsMeta = [
+  { step: 1, name: "Step 1: Awakening Sense of Urgency" },
+  { step: 2, name: "Step 2: Building Guiding Coalitions" },
+  { step: 3, name: "Step 3: Developing Strategic Vision" },
+  { step: 4, name: "Step 4: Communicating for Buy-In" },
+  { step: 5, name: "Step 5: Empowering Action & Removing Barriers" },
+  { step: 6, name: "Step 6: Generating Short-Term Wins" },
+  { step: 7, name: "Step 7: Sustaining Acceleration" },
+  { step: 8, name: "Step 8: Anchoring Change in Culture" }
+];
+
+let responses = {};
+
+function initQuiz() {
+  const container = document.getElementById("questionsContainer");
+  container.innerHTML = "";
+  responses = {};
+  
+  questions.forEach((q, index) => {
+    const qDiv = document.createElement("div");
+    qDiv.className = "question-item";
+    qDiv.innerHTML = `
+      <div class="question-text">${index + 1}. ${q.text}</div>
+      <div class="options-grid">
+        ${[1, 2, 3, 4, 5].map(val => `
+          <button type="button" class="option-btn" id="q_${q.id}_${val}" onclick="selectOption(${q.id}, ${val})">
+            ${val === 1 ? '1<br><small>Strongly Disagree</small>' : val === 5 ? '5<br><small>Strongly Agree</small>' : val}
+          </button>
+        `).join('')}
+      </div>
+    `;
+    container.appendChild(qDiv);
+  });
+  updateProgress();
+}
+
+function selectOption(qId, value) {
+  responses[qId] = value;
+  for (let val = 1; val <= 5; val++) {
+    const btn = document.getElementById(`q_${qId}_${val}`);
+    if (btn) btn.classList.toggle("selected", val === value);
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  const answered = Object.keys(responses).length;
+  const pct = (answered / questions.length) * 100;
+  document.getElementById("progressBar").style.width = pct + "%";
+}
+
+function calculateResults() {
+  const name = document.getElementById("userName").value.trim();
+  const role = document.getElementById("userRole").value.trim();
+
+  if (!name || !role) {
+    alert("Please enter your Full Name and Designation before viewing results.");
+    return;
+  }
+
+  if (Object.keys(responses).length < questions.length) {
+    alert("Please complete all 16 items to generate your diagnostic report.");
+    return;
+  }
+
+  const mode = document.querySelector('input[name="evalMode"]:checked').value;
+  const isProjectMode = mode === 'project';
+
+  const getTierAvg = (t) => {
+    const tierQuestions = questions.filter(q => q.tier === t);
+    const sum = tierQuestions.reduce((acc, q) => acc + (responses[q.id] || 0), 0);
+    return sum / tierQuestions.length;
+  };
+
+  const t1 = getTierAvg(1);
+  const t2 = getTierAvg(2);
+  const t3 = getTierAvg(3);
+
+  let level = { title: "", badge: "", badgeClass: "", desc: "", recs: [] };
+
+  if (t1 < 3.5) {
+    level = {
+      badge: "Routine-Focused / Change-Hesitant",
+      badgeClass: "badge-routine",
+      title: isProjectMode ? "Initiative Stalled: Baseline Resistance" : "Comfort-Oriented Participant",
+      desc: isProjectMode 
+        ? "The initiative faces baseline inertia in your immediate workspace. The team is clinging to legacy processes and lacks a shared sense of urgency."
+        : "Your current stance leans heavily toward routine predictability. You may feel hesitant or skeptical when faced with disruptive public sector reforms.",
+      recs: [
+        "Participate in change readiness self-assessments to pinpoint personal sources of discomfort.",
+        "Conduct a cost-of-inaction analysis to understand why continuing old methods damages service delivery.",
+        "Focus on personal adaptability: commit to adopting at least one new digital tool or workflow this quarter."
+      ]
+    };
+  } else if (t3 >= 4.0 && t1 < 3.8) {
+    level = {
+      badge: "Theoretical Strategist",
+      badgeClass: "badge-theory",
+      title: "Strategic Thinker (Execution Gap)",
+      desc: isProjectMode
+        ? "Strategic mandates are established on paper, but frontline operations lack practical mechanisms to execute them effectively."
+        : "You possess high-level strategic vision but risk becoming disconnected from frontline operational friction.",
+      recs: [
+        "Spend time on the frontlines to understand the operational burden of administrative compliance.",
+        "Co-design workflows with frontline staff before finalizing high-level strategic directives.",
+        "Establish immediate two-way feedback loops to capture operational friction early."
+      ]
+    };
+  } else if (t1 >= 3.8 && t2 < 3.8) {
+    level = {
+      badge: "Tier 1: Change Agent",
+      badgeClass: "badge-agent",
+      title: "Active Frontline Catalyst",
+      desc: isProjectMode
+        ? "You and your immediate peers adapt well to project rollouts, but tactical work planning and cross-team engagement are missing."
+        : "You are an adaptable, open-minded catalyst who readily embraces public sector improvements and supports your immediate peers.",
+      recs: [
+        "Advance to Tier 2 by learning to translate agency-wide mandates into unit-level operational work plans.",
+        "Practice empathetic coaching: actively listen to direct reports' concerns and resolve transition anxieties.",
+        "Structure measurable quick-win milestones within your unit to build momentum among peers."
+      ]
+    };
+  } else if (t1 >= 3.8 && t2 >= 3.8 && t3 < 3.8) {
+    level = {
+      badge: "Tier 2: Change Leader",
+      badgeClass: "badge-leader",
+      title: "Tactical Unit Leader & Coach",
+      desc: isProjectMode
+        ? "Unit execution and local coaching are strong, but the project requires executive alignment, inter-bureau resource sharing, and institutional policies to scale."
+        : "You excel at leading your unit through transitions, resolving workflow bottlenecks, and building localized buy-in.",
+      recs: [
+        "Advance to Tier 3 by expanding your leadership scope beyond your unit to cross-bureau and regional coalitions.",
+        "Learn enterprise resource management: negotiate cross-functional budgets, tech access, and staffing support.",
+        "Work with policy teams to formally codify successful pilot outcomes into agency standard operating manuals and Citizen's Charters."
+      ]
+    };
+  } else {
+    level = {
+      badge: "Tier 3: Change Master",
+      badgeClass: "badge-master",
+      title: "Enterprise Transformation Master",
+      desc: isProjectMode
+        ? "The initiative is led with full-spectrum capability—from frontline support and unit agility to cross-bureau governance and long-term cultural institutionalization."
+        : "You command full-spectrum public sector change leadership: from personal frontline empathy to cross-bureau coalition building and sustainable policy anchoring.",
+      recs: [
+        "Serve as an executive sponsor and mentor to emerging Change Agents and Unit Leaders across regional offices.",
+        "Design institutional recognition architectures to celebrate innovation and prevent reform fatigue.",
+        "Lead horizon scanning efforts to anticipate future digital, policy, and market shifts before they disrupt operations."
+      ]
+    };
+  }
+
+  // Populate Participant Output
+  document.getElementById("outName").innerText = name;
+  document.getElementById("outRole").innerText = role;
+  document.getElementById("outDate").innerText = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById("outContext").innerText = isProjectMode ? 'Evaluation Context: In-Flight Change Project' : 'Evaluation Context: General Leadership Profile';
+
+  // Render Core Results
+  document.getElementById("tierBadge").innerHTML = `<span class="badge ${level.badgeClass}">${level.badge}</span>`;
+  document.getElementById("tierTitle").innerText = level.title;
+  document.getElementById("tierDescription").innerText = level.desc;
+
+  // Render Recommendations
+  const recList = document.getElementById("recList");
+  recList.innerHTML = "";
+  level.recs.forEach(rec => {
+    const li = document.createElement("li");
+    li.innerText = rec;
+    recList.appendChild(li);
+  });
+
+  // Render Kotter Matrix
+  const tableBody = document.getElementById("kotterTableBody");
+  tableBody.innerHTML = "";
+
+  kotterStepsMeta.forEach(meta => {
+    const stepQuestions = questions.filter(q => q.step === meta.step);
+    const stepSum = stepQuestions.reduce((acc, q) => acc + (responses[q.id] || 0), 0);
+    const stepScore = (stepSum / stepQuestions.length).toFixed(1);
+
+    let statusHtml = "";
+    if (stepScore >= 4.2) {
+      statusHtml = '<span class="status-tag status-strength">Core Strength</span>';
+    } else if (stepScore <= 3.2) {
+      statusHtml = '<span class="status-tag status-focus">Priority Focus</span>';
+    } else {
+      statusHtml = '<span class="status-tag status-moderate">Developing</span>';
+    }
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td><strong>${meta.name}</strong></td>
+      <td>${stepScore} / 5.0</td>
+      <td>${statusHtml}</td>
+    `;
+    tableBody.appendChild(row);
+  });
+
+  document.getElementById("quizCard").classList.add("hidden");
+  document.getElementById("resultsCard").classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function downloadPDF() {
+  const element = document.getElementById("pdfContent");
+  const userName = document.getElementById("userName").value.trim() || "Participant";
+  const sanitizedName = userName.replace(/[^a-zA-Z0-9]/g, "_");
+
+  document.getElementById("pdfHeader").style.display = "block";
+
+  const opt = {
+    margin: [10, 10, 10, 10],
+    filename: `Change_Leadership_Report_${sanitizedName}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  html2pdf().set(opt).from(element).save().then(() => {
+    document.getElementById("pdfHeader").style.display = "none";
+  });
+}
+
+function restartQuiz() {
+  document.getElementById("resultsCard").classList.add("hidden");
+  document.getElementById("quizCard").classList.remove("hidden");
+  initQuiz();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+window.onload = initQuiz;
+</script>
+</body>
+</html>
