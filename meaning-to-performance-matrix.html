@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meaning to Performance Matrix | Facilitator Projector</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              heading: ["Poppins", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+            colors: {
+              brand: {
+                950: "#020617", // slate-950 high contrast
+                card: "#0f172a",
+                amber: "#d4af37",
+                gold: "#f59e0b",
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #020617; /* High-contrast slate-950 */
+        color: #f8fafc;
+        overflow-x: hidden;
+      }
+      .matrix-grid-line {
+        stroke: rgba(255, 255, 255, 0.08);
+        stroke-dasharray: 4 4;
+      }
+      .matrix-axis-line {
+        stroke: rgba(212, 175, 55, 0.5);
+        stroke-width: 2;
+      }
+      .quadrant-highlight {
+        transition: all 0.3s ease;
+      }
+      .dot {
+        cursor: pointer;
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), r 0.2s ease, opacity 0.2s ease;
+      }
+      .dot:hover {
+        transform: scale(1.6);
+        stroke: #ffffff;
+        stroke-width: 2.5px;
+      }
+      .pulse-ring {
+        animation: pulseRing 1.8s infinite;
+      }
+      @keyframes pulseRing {
+        0% { transform: scale(0.95); opacity: 0.8; }
+        50% { transform: scale(1.15); opacity: 0.3; }
+        100% { transform: scale(0.95); opacity: 0.8; }
+      }
+      .live-dot {
+        box-shadow: 0 0 10px #10b981;
+      }
+    </style>
+  </head>
+
+  <body class="bg-slate-950 text-slate-100 h-screen flex flex-col font-sans select-none overflow-hidden">
+    
+    <!-- Top Facilitator Control Bar -->
+    <header class="w-full bg-slate-900/90 border-b border-slate-800 px-4 sm:px-6 py-3 flex-shrink-0 z-30">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        
+        <!-- Brand & Title -->
+        <div class="flex items-center gap-3">
+          <a href="/assessments" class="flex items-center gap-2" title="Back to Assessments">
+            <img src="/logo.png" alt="Brkthru" class="h-8 w-auto" />
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-amber-400 tracking-[0.2em] uppercase">BRKTHRU DIGITAL</span>
+              <span id="connection-badge" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-mono font-bold tracking-wider">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 live-dot animate-ping"></span>
+                <span>LIVE STREAM</span>
+              </span>
+            </div>
+            <h1 class="text-base sm:text-lg font-black font-heading text-white tracking-tight flex items-center gap-2">
+              Meaning to Performance Matrix
+              <span class="text-xs font-normal text-slate-400 font-mono">(1-10 Dynamic Space)</span>
+            </h1>
+          </div>
+        </div>
+
+        <!-- Controls: Department Filter + View Toggle + Export CSV + Fullscreen -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          
+          <!-- Participant Count Badge -->
+          <div class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs font-mono font-bold text-slate-200 flex items-center gap-2">
+            <span class="text-slate-400 font-sans uppercase text-[10px] tracking-wider">Sample:</span>
+            <span id="participants-count" class="text-amber-400 text-sm">0</span>
+            <span class="text-slate-500 text-[11px]">/ 600 Max</span>
+          </div>
+
+          <!-- Department / Team Filter -->
+          <div class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1">
+            <label for="dept-filter" class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Team:</label>
+            <select
+              id="dept-filter"
+              class="bg-transparent text-xs text-white font-semibold focus:outline-none cursor-pointer pr-1"
+            >
+              <option value="ALL" class="bg-slate-900 text-white">All Departments</option>
+            </select>
+          </div>
+
+          <!-- View Mode Toggle: Dots View vs Heatmap / % View -->
+          <div class="flex items-center bg-slate-800/90 border border-slate-700 rounded-lg p-0.5">
+            <button
+              id="view-dots-btn"
+              type="button"
+              class="px-3 py-1 text-xs font-bold rounded-md bg-amber-500 text-slate-950 transition-all shadow-sm"
+            >
+              Dots View
+            </button>
+            <button
+              id="view-heatmap-btn"
+              type="button"
+              class="px-3 py-1 text-xs font-bold rounded-md text-slate-300 hover:text-white transition-all"
+            >
+              Heatmap / % View
+            </button>
+          </div>
+
+          <!-- Export CSV Button -->
+          <button
+            id="export-csv-btn"
+            type="button"
+            class="px-3 py-1.5 rounded-lg bg-blue-600/80 hover:bg-blue-600 border border-blue-500/40 text-xs font-bold text-white transition-all flex items-center gap-1.5"
+            title="Download CSV report of filtered participants"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.5L19 7.5V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>Export CSV</span>
+          </button>
+
+          <!-- Facilitator Demo/Rehearsal Dropdown -->
+          <div class="relative group">
+            <button
+              id="rehearsal-toggle-btn"
+              type="button"
+              class="p-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-white"
+              title="Workshop Rehearsal Tools"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+            </button>
+            <div class="absolute right-0 top-full mt-2 hidden group-hover:block w-48 bg-slate-900 border border-slate-700 rounded-xl p-2 shadow-2xl z-50">
+              <div class="text-[10px] uppercase font-bold text-slate-400 px-2 py-1">Facilitator Tools</div>
+              <button id="seed-50-btn" class="w-full text-left px-2 py-1.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white rounded">
+                + Seed 50 Test Dots
+              </button>
+              <button id="seed-600-btn" class="w-full text-left px-2 py-1.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white rounded">
+                + Seed 600 Workshop Dots
+              </button>
+              <button id="reset-dots-btn" class="w-full text-left px-2 py-1.5 text-xs text-rose-400 hover:bg-rose-950/40 rounded mt-1 border-t border-slate-800">
+                Clear All Dots
+              </button>
+            </div>
+          </div>
+
+          <!-- Fullscreen Toggle Button -->
+          <button
+            id="fullscreen-btn"
+            type="button"
+            class="p-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-white"
+            title="Toggle Projector Fullscreen"
+          >
+            <svg id="fullscreen-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Projector Stage / Matrix Container -->
+    <main class="flex-grow relative flex items-center justify-center p-3 sm:p-6 overflow-hidden">
+      
+      <!-- Coordinate Canvas & SVG Layer -->
+      <div class="relative w-full h-full max-w-6xl max-h-[88vh] bg-slate-900/60 rounded-2xl border border-slate-800 shadow-2xl flex flex-col overflow-hidden">
+        
+        <!-- Quadrant Label Overlays (4 Quadrants) -->
+        
+        <!-- Top-Left: DREAMER (Meaning > 5, Competence <= 5) -->
+        <div id="quad-tl" class="absolute top-3 left-4 pointer-events-none z-10 flex flex-col items-start">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-purple-500 shadow-lg shadow-purple-500/50"></span>
+            <span class="font-heading font-black text-sm sm:text-base tracking-wider text-purple-300 uppercase">
+              DREAMER
+            </span>
+          </div>
+          <span class="text-[10px] sm:text-xs text-purple-400/80 font-mono font-semibold">
+            High Meaning (&gt;5) • Low Competence (&le;5)
+          </span>
+          <div id="stat-dreamer" class="mt-1 px-2.5 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 text-[11px] font-mono font-bold">
+            0 participants (0.0%)
+          </div>
+        </div>
+
+        <!-- Top-Right: SELF-ACTUALIZER (Meaning > 5, Competence > 5) -->
+        <div id="quad-tr" class="absolute top-3 right-4 pointer-events-none z-10 flex flex-col items-end text-right">
+          <div class="flex items-center gap-2">
+            <span class="font-heading font-black text-sm sm:text-base tracking-wider text-emerald-300 uppercase">
+              SELF-ACTUALIZER
+            </span>
+            <span class="w-3 h-3 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50"></span>
+          </div>
+          <span class="text-[10px] sm:text-xs text-emerald-400/80 font-mono font-semibold">
+            High Meaning (&gt;5) • High Competence (&gt;5)
+          </span>
+          <div id="stat-actualizer" class="mt-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[11px] font-mono font-bold">
+            0 participants (0.0%)
+          </div>
+        </div>
+
+        <!-- Bottom-Left: UNDER-DEVELOPED (Meaning <= 5, Competence <= 5) -->
+        <div id="quad-bl" class="absolute bottom-10 left-4 pointer-events-none z-10 flex flex-col items-start">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-rose-500 shadow-lg shadow-rose-500/50"></span>
+            <span class="font-heading font-black text-sm sm:text-base tracking-wider text-rose-300 uppercase">
+              UNDER-DEVELOPED
+            </span>
+          </div>
+          <span class="text-[10px] sm:text-xs text-rose-400/80 font-mono font-semibold">
+            Low Meaning (&le;5) • Low Competence (&le;5)
+          </span>
+          <div id="stat-under" class="mt-1 px-2.5 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-300 text-[11px] font-mono font-bold">
+            0 participants (0.0%)
+          </div>
+        </div>
+
+        <!-- Bottom-Right: DOER / PERFORMER (Meaning <= 5, Competence > 5) -->
+        <div id="quad-br" class="absolute bottom-10 right-4 pointer-events-none z-10 flex flex-col items-end text-right">
+          <div class="flex items-center gap-2">
+            <span class="font-heading font-black text-sm sm:text-base tracking-wider text-blue-300 uppercase">
+              DOER / PERFORMER
+            </span>
+            <span class="w-3 h-3 rounded-full bg-blue-500 shadow-lg shadow-blue-500/50"></span>
+          </div>
+          <span class="text-[10px] sm:text-xs text-blue-400/80 font-mono font-semibold">
+            Low Meaning (&le;5) • High Competence (&gt;5)
+          </span>
+          <div id="stat-performer" class="mt-1 px-2.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/40 text-blue-300 text-[11px] font-mono font-bold">
+            0 participants (0.0%)
+          </div>
+        </div>
+
+        <!-- Heatmap Overlay Background (Toggled in Heatmap View) -->
+        <div id="heatmap-overlay" class="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-500 z-0">
+          <div class="w-full h-full grid grid-cols-2 grid-rows-2">
+            <!-- TL: Dreamer -->
+            <div class="bg-gradient-to-br from-purple-900/30 via-purple-950/20 to-transparent border-r border-b border-purple-500/20"></div>
+            <!-- TR: Self-Actualizer -->
+            <div class="bg-gradient-to-bl from-emerald-900/35 via-emerald-950/20 to-transparent border-b border-emerald-500/20"></div>
+            <!-- BL: Under-Developed -->
+            <div class="bg-gradient-to-tr from-rose-950/35 via-slate-950/20 to-transparent border-r border-rose-500/20"></div>
+            <!-- BR: Doer / Performer -->
+            <div class="bg-gradient-to-tl from-blue-900/35 via-blue-950/20 to-transparent border-blue-500/20"></div>
+          </div>
+        </div>
+
+        <!-- SVG Matrix Coordinate Space (ViewBox 0 0 1000 1000) -->
+        <svg
+          id="matrix-svg"
+          class="w-full h-full z-10"
+          viewBox="0 0 1000 1000"
+          preserveAspectRatio="none"
+        >
+          <!-- Grid Lines (1 to 10 scale) -->
+          <g id="grid-lines-layer"></g>
+
+          <!-- Center Crosshairs (Midpoint = 5.0) -->
+          <!-- Vertical Divider (X = 5.0 -> mapped to viewBox X = 444.44) -->
+          <line x1="500" y1="0" x2="500" y2="1000" stroke="#d4af37" stroke-width="2.5" stroke-dasharray="8 6" opacity="0.65" />
+          <!-- Horizontal Divider (Y = 5.0 -> mapped to viewBox Y = 500) -->
+          <line x1="0" y1="500" x2="1000" y2="500" stroke="#d4af37" stroke-width="2.5" stroke-dasharray="8 6" opacity="0.65" />
+
+          <!-- Axis Arrows / Boundaries -->
+          <line x1="0" y1="1000" x2="1000" y2="1000" stroke="#334155" stroke-width="4" />
+          <line x1="0" y1="0" x2="0" y2="1000" stroke="#334155" stroke-width="4" />
+
+          <!-- Dynamic Dot Layer -->
+          <g id="dots-layer"></g>
+        </svg>
+
+        <!-- Axis Labels (Human readable around perimeter) -->
+        <!-- Y-Axis Label (Meaning) -->
+        <div class="absolute left-2 top-1/2 -translate-y-1/2 -rotate-90 origin-left pointer-events-none z-20 flex items-center gap-2">
+          <span class="text-xs font-black tracking-[0.25em] uppercase text-amber-400">MEANING</span>
+          <span class="text-[10px] text-slate-400 font-mono">(1.0 → 10.0)</span>
+        </div>
+
+        <!-- X-Axis Label (Competence / Performance) -->
+        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 pointer-events-none z-20 flex items-center gap-2">
+          <span class="text-xs font-black tracking-[0.25em] uppercase text-amber-400">COMPETENCE / PERFORMANCE</span>
+          <span class="text-[10px] text-slate-400 font-mono">(1.0 → 10.0)</span>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- Participant Details Modal / Popup Card -->
+    <div
+      id="dot-modal"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50"
+    >
+      <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative">
+        <button
+          id="close-modal-btn"
+          type="button"
+          class="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-lg bg-slate-800"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <div class="flex items-center gap-3 mb-4">
+          <div id="modal-archetype-icon" class="w-12 h-12 rounded-xl flex items-center justify-center font-black text-xl">
+            ●
+          </div>
+          <div>
+            <div id="modal-name" class="font-heading font-black text-lg text-white">
+              Participant Name
+            </div>
+            <div id="modal-dept" class="text-xs font-semibold text-slate-400">
+              Department / Role
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-950/80 rounded-xl p-4 border border-slate-800 space-y-2.5 mb-5 font-mono text-xs">
+          <div class="flex justify-between items-center">
+            <span class="text-slate-400 font-sans">Meaning Score:</span>
+            <span id="modal-meaning" class="font-bold text-amber-400 text-sm">--</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-400 font-sans">Competence / Performance:</span>
+            <span id="modal-competence" class="font-bold text-amber-400 text-sm">--</span>
+          </div>
+          <div class="pt-2 border-t border-slate-800 flex justify-between items-center">
+            <span class="text-slate-400 font-sans">Quadrant Archetype:</span>
+            <span id="modal-archetype" class="font-extrabold uppercase text-sm">--</span>
+          </div>
+          <div class="flex justify-between items-center text-[10px] text-slate-500 pt-1">
+            <span class="font-sans">Edits Logged:</span>
+            <span id="modal-edits">1 of 3</span>
+          </div>
+        </div>
+
+        <button
+          id="modal-dismiss-btn"
+          type="button"
+          class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs uppercase tracking-wider transition-all"
+        >
+          Close Card
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Logic Script -->
+    <script>
+      (function() {
+        // State
+        let allParticipants = [];
+        let selectedDept = 'ALL';
+        let viewMode = 'dots'; // 'dots' or 'heatmap'
+
+        // SVG Dimensions (0 to 1000 coordinate map)
+        const SVG_MIN = 60;
+        const SVG_MAX = 940;
+        const SVG_SPAN = SVG_MAX - SVG_MIN;
+
+        // Elements
+        const dotsLayer = document.getElementById('dots-layer');
+        const gridLinesLayer = document.getElementById('grid-lines-layer');
+        const countBadge = document.getElementById('participants-count');
+        const deptFilter = document.getElementById('dept-filter');
+        const viewDotsBtn = document.getElementById('view-dots-btn');
+        const viewHeatmapBtn = document.getElementById('view-heatmap-btn');
+        const heatmapOverlay = document.getElementById('heatmap-overlay');
+        const exportCsvBtn = document.getElementById('export-csv-btn');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const connectionBadge = document.getElementById('connection-badge');
+
+        // Modal Elements
+        const dotModal = document.getElementById('dot-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const modalDismissBtn = document.getElementById('modal-dismiss-btn');
+        const modalName = document.getElementById('modal-name');
+        const modalDept = document.getElementById('modal-dept');
+        const modalMeaning = document.getElementById('modal-meaning');
+        const modalCompetence = document.getElementById('modal-competence');
+        const modalArchetype = document.getElementById('modal-archetype');
+        const modalArchetypeIcon = document.getElementById('modal-archetype-icon');
+        const modalEdits = document.getElementById('modal-edits');
+
+        // Quadrant Stat Elements
+        const statActualizer = document.getElementById('stat-actualizer');
+        const statDreamer = document.getElementById('stat-dreamer');
+        const statPerformer = document.getElementById('stat-performer');
+        const statUnder = document.getElementById('stat-under');
+
+        // Render Background Grid Lines (1.0 to 10.0 scale)
+        function renderGridLines() {
+          let markup = '';
+          for (let val = 1; val <= 10; val++) {
+            // Map 1-10 to SVG coordinates
+            const frac = (val - 1) / 9;
+            const x = SVG_MIN + frac * SVG_SPAN;
+            const y = SVG_MAX - frac * SVG_SPAN; // Inverted Y
+
+            // Vertical line
+            markup += `<line x1="${x}" y1="0" x2="${x}" y2="1000" class="matrix-grid-line" />`;
+            // Horizontal line
+            markup += `<line x1="0" y1="${y}" x2="1000" y2="${y}" class="matrix-grid-line" />`;
+
+            // Axis Tick Numbers
+            if (val !== 5) {
+              markup += `<text x="${x}" y="985" fill="#64748b" font-size="16" font-family="JetBrains Mono" text-anchor="middle">${val}</text>`;
+              markup += `<text x="25" y="${y + 5}" fill="#64748b" font-size="16" font-family="JetBrains Mono" text-anchor="middle">${val}</text>`;
+            }
+          }
+          gridLinesLayer.innerHTML = markup;
+        }
+
+        renderGridLines();
+
+        // Archetype categorization
+        function computeArchetype(m, c) {
+          m = parseFloat(m);
+          c = parseFloat(c);
+          if (m > 5 && c > 5) return 'SELF-ACTUALIZER';
+          if (m > 5 && c <= 5) return 'DREAMER';
+          if (m <= 5 && c > 5) return 'DOER / PERFORMER';
+          return 'UNDER-DEVELOPED';
+        }
+
+        // Color mapper by Archetype
+        function getArchetypeColor(archetype) {
+          switch (archetype) {
+            case 'SELF-ACTUALIZER':
+              return { fill: '#10b981', stroke: '#34d399', glow: 'rgba(16, 185, 129, 0.4)' };
+            case 'DREAMER':
+              return { fill: '#a855f7', stroke: '#c084fc', glow: 'rgba(168, 85, 247, 0.4)' };
+            case 'DOER / PERFORMER':
+              return { fill: '#3b82f6', stroke: '#60a5fa', glow: 'rgba(59, 130, 246, 0.4)' };
+            default:
+              return { fill: '#f43f5e', stroke: '#fb7185', glow: 'rgba(244, 63, 94, 0.4)' };
+          }
+        }
+
+        // Stable Pseudo-random hash for deterministic Micro-Jitter (±0.25)
+        function hashJitter(id, axis) {
+          let hash = 0;
+          const str = (id || '') + axis;
+          for (let i = 0; i < str.length; i++) {
+            hash = (hash << 5) - hash + str.charCodeAt(i);
+            hash |= 0;
+          }
+          // Normalize to range -0.25 to +0.25
+          const normalized = ((Math.abs(hash) % 1000) / 1000) * 0.5 - 0.25;
+          return normalized;
+        }
+
+        // Coordinate Mapping (1-10 to SVG ViewBox 0-1000) with Micro-Jitter
+        function mapCoordinates(competence, meaning, id) {
+          const cJitter = hashJitter(id, 'c');
+          const mJitter = hashJitter(id, 'm');
+
+          // Constrain coordinates within 1.0 to 10.0 after jitter
+          const finalC = Math.min(10, Math.max(1, parseFloat(competence) + cJitter));
+          const finalM = Math.min(10, Math.max(1, parseFloat(meaning) + mJitter));
+
+          const fracX = (finalC - 1) / 9;
+          const fracY = (finalM - 1) / 9;
+
+          const svgX = SVG_MIN + fracX * SVG_SPAN;
+          const svgY = SVG_MAX - fracY * SVG_SPAN; // Inverted for Y-up Cartesian
+
+          return { x: svgX, y: svgY, finalC, finalM };
+        }
+
+        // Re-render all dots and compute quadrant percentages
+        function renderMatrix() {
+          const filtered = allParticipants.filter(p => {
+            if (selectedDept === 'ALL') return true;
+            return p.department === selectedDept;
+          });
+
+          countBadge.textContent = filtered.length;
+
+          // Compute Quadrant Stats
+          let actualizerCount = 0;
+          let dreamerCount = 0;
+          let performerCount = 0;
+          let underCount = 0;
+
+          filtered.forEach(p => {
+            const arch = p.archetype || computeArchetype(p.meaning, p.competence);
+            if (arch === 'SELF-ACTUALIZER') actualizerCount++;
+            else if (arch === 'DREAMER') dreamerCount++;
+            else if (arch === 'DOER / PERFORMER') performerCount++;
+            else underCount++;
+          });
+
+          const total = filtered.length || 1;
+          const pctActualizer = ((actualizerCount / total) * 100).toFixed(1);
+          const pctDreamer = ((dreamerCount / total) * 100).toFixed(1);
+          const pctPerformer = ((performerCount / total) * 100).toFixed(1);
+          const pctUnder = ((underCount / total) * 100).toFixed(1);
+
+          statActualizer.textContent = `${actualizerCount} participants (${pctActualizer}%)`;
+          statDreamer.textContent = `${dreamerCount} participants (${pctDreamer}%)`;
+          statPerformer.textContent = `${performerCount} participants (${pctPerformer}%)`;
+          statUnder.textContent = `${underCount} participants (${pctUnder}%)`;
+
+          // Build SVG Dots
+          let dotsMarkup = '';
+          filtered.forEach(p => {
+            const arch = p.archetype || computeArchetype(p.meaning, p.competence);
+            const { x, y } = mapCoordinates(p.competence, p.meaning, p.id);
+            const colors = getArchetypeColor(arch);
+            const radius = filtered.length > 300 ? 5.5 : (filtered.length > 100 ? 7 : 8.5);
+
+            dotsMarkup += `
+              <circle
+                class="dot"
+                cx="${x.toFixed(2)}"
+                cy="${y.toFixed(2)}"
+                r="${radius}"
+                fill="${colors.fill}"
+                stroke="${colors.stroke}"
+                stroke-width="1.5"
+                filter="drop-shadow(0 0 6px ${colors.glow})"
+                data-id="${p.id}"
+              >
+                <title>${p.nickname} ${p.last_name} (${arch})</title>
+              </circle>
+            `;
+          });
+
+          dotsLayer.innerHTML = dotsMarkup;
+
+          // Attach click listeners to dots
+          const circles = dotsLayer.querySelectorAll('.dot');
+          circles.forEach(circle => {
+            circle.addEventListener('click', (e) => {
+              const pid = circle.getAttribute('data-id');
+              const item = allParticipants.find(p => p.id === pid);
+              if (item) openParticipantModal(item);
+            });
+          });
+        }
+
+        // Open Participant Detail Modal
+        function openParticipantModal(p) {
+          const arch = p.archetype || computeArchetype(p.meaning, p.competence);
+          const colors = getArchetypeColor(arch);
+
+          modalName.textContent = `${p.nickname} ${p.last_name}`;
+          modalDept.textContent = p.department;
+          modalMeaning.textContent = `${parseFloat(p.meaning).toFixed(1)} / 10`;
+          modalCompetence.textContent = `${parseFloat(p.competence).toFixed(1)} / 10`;
+          modalArchetype.textContent = arch;
+          modalArchetype.style.color = colors.fill;
+
+          modalArchetypeIcon.style.backgroundColor = colors.glow;
+          modalArchetypeIcon.style.color = colors.fill;
+          modalEdits.textContent = `${p.submission_count || 1} of 3 edits used`;
+
+          dotModal.classList.remove('hidden');
+          dotModal.classList.add('flex');
+        }
+
+        function closeModal() {
+          dotModal.classList.add('hidden');
+          dotModal.classList.remove('flex');
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        modalDismissBtn.addEventListener('click', closeModal);
+        dotModal.addEventListener('click', (e) => {
+          if (e.target === dotModal) closeModal();
+        });
+
+        // Update Department Dropdown options
+        function updateDepartmentOptions() {
+          const depts = new Set();
+          allParticipants.forEach(p => {
+            if (p.department) depts.add(p.department.trim());
+          });
+
+          const currentVal = deptFilter.value;
+          let optionsHtml = `<option value="ALL" class="bg-slate-900 text-white">All Departments (${allParticipants.length})</option>`;
+
+          Array.from(depts).sort().forEach(dept => {
+            const count = allParticipants.filter(p => p.department === dept).length;
+            optionsHtml += `<option value="${dept}" class="bg-slate-900 text-white">${dept} (${count})</option>`;
+          });
+
+          deptFilter.innerHTML = optionsHtml;
+          if (depts.has(currentVal)) {
+            deptFilter.value = currentVal;
+          } else {
+            deptFilter.value = 'ALL';
+            selectedDept = 'ALL';
+          }
+        }
+
+        deptFilter.addEventListener('change', (e) => {
+          selectedDept = e.target.value;
+          renderMatrix();
+        });
+
+        // View Mode: Dots vs Heatmap / % View
+        viewDotsBtn.addEventListener('click', () => {
+          viewMode = 'dots';
+          viewDotsBtn.classList.add('bg-amber-500', 'text-slate-950');
+          viewDotsBtn.classList.remove('text-slate-300');
+          viewHeatmapBtn.classList.remove('bg-amber-500', 'text-slate-950');
+          viewHeatmapBtn.classList.add('text-slate-300');
+
+          heatmapOverlay.classList.remove('opacity-90');
+          heatmapOverlay.classList.add('opacity-0');
+        });
+
+        viewHeatmapBtn.addEventListener('click', () => {
+          viewMode = 'heatmap';
+          viewHeatmapBtn.classList.add('bg-amber-500', 'text-slate-950');
+          viewHeatmapBtn.classList.remove('text-slate-300');
+          viewDotsBtn.classList.remove('bg-amber-500', 'text-slate-950');
+          viewDotsBtn.classList.add('text-slate-300');
+
+          heatmapOverlay.classList.remove('opacity-0');
+          heatmapOverlay.classList.add('opacity-90');
+        });
+
+        // Export CSV Functionality
+        exportCsvBtn.addEventListener('click', () => {
+          const filtered = allParticipants.filter(p => {
+            if (selectedDept === 'ALL') return true;
+            return p.department === selectedDept;
+          });
+
+          if (filtered.length === 0) {
+            alert('No participants to export.');
+            return;
+          }
+
+          const headers = ['Nickname', 'Last Name', 'Department', 'Meaning', 'Competence', 'Quadrant Archetype'];
+          const rows = filtered.map(p => {
+            const arch = p.archetype || computeArchetype(p.meaning, p.competence);
+            return [
+              `"${(p.nickname || '').replace(/"/g, '""')}"`,
+              `"${(p.last_name || '').replace(/"/g, '""')}"`,
+              `"${(p.department || '').replace(/"/g, '""')}"`,
+              parseFloat(p.meaning).toFixed(1),
+              parseFloat(p.competence).toFixed(1),
+              `"${arch}"`
+            ].join(',');
+          });
+
+          const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows].join('\n');
+          const encodedUri = encodeURI(csvContent);
+          const link = document.createElement('a');
+          link.setAttribute('href', encodedUri);
+          const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+          link.setAttribute('download', `meaning_to_performance_matrix_${timestamp}.csv`);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+
+        // Fullscreen Toggle
+        fullscreenBtn.addEventListener('click', () => {
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+              console.warn('Fullscreen request failed:', err);
+            });
+          } else {
+            document.exitFullscreen().catch(err => {});
+          }
+        });
+
+        // Facilitator Simulation & Seed Controls
+        document.getElementById('seed-50-btn').addEventListener('click', async () => {
+          await fetch('/api/matrix/seed', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ count: 50 })
+          });
+        });
+
+        document.getElementById('seed-600-btn').addEventListener('click', async () => {
+          await fetch('/api/matrix/seed', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ count: 600 })
+          });
+        });
+
+        document.getElementById('reset-dots-btn').addEventListener('click', async () => {
+          if (confirm('Clear all matrix responses?')) {
+            await fetch('/api/matrix/reset', { method: 'POST' });
+          }
+        });
+
+        // Server-Sent Events (SSE) Live Connection
+        function connectSSE() {
+          const evtSource = new EventSource('/api/matrix/stream');
+
+          evtSource.addEventListener('init', (e) => {
+            try {
+              allParticipants = JSON.parse(e.data);
+              updateDepartmentOptions();
+              renderMatrix();
+            } catch (err) {
+              console.error('SSE init error:', err);
+            }
+          });
+
+          evtSource.addEventListener('insert', (e) => {
+            try {
+              const item = JSON.parse(e.data);
+              const idx = allParticipants.findIndex(p => p.id === item.id);
+              if (idx >= 0) {
+                allParticipants[idx] = item;
+              } else {
+                allParticipants.push(item);
+              }
+              updateDepartmentOptions();
+              renderMatrix();
+            } catch (err) {
+              console.error('SSE insert error:', err);
+            }
+          });
+
+          evtSource.addEventListener('update', (e) => {
+            try {
+              const item = JSON.parse(e.data);
+              const idx = allParticipants.findIndex(p => p.id === item.id);
+              if (idx >= 0) {
+                allParticipants[idx] = item;
+              } else {
+                allParticipants.push(item);
+              }
+              updateDepartmentOptions();
+              renderMatrix();
+            } catch (err) {
+              console.error('SSE update error:', err);
+            }
+          });
+
+          evtSource.addEventListener('reset', () => {
+            allParticipants = [];
+            updateDepartmentOptions();
+            renderMatrix();
+          });
+
+          evtSource.onopen = () => {
+            connectionBadge.classList.remove('bg-rose-500/10', 'text-rose-400', 'border-rose-500/30');
+            connectionBadge.classList.add('bg-emerald-500/10', 'text-emerald-400', 'border-emerald-500/30');
+            connectionBadge.innerHTML = `
+              <span class="w-2 h-2 rounded-full bg-emerald-400 live-dot animate-ping"></span>
+              <span>LIVE STREAM</span>
+            `;
+          };
+
+          evtSource.onerror = () => {
+            connectionBadge.classList.remove('bg-emerald-500/10', 'text-emerald-400', 'border-emerald-500/30');
+            connectionBadge.classList.add('bg-rose-500/10', 'text-rose-400', 'border-rose-500/30');
+            connectionBadge.innerHTML = `
+              <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+              <span>RECONNECTING</span>
+            `;
+          };
+        }
+
+        // Start SSE stream
+        connectSSE();
+
+      })();
+    </script>
+  </body>
+</html>

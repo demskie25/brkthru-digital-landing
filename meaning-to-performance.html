@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meaning to Performance Matrix Assessment | Brkthru Digital</title>
+    <meta
+      name="description"
+      content="Evaluate personal alignment across meaning and competence to calibrate high performance and self-actualization."
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              heading: ["Poppins", "sans-serif"],
+            },
+            colors: {
+              brand: {
+                950: "#070c16",
+                900: "#0f172a",
+                800: "#1e293b",
+                card: "#0f1f32",
+                amber: "#d4af37",
+                amberGlow: "#f59e0b",
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #070c16;
+        color: #f8fafc;
+      }
+      .custom-slider {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 8px;
+        border-radius: 9999px;
+        background: #1e293b;
+        outline: none;
+        transition: background 0.2s;
+      }
+      .custom-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #d4af37;
+        cursor: pointer;
+        box-shadow: 0 0 12px rgba(212, 175, 55, 0.7);
+        border: 2px solid #ffffff;
+      }
+      .custom-slider::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #d4af37;
+        cursor: pointer;
+        box-shadow: 0 0 12px rgba(212, 175, 55, 0.7);
+        border: 2px solid #ffffff;
+      }
+      .glow-border {
+        box-shadow: 0 0 30px -5px rgba(212, 175, 55, 0.15);
+      }
+    </style>
+  </head>
+
+  <body class="font-sans bg-[#070c16] text-slate-100 antialiased min-h-screen flex flex-col justify-between">
+    <!-- Header -->
+    <header class="w-full bg-[#070c16]/95 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center gap-3">
+            <a href="/assessments" class="flex items-center gap-2 group">
+              <img src="/logo.png" alt="Brkthru" class="h-8 w-auto" />
+            </a>
+            <span class="text-[11px] font-black text-amber-500 tracking-[0.2em] uppercase">BRKTHRU DIGITAL</span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <a href="/assessments" class="text-xs text-slate-400 hover:text-amber-400 font-semibold transition-colors">
+              ← Assessments
+            </a>
+            <a
+              href="/assessments/meaning-to-performance/matrix"
+              target="_blank"
+              class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-slate-300 hover:border-amber-400/50 hover:text-amber-400 transition-all"
+            >
+              <span>Projector Screen</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-xl w-full mx-auto px-4 py-8 sm:py-12 flex-grow">
+      
+      <!-- Top Title Badge -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-extrabold tracking-widest uppercase mb-3">
+          <span>●</span>
+          <span>WORKSHOP ASSESSMENT</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black font-heading text-white tracking-tight">
+          Meaning to Performance Matrix Assessment
+        </h1>
+        <p class="text-slate-400 text-xs sm:text-sm mt-2">
+          Rate your current alignment to plot your quadrant on the live workshop display.
+        </p>
+      </div>
+
+      <!-- Locked Notification Banner (Only shows when 3 edits reached) -->
+      <div id="locked-banner" class="hidden mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm font-semibold flex items-center gap-3">
+        <svg class="w-5 h-5 flex-shrink-0 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+        <span>Maximum updates reached. Your responses are locked.</span>
+      </div>
+
+      <!-- Confirmation Screen (Hidden until response plotted) -->
+      <div id="confirmation-screen" class="hidden bg-[#0f1f32] border border-emerald-500/40 rounded-2xl p-6 sm:p-8 text-center glow-border">
+        <div class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 mx-auto flex items-center justify-center mb-5">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+
+        <h2 class="text-xl sm:text-2xl font-black font-heading text-white mb-2">
+          Response Plotted! Look at the main screen to see where your dot lands.
+        </h2>
+
+        <p class="text-slate-300 text-xs sm:text-sm mb-6">
+          Your scores have been transmitted live to the facilitator matrix.
+        </p>
+
+        <!-- Participant Score Summary Card -->
+        <div class="bg-[#070c16]/80 border border-white/10 rounded-xl p-4 mb-6 text-left space-y-2">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-400">Participant:</span>
+            <span id="summary-name" class="font-bold text-white">--</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-400">Department / Role:</span>
+            <span id="summary-department" class="font-bold text-slate-200">--</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-400">Meaning Score:</span>
+            <span id="summary-meaning" class="font-bold text-amber-400">-- / 10</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-400">Competence / Performance Score:</span>
+            <span id="summary-competence" class="font-bold text-amber-400">-- / 10</span>
+          </div>
+          <div class="pt-2 border-t border-white/10 flex justify-between items-center text-xs">
+            <span class="text-slate-400">Quadrant Archetype:</span>
+            <span id="summary-archetype" class="font-extrabold text-emerald-400 uppercase tracking-wider">--</span>
+          </div>
+        </div>
+
+        <!-- Edits Counter Badge -->
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300 mb-6">
+          <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+          <span id="edits-counter-text">1 of 3 edits used</span>
+        </div>
+
+        <!-- Adjust Button (Shown only if edits < 3) -->
+        <div id="adjust-container">
+          <button
+            type="button"
+            id="adjust-btn"
+            class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs sm:text-sm py-3 px-6 rounded-xl tracking-wider uppercase transition-all shadow-lg shadow-amber-500/20"
+          >
+            Adjust Response
+          </button>
+        </div>
+      </div>
+
+      <!-- Participant Input Form -->
+      <form id="matrix-form" class="bg-[#0f1f32] border border-amber-500/30 rounded-2xl p-6 sm:p-8 glow-border space-y-6">
+        
+        <!-- Field 1: Nickname (First Name) -->
+        <div>
+          <label for="nickname" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+            Nickname (First Name) <span class="text-amber-400">*</span>
+          </label>
+          <input
+            type="text"
+            id="nickname"
+            name="nickname"
+            required
+            maxlength="40"
+            placeholder="e.g. Maria"
+            class="w-full bg-[#070c16] border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors"
+          />
+        </div>
+
+        <!-- Field 2: Last Name -->
+        <div>
+          <label for="last-name" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+            Last Name <span class="text-amber-400">*</span>
+          </label>
+          <input
+            type="text"
+            id="last-name"
+            name="last-name"
+            required
+            maxlength="40"
+            placeholder="e.g. Santos"
+            class="w-full bg-[#070c16] border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors"
+          />
+        </div>
+
+        <!-- Field 3: Department / Role -->
+        <div>
+          <label for="department" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+            Department / Role <span class="text-amber-400">*</span>
+          </label>
+          <input
+            type="text"
+            id="department"
+            name="department"
+            required
+            maxlength="60"
+            placeholder="e.g. Executive Leadership, Operations, Sales..."
+            class="w-full bg-[#070c16] border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors"
+          />
+        </div>
+
+        <!-- Slider 1: Meaning (scale 1 to 10) -->
+        <div class="pt-4 border-t border-white/10">
+          <div class="flex justify-between items-center mb-2">
+            <label for="meaning-slider" class="text-xs font-bold uppercase tracking-wider text-slate-200">
+              Meaning <span class="text-amber-400">(scale 1 to 10)</span>
+            </label>
+            <span id="meaning-val-badge" class="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono font-black text-sm">
+              7.0
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 mb-3">
+            Sense of purpose, personal significance, mission alignment, and inner motivation.
+          </p>
+          <input
+            type="range"
+            id="meaning-slider"
+            min="1"
+            max="10"
+            step="0.5"
+            value="7.0"
+            class="custom-slider"
+          />
+          <div class="flex justify-between text-[10px] text-slate-500 mt-1 font-mono">
+            <span>1 (Low Meaning)</span>
+            <span>5 (Moderate)</span>
+            <span>10 (Peak Purpose)</span>
+          </div>
+        </div>
+
+        <!-- Slider 2: Competence / Performance (scale 1 to 10) -->
+        <div class="pt-4 border-t border-white/10">
+          <div class="flex justify-between items-center mb-2">
+            <label for="competence-slider" class="text-xs font-bold uppercase tracking-wider text-slate-200">
+              Competence / Performance <span class="text-amber-400">(scale 1 to 10)</span>
+            </label>
+            <span id="competence-val-badge" class="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono font-black text-sm">
+              7.0
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 mb-3">
+            Execution mastery, skill capability, behavioral output, and measurable results.
+          </p>
+          <input
+            type="range"
+            id="competence-slider"
+            min="1"
+            max="10"
+            step="0.5"
+            value="7.0"
+            class="custom-slider"
+          />
+          <div class="flex justify-between text-[10px] text-slate-500 mt-1 font-mono">
+            <span>1 (Low Execution)</span>
+            <span>5 (Moderate)</span>
+            <span>10 (Peak Mastery)</span>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-4">
+          <button
+            type="submit"
+            id="submit-btn"
+            class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs sm:text-sm py-3.5 px-6 rounded-xl tracking-wider uppercase transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2"
+          >
+            <span>Plot My Response</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
+          <p id="submission-limit-hint" class="text-center text-[11px] text-slate-400 mt-2">
+            You can adjust your score up to 3 times during this workshop.
+          </p>
+        </div>
+      </form>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full border-t border-white/10 py-6 bg-[#070c16]">
+      <div class="max-w-4xl mx-auto px-4 text-center text-xs text-slate-500">
+        © 2026 Brkthru Digital & Breakthrough Coaching. All rights reserved.
+      </div>
+    </footer>
+
+    <!-- Client Script -->
+    <script>
+      (function() {
+        const LOCAL_STORAGE_KEY = 'm2p_participant_state';
+
+        // Elements
+        const form = document.getElementById('matrix-form');
+        const confirmationScreen = document.getElementById('confirmation-screen');
+        const lockedBanner = document.getElementById('locked-banner');
+        const adjustBtn = document.getElementById('adjust-btn');
+        const adjustContainer = document.getElementById('adjust-container');
+        const submitBtn = document.getElementById('submit-btn');
+
+        const nicknameInput = document.getElementById('nickname');
+        const lastNameInput = document.getElementById('last-name');
+        const deptInput = document.getElementById('department');
+        const meaningSlider = document.getElementById('meaning-slider');
+        const competenceSlider = document.getElementById('competence-slider');
+        const meaningBadge = document.getElementById('meaning-val-badge');
+        const competenceBadge = document.getElementById('competence-val-badge');
+
+        const summaryName = document.getElementById('summary-name');
+        const summaryDept = document.getElementById('summary-department');
+        const summaryMeaning = document.getElementById('summary-meaning');
+        const summaryCompetence = document.getElementById('summary-competence');
+        const summaryArchetype = document.getElementById('summary-archetype');
+        const editsCounterText = document.getElementById('edits-counter-text');
+
+        // Update slider badges on slide
+        meaningSlider.addEventListener('input', () => {
+          meaningBadge.textContent = parseFloat(meaningSlider.value).toFixed(1);
+        });
+        competenceSlider.addEventListener('input', () => {
+          competenceBadge.textContent = parseFloat(competenceSlider.value).toFixed(1);
+        });
+
+        // Load existing participant state
+        function getParticipantState() {
+          try {
+            const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (raw) return JSON.parse(raw);
+          } catch (e) {}
+
+          // Generate stable client UUID
+          const newId = 'p_' + (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 12));
+          const initial = {
+            id: newId,
+            nickname: '',
+            last_name: '',
+            department: '',
+            meaning: 7.0,
+            competence: 7.0,
+            submission_count: 0,
+            locked: false,
+            submitted: false,
+            archetype: ''
+          };
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(initial));
+          return initial;
+        }
+
+        function saveParticipantState(state) {
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+        }
+
+        let state = getParticipantState();
+
+        // Populate fields if previously filled
+        if (state.nickname) nicknameInput.value = state.nickname;
+        if (state.last_name) lastNameInput.value = state.last_name;
+        if (state.department) deptInput.value = state.department;
+        if (state.meaning) {
+          meaningSlider.value = state.meaning;
+          meaningBadge.textContent = parseFloat(state.meaning).toFixed(1);
+        }
+        if (state.competence) {
+          competenceSlider.value = state.competence;
+          competenceBadge.textContent = parseFloat(state.competence).toFixed(1);
+        }
+
+        function renderStateUI() {
+          if (state.submission_count >= 3) {
+            state.locked = true;
+          }
+
+          if (state.locked) {
+            lockedBanner.classList.remove('hidden');
+            // Disable inputs
+            nicknameInput.disabled = true;
+            lastNameInput.disabled = true;
+            deptInput.disabled = true;
+            meaningSlider.disabled = true;
+            competenceSlider.disabled = true;
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            if (adjustContainer) adjustContainer.style.display = 'none';
+          }
+
+          if (state.submitted) {
+            form.classList.add('hidden');
+            confirmationScreen.classList.remove('hidden');
+
+            summaryName.textContent = `${state.nickname} ${state.last_name}`;
+            summaryDept.textContent = state.department;
+            summaryMeaning.textContent = `${parseFloat(state.meaning).toFixed(1)} / 10`;
+            summaryCompetence.textContent = `${parseFloat(state.competence).toFixed(1)} / 10`;
+            summaryArchetype.textContent = state.archetype || calculateArchetype(state.meaning, state.competence);
+
+            editsCounterText.textContent = `${state.submission_count} of 3 edits used`;
+
+            if (state.submission_count < 3 && !state.locked) {
+              adjustContainer.style.display = 'block';
+            } else {
+              adjustContainer.style.display = 'none';
+            }
+          } else {
+            form.classList.remove('hidden');
+            confirmationScreen.classList.add('hidden');
+          }
+        }
+
+        function calculateArchetype(m, c) {
+          m = parseFloat(m);
+          c = parseFloat(c);
+          if (m > 5 && c > 5) return 'SELF-ACTUALIZER';
+          if (m > 5 && c <= 5) return 'DREAMER';
+          if (m <= 5 && c > 5) return 'DOER / PERFORMER';
+          return 'UNDER-DEVELOPED';
+        }
+
+        // Adjust Response button action
+        adjustBtn.addEventListener('click', () => {
+          if (state.submission_count >= 3 || state.locked) return;
+          state.submitted = false;
+          saveParticipantState(state);
+          renderStateUI();
+        });
+
+        // Form Submission
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          if (state.submission_count >= 3 || state.locked) {
+            alert('Maximum updates reached. Your responses are locked.');
+            return;
+          }
+
+          const payload = {
+            id: state.id,
+            nickname: nicknameInput.value.trim(),
+            last_name: lastNameInput.value.trim(),
+            department: deptInput.value.trim(),
+            meaning: parseFloat(meaningSlider.value),
+            competence: parseFloat(competenceSlider.value)
+          };
+
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = `<span>Plotting...</span>`;
+
+          try {
+            const res = await fetch('/api/matrix/submit', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+              if (res.status === 403 || data.locked) {
+                state.locked = true;
+                state.submission_count = 3;
+                saveParticipantState(state);
+                renderStateUI();
+                alert(data.error || 'Maximum updates reached. Your responses are locked.');
+                return;
+              }
+              alert(data.error || 'Submission failed. Please try again.');
+              return;
+            }
+
+            // Success
+            state.nickname = payload.nickname;
+            state.last_name = payload.last_name;
+            state.department = payload.department;
+            state.meaning = payload.meaning;
+            state.competence = payload.competence;
+            state.submission_count = data.participant.submission_count;
+            state.archetype = data.participant.archetype;
+            state.submitted = true;
+            state.locked = data.locked || state.submission_count >= 3;
+
+            saveParticipantState(state);
+            renderStateUI();
+          } catch (err) {
+            console.error(err);
+            alert('Network error. Please make sure the workshop server is running.');
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `
+              <span>Plot My Response</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            `;
+          }
+        });
+
+        // Initialize display
+        renderStateUI();
+      })();
+    </script>
+  </body>
+</html>
